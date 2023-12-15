@@ -1,1 +1,1 @@
-ça s'écrit tri
+#include<stdio.h>
