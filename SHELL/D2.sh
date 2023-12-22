@@ -8,6 +8,5 @@ elif [ "$1" != "data.csv" ] || [ ! -f $1 ] || [ ! -e $1 ] ; then
     exit 2
 fi
 
-trajets=`awk -F';' '{if(NR>1) count[$6]++} END {for (person in count) print person, count[person]}' data.csv | sort -t' ' -k3 -r | head -10`
-echo "$trajets"
-
+distance=`awk -F';' '{if(NR>1) count[$6]++} END {for (distance in count) print $6,distance, count[distance]}' data.csv | sort -t' ' -k3 -r | head -10`
+echo "$distance"
