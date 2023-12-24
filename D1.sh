@@ -8,7 +8,9 @@ elif [ "$1" != "data.csv" ] || [ ! -f $1 ] || [ ! -e $1 ] ; then
     exit 2
 fi
 
-trajets=$(awk -F';' 'NR>1 {if(NR>1) count[$6]++} END {for (person in count) print person, count[person]}' "$1" | sort -t' ' -k3 -r -n | head -10)
+#trajets=$(awk -F';' 'NR>1 {if(NR>1) count += $1  } END {for (person in count) printf "%s;%d\n", person, count[person]}' "$1" | sort -t';' -k2 -r -n | head -10)
+trajets=$(LC_NUMERIC=C awk -F';' 'NR>1 {routes[$1, $6]++} END {for (route in routes) {split(route, arr, SUBSEP); count[arr[2]]++} for (person in count) printf "%s;%d\n", person, count[person]}' "$1" | sort -t';' -k2 -r -n | head -10)
+
 #if [ ! -e demo et images ] ; then creer le dos
 echo "$trajets" > demo/gnuplot_data_D1.txt
 
