@@ -8,7 +8,7 @@ elif [ "$1" != "data.csv" ] || [ ! -f $1 ] || [ ! -e $1 ] ; then
     exit 2
 fi
 
-distance_conducteur=$(LC_NUMERIC=C awk -F';' 'NR>1 {if(NR>1) distance[$6] += $5} END {for (personne in distance) printf "%s;%.6f\n", personne, distance[personne]}' "$1" | sort -t';' -k2 -r -n | head -10)
+distance_conducteur=$(LC_NUMERIC=C awk -F';' 'NR>1 {if(NR>1) distance[$6] += $5} END {for (conducteur in distance) printf "%s;%.6f\n", conducteur, distance[conducteur]}' "$1" | sort -t';' -k2 -r -n | head -10)
 #if [ ! -e demo et images] ; then creer le dos
 echo "$distance_conducteur" > demo/gnuplot_data_D2.txt
 
