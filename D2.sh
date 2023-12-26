@@ -13,4 +13,5 @@ distance_conducteur=$(LC_NUMERIC=C awk -F';' 'NR>1 {if(NR>1) distance[$6] += $5}
 echo "$distance_conducteur" > demo/gnuplot_data_D2.txt
 
 # Exécution du script Gnuplot
-gnuplot -c gnuplot_script_D2.gnu
+chmod +x gnuplot_script_D2.sh
+./gnuplot_script_D2.sh

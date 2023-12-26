@@ -13,4 +13,5 @@ distance_trajet=$(LC_NUMERIC=C awk -F';' 'NR>1 {if(NR>1) distance[$1] += $5} END
 echo "$distance_trajet" > demo/gnuplot_data_L.txt
 
 # Exécution du script Gnuplot
-gnuplot -c gnuplot_script_L.gnu
+chmod +x gnuplot_script_L.sh
+./gnuplot_script_L.sh

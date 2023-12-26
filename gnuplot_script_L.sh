@@ -1,3 +1,6 @@
+#!/bin/bash
+
+gnuplot << EOF
 # Définition du style de sortie
 set terminal pngcairo enhanced font 'arial,15' size 1000,700
 set output 'images/output_L.png'
@@ -16,7 +19,6 @@ unset key
 set boxwidth 2.0
 
 # Axe X
-set xtics rotate by -45
 set xlabel 'ROUTE ID'
 set ylabel 'DISTANCE(km)'
 
@@ -27,4 +29,5 @@ set yrange [0:3000]
 set datafile separator ";"
 
 # Charger les données depuis le fichier temporaire
-plot 'demo/gnuplot_data_L.txt' using 2:xtic(1) with histograms title 'Distance' 
+plot 'demo/gnuplot_data_L.txt' using 2:xtic(1) with histograms title 'Distance' linecolor 2 lt 1
+EOF
