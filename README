@@ -1,0 +1,86 @@
+~~~~~~~ README : CY-TRUCK ~~~~~~~
+
+Vous êtes le gérant d’une société nationale de transport routier. Vous disposez d’un outil gérant l’ensemble de votre logistique, mais les données recueillies sont bien trop volumineuses et mélangées pour être traitées par un humain. 
+C'est ainsi que le programme intervient.
+
+~~> Instructions d'Installation
+
+Avant de lancer le programme, assurez-vous que votre chemin d'accès mène bien au dossier du projet, "Projet-S1", avec tous ses programmes. 
+    Utilisez la commande suivante dans le terminal :
+        cd users/projets/MI5/Projet-S1
+Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vous n'avez pas besoin de le deplacer dans le dossier data puisque Menu_Traitements.sh s'en occupe mais si vous souhaitez quand même le faire  
+    Utilisez la commande suivante dans le terminal : 
+        mv data.csv Projet-S1/data
+Enfin, si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas
+    Utilisez la commande suivante dans le terminal :
+        sudo apt update
+        sudo apt install imagemagick
+
+~~> Compilation via le Makefile 
+
+Assurez-vous d'être dans le répertoire où se trouve le jeu.
+Exécutez la commande suivante pour compiler les fichiers correspondants :
+    make
+Exécutez le jeu en tapant le nom de l'exécutable :
+    ./Projet
+
+Le jeu se lancera !
+
+~~> Compilation via 'Menu_Traitements.sh'
+Si vous souhaitez lancer les traitements, plusieurs choix s'offre à vous :
+    - (1) vous souhaitez lancer tous les traitements en une seule fois alors lancer la commande =>
+             ./Menu_Traitements.sh *.csv -d1 -d2 -l -s -t    (!!! RESPECTER LE FORMAT !!!)
+Alors dans le script Menu_Traitements.sh, il va vérifier avant la presence des dossiers 'temp' et 'images', s'l y a des choses dedans, il vide le contenu sinon il creer les dossiers, s'ils ont disparu. Enfin, il deplace votre premier argument ([...].csv) dans 'data/', s'il se trouve pas à la racine du projet.
+    - (2) vous souhaitez lancer qu'un argument a la fois alors lancer la commande =>
+             ./Menu_Traitements.sh *.csv -...     (!!! RESPECTER LE FORMAT !!!)
+Il fera alors comme le choix 1, verification de presence des doss (vidage ou non, creation des doss) et deplacement potentiel de l'arg 1. 
+    - (3) vous souhaitez une aide expliquant les options pouvant être utilisées ou non alors lancer la commande =>
+            ./Menu_Traitements.sh *.csv -h  ou  ./Menu_Traitements.sh *.csv -d1 -d2 -h       (!!! RESPECTER LE FORMAT !!!)
+Alors tous les autres arguments seront ignorés (si jamais vous aviez mis d'autre arguments avant) et affichera l'aide.s 
+
+~~> Fonctionnalités Principales
+- Le script Shell (Menu_Traitements.sh) placer à la racine du projet vérifie la présence du dossier temp et images : 
+si ces derniers n’existent pas, il les crée sinon les vides avant l’exécution des traitements.
+- Menu_Traitements.sh deplace votre premier argument (le fichier csv) au dossier 'data'.
+- Les graphiques sont stockés dans le dossier ‘images’ apres compilation de Menu_Traitements.sh.
+- La durée de chaque traitement que vous tapper sur le terminal est affichée en secondes à la fin.
+
+~~> CONTENU DE 'Projet-S1'
+- Le programme C et tout ce qui s’y rapporte (makefile, exécutable, …) sont situés dans le dossier 'progc'.
+- Les fichiers intermédiaires (gnuplot_data_[...].txt) nécessaires à l'application sont placés dans le dossier 'temp'.
+- Les résultats d’exécutions précédentes (qu'on a fait de notre côté) sont dans le dossier 'demo'.
+- Le dossier 'Bonus' contient quelque chose (pas de spoil) permettant d'afficher un texte lorsque vous compiler Menu.Traitements.sh 
+ (voir le format dans 'Commandes du Programme')
+- Racine du Projet :
+    ~ (D1 || D2 || L || S || T).sh contient le programme permettant de recuperer les données demandées 
+    (dans teams [...].dat, ici c'est temp/gnuplot_data_[...].txt)
+    ~ gnuplot_script_[...].sh contient le script permettant de faire les graphiques
+
+~~> Exigences du Système
+Système d'exploitation : Linux
+
+~~> Rapport de Bugs
+Si vous rencontrez des erreurs du type "Quelque chose ne va pas dans..." concernant des pointeurs,
+vérifiez si le pointeur a été alloué avec malloc et si l'allocation de mémoire (malloc) fonctionne correctement dans le fichier .c correspondant.
+
+~~> Licence
+Ce projet est sous licence MI5.
+
+~~> Contact 
+- CY TECH – CERGY
+- Lien pour mettre une bonne note : https://mycy.cyu.fr
+
+~~> Crédits
+
+- ChatGPT
+- Gromu
+- Eva Queen
+- Louaye SAGHIR
+- Clement PREMOLI
+- Roman BOULLIER
+
+Avec l'aimable participation (aide) de :
+- Ayman
+- Abdel
+- Adam
+- (MI1 filles)
