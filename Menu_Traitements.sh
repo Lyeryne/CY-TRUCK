@@ -9,76 +9,91 @@ else
     source Bonus/DisplayTxt_Menu.sh
 fi
 
-# ROBUSTESSE PARTIE DOSSIER
-    # si le dossier 'data' n'existe pas alors on le mkdir
+# ROBUSTESSE PARTIE [ DOSSIERS ]
+    # si le dossier 'data' n'existe pas alors on le mkdir puis on mv le .csv
     if [ ! -e data ] ; then 
-        mkdir data
-        mv *.csv data/
+        mkdir data #etape 1
+        
+        # ROBUSTESSE
+        if [[ "$1" != *.csv ]] ; then # verifie si $1 est un .CSV 
+            echo "Ce n'est pas un fichier csv" 
+            exit 1
+        elif [ ! -f "$1" ]  ; then
+            echo "$1 n'est pas un fichier" #verifie si c'est un fichier
+            exit 2
+        fi
+        
+        mv $1 data/ #etape 2
+        
+        # ROBUSTESSE
+        if  [ ! -e "data/$1" ] ; then # verifie si $1 existe dans data/
+            echo "data/$1 n'existe pas"
+            exit 3
+        fi
+
+    else
+        if [[ "data/$1" != *.csv ]] || [ ! -e "data/$1" ] ; then  # mv le .csv dans data/ s'il n'y est pas ou s'il n'existe pas
+            mv $1 data/
+        fi
+    fi
+
+
+    # si le dossier 'temp' n'existe pas alors on le mkdir
+    if [ ! -e temp ] ; then 
+        mkdir temp
+        else # si le dossier 'temp' contient des elements alors on rm récursivement 
+            if [ ! -z "$(ls -A temp/)" ] ; then
+                rm -r temp/*
+            fi
+    fi
+    # si le dossier 'images' n'existe pas alors on le mkdir
+    if [ ! -e images ] ; then 
+        mkdir images
+    else # si le dossier 'images' contient des elements alors on rm récursivement 
+        if [ ! -z "$(ls -A images/)" ] ; then
+            rm -r images/*
+        fi
     fi
     # si le dossier 'demo' n'existe pas alors on le mkdir
     if [ ! -e demo ] ; then 
         mkdir demo
     fi
-    # si le dossier 'images' n'existe pas alors on le mkdir
-    if [ ! -e images ] ; then 
-        mkdir images
-    fi
-# ROBUSTESSE PARTIE DATA/FICHIER($1)
-    if [ $# -ne 2 ] ; then # verifie de n'utiliser qu'un arg
-        echo "Tu dois utiliser que 2 arguments" 
-        exit 1
-    elif  [ ! -e "data/$1" ] ; then # verifie si $1 existe
-        echo "data/$1 n'existe pas"
-        exit 2
-    elif [[ "$1" != *.csv ]] ; then # verifie si $1 est un .CSV 
-        echo "Ce n'est pas un fichier csv" 
-        exit 3
-    elif [ ! -f "data/$1" ]  ; then
-        echo "data/$1 n'est pas un fichier" #verifie si c'est un fichier
-        exit 4
-    fi
+
+
 
 # CHOIX DE TRAITEMENTS (D1, D2, L, T, S)
-    #for i in `seq 1$#
-    #varM=1
-    #varC=1
-    #for i in $@
-    #do 
-        #echo ${!i} affiche le nombre d'arguments
-        #echo $i
-        
-        case $2 in 
-            -D1)
-                if [ ! -x D1.sh ] ; then
-                    chmod +x D1.sh
-                    ./D1.sh $1 
-                else
-                    ./D1.sh $1
-                fi 
-                ;;
-            -D2)
-                if [ ! -x $2 ] ; then
-                    chmod +x $2
-                    ./$2 $1 
-                else
-                    ./$2 $1
-                fi 
-                ;; #   $varM=1;; #equivalent du break
-            -L)
-                if [ ! -x $2 ] ; then
-                    chmod +x $2
-                    ./$2 $1 
-                else
-                    ./$2 $1
-                fi 
-                ;;  #    $1 $varC=1;;
-            #-T) ... ;;
-            #-S) ... ;;
-            
-           #if[ $varM -eq 1 ] ; then   
-            #fi
-        esac
-    #done
+for i in $@
+do 
+    case $i in 
+        "-d1")
+            if [ ! -x "D1.sh" ] ; then
+                chmod +x D1.sh
+                ./D1.sh $1 
+            else
+                ./D1.sh $1
+            fi 
+            ;;
+        "-d2")
+            if [ ! -x "D2.sh" ] ; then
+                chmod +x D2.sh
+                ./D2.sh $1 
+            else
+                ./D2.sh $1
+            fi 
+            ;;
+        "-l")
+            if [ ! -x "L.sh" ] ; then
+                chmod +x L.sh
+                ./L.sh $1 
+            else
+                ./L.sh $1
+            fi 
+            ;;
+        #"-t") ... ;;
+        #"-s") ... ;;
+        #"-h") message d’aide expliquant les options ;; 
+    esac
+done
 
 
 

@@ -35,7 +35,7 @@ set y2tics rotate
 unset ytics;set y2tics mirror
 
 # Charger les données depuis le fichier temporaire
-plot 'demo/gnuplot_data_D2.txt' using 2:xticlabels(1) axes x1y2 notitle linecolor 2 lt 1
+plot 'temp/gnuplot_data_D2.txt' using 2:xticlabels(1) axes x1y2 notitle linecolor 2 lt 1
 EOF
 
 convert -rotate 90 images/output_D2.png images/output_D2.png
