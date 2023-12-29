@@ -93,10 +93,10 @@ if [ -e "$1" ] || [ -e "data/$1" ] ; then
             #"-h") message d’aide expliquant les options 
                     #exit 0
                     #;; 
-               *)
-                echo "Option non reconnue: $i"
-                exit 1
-                ;;
+               #*)
+               # echo "Option non reconnue: $1"
+                #exit 1
+                #;;
         esac
     done
     if [[ "$@" == *"-h"* ]]; then
