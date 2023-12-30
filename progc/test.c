@@ -3,6 +3,7 @@
 #include <string.h>
 #include "avl.h"
 #include "avl.c"
+#define SIZE_LINE 100
 
 float **creation_tableau_final(pArbre a, float **tab)
 {
@@ -86,6 +87,16 @@ int comparer(float a[], float b[])
     return 0;
 }
 
+void freeArbre(pArbre a) {
+    if (a != NULL) {
+        freeArbre(a->fg);
+        freeArbre(a->fd);
+        free(a);
+    }
+}
+
+
+
 void trierTableau(float **tableau, int taille)
 {
     if (tableau == NULL)
@@ -119,13 +130,21 @@ int main()
         printf("quelque chose ne vas pas");
         exit(11);
     }
-    while(fgets,(line, SIZE_LINE, file) != NULL){
+    while (fgets(line, SIZE_LINE, file) != NULL){
     pArbre a = NULL;
     pArbre b = a;
 
     int RouteID;
     float distance;
-    while (scanf("%d;%f", &RouteID, &distance) == 2)
+
+
+    float **tab_final = malloc(SIZE3 * sizeof(float *));
+for (int i = 0; i < SIZE3; i++) {
+    tab_final[i] = malloc(SIZE1 * sizeof(float));
+}
+
+    pArbre a = NULL;
+ while (sscanf(line, "%d;%f", &RouteID, &distance) == 2)
     {
         while (b != NULL || RouteID == b->elt)
         {
@@ -161,7 +180,7 @@ int main()
         }
     }
     }
-    free(b);
+    freeArbre(a);
     float **tab_final = creation_tableau_final(a, tab_final);
 
     trierTableau(tab_final, SIZE2);
