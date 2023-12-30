@@ -51,60 +51,67 @@
 
 
 # CHOIX DE TRAITEMENTS (D1, D2, L, T, S)
-if [ -e "$1" ] || [ -e "data/$1" ] ; then
-    # PRINTF DE BIENVENUE
-    if [ ! -x "Bonus/DisplayTxt_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
-        chmod +x 'Bonus/DisplayTxt_Menu.sh'
-        source Bonus/DisplayTxt_Menu.sh
+    if [ -e "$1" ] || [ -e "data/$1" ] ; then
+        # PRINTF DE BIENVENUE
+        if [ ! -x "Bonus/DisplayTxt_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
+            chmod +x 'Bonus/DisplayTxt_Menu.sh'
+            source Bonus/DisplayTxt_Menu.sh
+        else
+            source Bonus/DisplayTxt_Menu.sh
+        fi
+
+    # si jamais il voit -h, il affiche l'aide et ne fais pas les autres traitements
+        for i in "$@" ; do
+            if [ "$i" = "-h" ]; then
+                echo "message d’aide expliquant les options"
+                exit 0
+            fi
+        done
+    # Sinon il fais les traitements
+        for i in "$@" ; do
+            case $i in 
+                "-d1")
+                    if [ ! -x "D1.sh" ] ; then
+                        chmod +x D1.sh
+                        ./D1.sh $1 
+                    else
+                        ./D1.sh $1
+                    fi 
+                    ;;
+                "-d2")
+                    if [ ! -x "D2.sh" ] ; then
+                        chmod +x D2.sh
+                        ./D2.sh $1 
+                    else
+                        ./D2.sh $1
+                    fi 
+                    ;;
+                "-l")
+                    if [ ! -x "L.sh" ] ; then
+                        chmod +x L.sh
+                        ./L.sh $1 
+                    else
+                        ./L.sh $1
+                    fi 
+                    ;;
+                #"-t") ... ;;
+                "-s")
+                    if [ ! -x "S.sh" ] ; then
+                        chmod +x S.sh
+                        ./S.sh $1 
+                    else
+                        ./S.sh $1
+                    fi 
+                    ;;
+                #"-s") ... ;;
+            esac
+        done
+        if [[ "$@" == *"-h"* ]]; then
+            exit 0
+        fi
     else
-        source Bonus/DisplayTxt_Menu.sh
+        echo "Ton fichier CSV ne se trouve pas à la racine du projet"
     fi
-
-
-    for i in $@
-    do 
-        case $i in 
-            "-d1")
-                if [ ! -x "D1.sh" ] ; then
-                    chmod +x D1.sh
-                    ./D1.sh $1 
-                else
-                    ./D1.sh $1
-                fi 
-                ;;
-            "-d2")
-                if [ ! -x "D2.sh" ] ; then
-                    chmod +x D2.sh
-                    ./D2.sh $1 
-                else
-                    ./D2.sh $1
-                fi 
-                ;;
-            "-l")
-                if [ ! -x "L.sh" ] ; then
-                    chmod +x L.sh
-                    ./L.sh $1 
-                else
-                    ./L.sh $1
-                fi 
-                ;;
-            #"-t") ... ;;
-            #"-s") ... ;;
-            #"-h") message d’aide expliquant les options 
-                    #exit 0
-                    #;; 
-               #*)
-               # echo "Option non reconnue: $1"
-                #exit 1
-                #;;
-        esac
-    done
-    if [[ "$@" == *"-h"* ]]; then
-        exit 0
-    fi
-else
-    echo "Ton fichier CSV ne se trouve pas à la racine du projet"
-fi
 
 
 

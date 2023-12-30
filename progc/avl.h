@@ -2,16 +2,23 @@
 #define AVL_H
 
 #include <stdio.h>
+#include <math.h>
 
-typedef struct _a
+#define SIZE1 4
+#define SIZE2 50
+#define SIZE3 5
+
+
+typedef struct _b
 {
     int elt;
-    struct _a *fg;
-    struct _a *fd;
+    struct _b *fg;
+    struct _b *fd;
     int equilibre;
+    float tab_distance[SIZE1];
 } Arbre;
 
-typedef Arbre *pArbre;
+typedef Arbre* pArbre;
 
 pArbre creerArbre(int e);
 

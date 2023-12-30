@@ -11,10 +11,16 @@ Avant de lancer le programme, assurez-vous que votre chemin d'accès mène bien 
 Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vous n'avez pas besoin de le déplacer dans le dossier "data", puisque Menu_Traitements.sh s'en occupe. Si vous souhaitez quand même le faire,
     Utilisez la commande suivante dans le terminal : 
         mv data.csv Projet-S1/data
+Assurez-vous que Menu_Traitements.sh à les droit en 
+    Utilisant la commande suivante dans le terminal :
+        chmod +x Menu_Traitements.sh
 Enfin, si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
     Utilisez la commande suivante dans le terminal :
         sudo apt update
         sudo apt install imagemagick
+Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les graphiques, 
+    Utilisez la commande suivante dans le terminal :
+        sudo apt install gnuplot-x11
 
 
 ~~> Compilation via 'Menu_Traitements.sh'
