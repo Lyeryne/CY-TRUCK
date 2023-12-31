@@ -62,8 +62,8 @@
 
     # si jamais il voit -h, il affiche l'aide et ne fais pas les autres traitements
         for i in "$@" ; do
-            if [ "$i" = "-h" ]; then
-                echo "message d’aide expliquant les options"
+            if [ "$i" = "-h" ] ; then
+                cat H.txt
                 exit 0
             fi
         done
@@ -94,7 +94,14 @@
                         ./L.sh $1
                     fi 
                     ;;
-                #"-t") ... ;;
+                #"-t") 
+                    #if [ ! -x "T.sh" ] ; then
+                    #    chmod +x T.sh
+                    #    ./T.sh $1 
+                    #else
+                    #    ./T.sh $1
+                    #fi 
+                    #;;
                 "-s")
                     if [ ! -x "S.sh" ] ; then
                         chmod +x S.sh
@@ -103,12 +110,8 @@
                         ./S.sh $1
                     fi 
                     ;;
-                #"-s") ... ;;
             esac
         done
-        if [[ "$@" == *"-h"* ]]; then
-            exit 0
-        fi
     else
         echo "Ton fichier CSV ne se trouve pas à la racine du projet"
     fi

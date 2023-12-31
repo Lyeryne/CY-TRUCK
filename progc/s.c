@@ -1,4 +1,5 @@
 #include "avl.h"
+#include "avl.c"
 #include "s.h"
 
 float **creation_tableau_final(pArbre a, float **tab)

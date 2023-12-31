@@ -1,0 +1,76 @@
+  +-+-+-+ +-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+
+  |~|~|~| |M|E|S|S|A|G|E| |D|'|A|I|D|E| |~|~|~|
+  +-+-+-+ +-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+
+
+
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+-+ +-+     +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+        |T|r|a|i|t|e|m|e|n|t| |-|D|1| |:|     |(|M|A|R|C|H|E| |T|O|U|T| |A| |F|A|I|T|)|
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+-+ +-+     +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+        
+-La commande suivante (D1.sh) a pour objectif de récupérer la liste des conducteurs 
+avec le nombre de trajets différents qu'ils ont effectués. 
+-Ensuite, elle trie cette liste par ordre décroissant de nombre de trajets et conserve uniquement les 10 premiers conducteurs. 
+-Bien sur avec une contrainte de temps d'exécution ne dépassant pas l'ordre de grandeur de 8 secondes environ. 
+-Enfin, le programme (gnuplot_script_D1.sh) crée un graphique de type histogramme horizontal où les noms complets des conducteurs 
+sont affichés en ordonnée, et le nombre de trajets effectués est représenté en abscisse.  
+
+=> Commande pour le lancer : ./Menu_Traitements [...].csv -d1   (!!! RESPECTEZ LE FORMAT !!!)
+
+
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+-+ +-+     +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+        |T|r|a|i|t|e|m|e|n|t| |-|D|2| |:|     |(|M|A|R|C|H|E| |T|O|U|T| |A| |F|A|I|T|)|
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+-+ +-+     +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+
+-La commande suivante (D2.sh) a pour objectif de récupérer la distance totale parcourue par chaque conducteur, 
+c’est à dire la somme des distances de toutes les étapes qui leurs sont associées.
+-Ensuite, elle trie cette liste par ordre décroissant de distances et conserve uniquement les 10 plus grandes distances. 
+-Bien sur avec une contrainte de temps d'exécution ne dépassant pas l'ordre de grandeur de 7 secondes environ. 
+-Enfin, le programme (gnuplot_script_D2.sh) crée un graphique de type histogramme horizontal où les noms complets des conducteurs 
+sont affichés en ordonnée, la distance totale parcourue est représenté en abscisse. 
+
+=> Commande pour le lancer : ./Menu_Traitements [...].csv -d2   (!!! RESPECTEZ LE FORMAT !!!)
+
+
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+      +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+        |T|r|a|i|t|e|m|e|n|t| |-|L| |:|      |(|M|A|R|C|H|E| |T|O|U|T| |A| |F|A|I|T|)|
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+      +-+-+-+-+-+-+-+ +-+-+-+-+ +-+ +-+-+-+-+-+
+
+-La commande suivante (L.sh) a pour objectif de récupérer la distance totale de chaque trajet, 
+c’est à dire la somme de chaque étape et ce, pour chaque trajet.
+-Ensuite, elle trie cette liste par ordre croissant de numéro d’identifiant de trajet et conserve uniquement 
+les 10 plus grandes distances. 
+-Bien sur avec une contrainte de temps d'exécution ne dépassant pas l'ordre de grandeur de 8 secondes environ. 
+-Enfin, le programme (gnuplot_script_L.sh) crée un graphique de type histogramme vertical où la
+distance en km sont affichés en ordonnée, l’identifiant du trajet est représenté en abscisse. 
+
+=> Commande pour le lancer : ./Menu_Traitements [...].csv -l    (!!! RESPECTEZ LE FORMAT !!!)
+
+
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+
+        |T|r|a|i|t|e|m|e|n|t| |-|S| |:|
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+
+
+-La commande suivante (S.sh mais coder en c) a pour objectif de récupérer les distances minimales, 
+maximales et moyennes des étapes, et ce, pour chaque trajet c’est à dire la somme de chaque étape et ce, pour chaque trajet.
+-Ensuite, elle trie cette liste par ordre décroissant de «distance_maxi – distance_mini» et 
+conserve uniquement les 50 premières valeurs.
+-Enfin, le programme (gnuplot_script_S.sh) crée un graphique de type courbes (min-max-moyenne)
+c’est à dire 2 courbes indiquant pour chaque abscisse les valeurs min et max des distances, 
+et une troisième entre les deux pour indiquer la moyenne où les identifiants des trajets sont affichés en abscisse, 
+les distances en km (mini, moyenne, maxi) représentée en ordonnée. 
+
+=> Commande pour le lancer : ./Menu_Traitements [...].csv -s    (!!! RESPECTEZ LE FORMAT !!!)
+
+
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+
+        |T|r|a|i|t|e|m|e|n|t| |-|T| |:|
+        +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+
+
+-La commande suivante (T.sh mais coder en c) a pour objectif de compter le nombre de trajets qui parcourent
+chaque ville, ainsi que le nombre de fois où ces villes ont été des villes de départ de trajets.
+-Ensuite, elle trie cette liste par ordre alphabétique de villes et conserve uniquement les 10 premières villes 
+avec le plus de trajets.
+-Enfin, le programme (gnuplot_script_T.sh) crée un graphique de type histogramme regroupé 
+où les noms des villes sont affichés en abscisse, le nombre de trajets représentée en ordonnée. 
+
+=> Commande pour le lancer : ./Menu_Traitements [...].csv -t    (!!! RESPECTEZ LE FORMAT !!!)

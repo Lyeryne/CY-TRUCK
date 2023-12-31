@@ -12,7 +12,7 @@ Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vo
     Utilisez la commande suivante dans le terminal : 
         mv data.csv Projet-S1/data
 Assurez-vous que Menu_Traitements.sh à les droit en 
-    Utilisant la commande suivante dans le terminal :
+    Utilisez la commande suivante dans le terminal :
         chmod +x Menu_Traitements.sh
 Enfin, si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
     Utilisez la commande suivante dans le terminal :
@@ -24,6 +24,9 @@ Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les
 
 
 ~~> Compilation via 'Menu_Traitements.sh'
+
+!!! IMPORTANT !!! : *csv ou [...].csv signifie quelquechose.csv comme $1 
+donc vous devez renommer votre fichier csv par n'importe quel nom 
 
 Si vous souhaitez lancer les traitements, plusieurs choix s'offrent à vous :
     - (1) vous souhaitez lancer tous les traitements en une seule fois, alors lancez la commande =>
