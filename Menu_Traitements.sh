@@ -53,12 +53,19 @@
 # CHOIX DE TRAITEMENTS (D1, D2, L, T, S)
     if [ -e "$1" ] || [ -e "data/$1" ] ; then
         # PRINTF DE BIENVENUE
-        if [ ! -x "Bonus/DisplayTxt_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
-            chmod +x 'Bonus/DisplayTxt_Menu.sh'
-            source Bonus/DisplayTxt_Menu.sh
+        if [ ! -x "Bonus/Affichage_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
+            chmod +x 'Bonus/Affichage_Menu.sh'
+            source Bonus/Affichage_Menu.sh
+            echo
         else
-            source Bonus/DisplayTxt_Menu.sh
+            source Bonus/Affichage_Menu.sh
+            echo
         fi
+        # PRINTF COMPTE A REBOURS
+        if [ ! -x "Bonus/Affichage_Temps.sh" ] ; then # verifie si le fichier a la permission d'exécution
+            chmod +x 'Bonus/Affichage_Temps.sh'
+            echo
+        fi       
 
     # si jamais il voit -h, il affiche l'aide et ne fais pas les autres traitements
         for i in "$@" ; do
@@ -94,14 +101,14 @@
                         ./L.sh $1
                     fi 
                     ;;
-                #"-t") 
-                    #if [ ! -x "T.sh" ] ; then
-                    #    chmod +x T.sh
-                    #    ./T.sh $1 
-                    #else
-                    #    ./T.sh $1
-                    #fi 
-                    #;;
+                "-t") 
+                    if [ ! -x "T.sh" ] ; then
+                        chmod +x T.sh
+                        ./T.sh $1 
+                    else
+                        ./T.sh $1
+                    fi 
+                    ;;
                 "-s")
                     if [ ! -x "S.sh" ] ; then
                         chmod +x S.sh

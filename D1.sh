@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Exécution du compte à rebours
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+STOP_TEMPS=false
+source "Bonus/Affichage_Temps.sh" &
+CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-plan (&) par la commande précédente, et le stocke dans la variable 'CPID'.
+# Conclusion : Cela permet de manipuler le processus (la 'source') pour envoyer des signaux et pleins d'autres opérations
+
+
 # Ligne de code permettant : 
 # - # (LC_NUMERIC=C) : evite les problèmes de formatage numérateur lors de l'executable de la commande dans un script.
 # - cut route ID et Driver name (f1,6) => dans le awk : f1 = $1 et f6 = $2 (grâce au pipe)
@@ -25,4 +33,12 @@ fi
 # Affiche que le temps (time -p 'la ligne de code') puis on dirige la sortie d'erreur standard (2>) au même endroit que la sortie standard (&1) 
 # puis on redirige la sortie vers awk pour extraire le temps "real" de la sortie de time afin de le stocker dans le fichier txt
 t=$( { time -p LC_NUMERIC=C cut -d';' -f1,6 < "data/$1" | awk -F';' '!routes[$1]++ {compteur[$2]++} END {for (conducteur in compteur) printf "%s;%d\n", conducteur, compteur[conducteur]}' | sort -t';' -k2 -n -r | head -10; } 2>&1 | awk '/^real/ {print $2}' )
+
+# Ligne de code : cela enverra le signal SIGUSR1(il se trouve dans Affichage_Temps.sh) au processus identifié par le PID stocké dans la variable $CPID, 
+# déclenchant ainsi la fonction stop_compteur dans le script.
+kill -SIGUSR1 $CPID
+echo # Retour à la ligne
+echo "arret du compte à rebour => TRAITEMENT FINIE" 
+echo # Retour à la ligne
+
 echo "Le traitement D1 a mis $t s" 
