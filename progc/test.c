@@ -1,200 +1,349 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
 #include <string.h>
-#include "avl.h"
-#include "avl.c"
-#define SIZE_LINE 100
 
-float **creation_tableau_final(pArbre a, float **tab)
+#define SIZE1 4
+#define SIZE2 50
+#define SIZE3 5
+
+
+typedef struct _b
 {
-    if (tab == NULL)
+    int ID_route;
+    struct _b *fg;
+    struct _b *fd;
+    int equilibre;
+    float distance;
+    float min;
+    float max;
+    int compteur;
+} Arbre;
+
+typedef Arbre* pArbre;
+
+pArbre rotationGauche(pArbre a);
+pArbre rotationDroit(pArbre a);
+pArbre doubleRotationGauche(pArbre a);
+pArbre doubleRotationDroit(pArbre a);
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h);
+
+pArbre equilibrerAVL(pArbre a)
+{
+    if (a == NULL)
     {
-        printf("Tableau vide");
-        exit(2);
+        exit(9);
     }
+    if (a->equilibre >= 2)
+    {
+        if (a->fd->equilibre >= 0)
+        {
+            return rotationGauche(a);
+        }
+        else
+        {
+            return doubleRotationGauche(a);
+        }
+    }
+    else if (a->equilibre <= -2)
+    {
+        if (a->fg->equilibre <= 0)
+        {
+            return rotationDroit(a);
+        }
+        else
+        {
+            return doubleRotationDroit(a);
+        }
+    }
+    return a;
+}
+
+pArbre creerArbre(int trajet, float distance)
+{
+    pArbre a = malloc(sizeof(Arbre));
+    if (a == NULL)
+    {
+        exit(1);
+    }
+    a->fg = NULL;
+    a->fd = NULL;
+    a->equilibre = 0;
+    a->ID_route = trajet;
+    a->distance = distance;
+    a->min = distance;
+    a->max = distance;
+    a->compteur = 1;
+    return a;
+}
+
+
+
+pArbre creationArbreFinal(pArbre a, pArbre b)
+{
     if (a != NULL)
     {
-        int i = 0;
-        do
-        {
-            if (tab[i] == NULL)
-            {
-                printf("Tableau vide");
-                exit(2);
-            }
-            i++;
-        } while (a->tab_distance[0] < tab[i][0] && i < SIZE3);
-
-        if (i != 50)
-        {
-            for (int j = 0; j < SIZE1; j++)
-            {
-                if (tab[i] == NULL)
-                {
-                    printf("Tableau vide");
-                    exit(2);
-                }
-                tab[i][j] = a->tab_distance[j];
-            }
-            tab[i][4] = a->elt;
-        }
-        tab = creation_tableau_final(a->fd, tab);
-        tab = creation_tableau_final(a->fg, tab);
+        b = creationArbreFinal(a->fg, b);
+        int h = 0;
+        b = insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &h);
+        b = creationArbreFinal(a->fd, b);
     }
-    return tab;
+    return b;
 }
 
-void echanger(float **tableau, int a, int b)
+void infixeInverse(FILE *chemin, pArbre a)
 {
-    float temp[SIZE3];
-    if (tableau == NULL)
+    if (a != NULL)
     {
-        printf("Tableau vide");
+        infixeInverse(chemin, a->fd);
+        fprintf(chemin, "%d;%f;%f;%f;%f\n", a->ID_route, a->distance, a->min, a->max, a->distance / a->compteur);
+        infixeInverse(chemin, a->fg);
+    }
+}
+
+pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
+{
+    if (h == NULL)
+    {
         exit(2);
     }
-    for (int i = 0; i < SIZE3; i++)
+    if (a == NULL)
     {
-        if (tableau[i] == NULL)
+        *h = 1;
+        return creerArbre(idtrajet, distance);
+    }
+    else if (idtrajet < a->ID_route)
+    {
+        a->fg = insertionAVLTrajet(a->fg, idtrajet, distance, h);
+        *h = -*h;
+    }
+    else if (idtrajet > a->ID_route)
+    {
+        *h = 0;
+        a->fd = insertionAVLTrajet(a->fd, idtrajet, distance, h);
+    }
+    else
+    {
+        if (a->min > distance)
         {
-            printf("Tableau vide");
-            exit(2);
+            a->min = distance;
         }
-        temp[i] = tableau[a][i];
+        if (a->max < distance)
+        {
+            a->max = distance;
+        }
+        a->compteur += 1;
+        a->distance += distance;
+        *h = 0;
+        return a;
     }
-    for (int i = 0; i < SIZE3; i++)
+
+    if (*h != 0)
     {
-        tableau[a][i] = tableau[b][i];
+        a->equilibre = a->equilibre + *h;
+        a = equilibrerAVL(a);
+        if (a->equilibre == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
     }
-    for (int i = 0; i < SIZE3; i++)
-    {
-        tableau[b][i] = temp[i];
-    }
+    return a;
 }
 
-int comparer(float a[], float b[])
+void libererArbre(pArbre a)
 {
-    float diffA = a[0] - a[1];
-    float diffB = b[0] - b[1];
-
-    if (diffA > diffB)
+    if (a != NULL)
     {
-        return -1;
-    }
-    else if (diffA < diffB)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-
-
-void trierTableau(float **tableau, int taille)
-{
-    if (tableau == NULL)
-    {
-        printf("Tableau vide");
-        exit(2);
-    }
-    for (int i = 0; i < taille - 1; i++)
-    {
-        if (tableau[i] == NULL)
-        {
-            printf("Tableau vide");
-            exit(2);
-        }
-        for (int j = 0; j < taille - i - 1; j++)
-        {
-            if (comparer(tableau[j], tableau[j + 1]) > 1)
-            {
-                echanger(tableau, j, j + 1);
-            }
-        }
-    }
-}
-void freeArbre(pArbre a) {
-    if (a != NULL) {
-        freeArbre(a->fg);
-        freeArbre(a->fd);
+        libererArbre(a->fg);
+        libererArbre(a->fd);
         free(a);
     }
 }
 
-int main() {
-    char line[1024];
-    FILE *file = fopen("data.csv", "r");
-    if (file == NULL) {
-        printf("Quelque chose ne va pas");
-        exit(11);
+pArbre creerArbreEntier(int trajet, float distance, int max, int min, int compteur)
+{
+    pArbre a = malloc(sizeof(Arbre));
+    if (a == NULL)
+    {
+        printf("Erreur d'allocation");
+        exit(1);
     }
+    a->distance = distance;
+    a->ID_route = trajet;
+    a->max = max;
+    a->min = min;
+    a->compteur = compteur;
+    a->fg = NULL;
+    a->fd = NULL;
+    a->equilibre = 0;
+    return a;
+}
+
+int min(int a, int b)
+{
+    if (a < b)
+    {
+        return a;
+    }
+    return b;
+}
+int max(int a, int b)
+{
+    if (a < b)
+    {
+        return b;
+    }
+    return a;
+}
+
+int existeFilsDroit(pArbre a)
+{
+    if (a != NULL)
+    {
+        return a->fg == NULL;
+    }
+    return 0;
+}
+
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h)
+{
+    if (h == NULL)
+    {
+        exit(2);
+    }
+    if (a == NULL)
+    {
+        *h = 1;
+        return creerArbreEntier(trajet, distance, min, max, compteur);
+    }
+    else if (max - min < a->max - a->min)
+    {
+        a->fg = insertionAVL(a->fg, trajet, distance, min, max, compteur, h);
+        *h = -*h;
+    }
+    else if (max - min > a->max - a->min)
+    {
+        *h = 0;
+        a->fd = insertionAVL(a->fd, trajet, distance, min, max, compteur, h);
+    }
+    else
+    {
+        *h = 0;
+        return a;
+    }
+    if (*h != 0)
+    {
+        a->equilibre = a->equilibre + *h;
+        a = equilibrerAVL(a);
+        if (a->equilibre == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+pArbre rotationGauche(pArbre a)
+{
+    if (a == NULL)
+    {
+        exit(5);
+    }
+    pArbre pivot;
+    int eq_a, eq_p;
+    pivot = a->fd;
+    a->fd = pivot->fg;
+    pivot->fg = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - max(eq_p, 0) - 1;
+    pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
+    pivot->equilibre = min(pivot->equilibre, eq_p - 1);
+    a = pivot;
+    return a;
+}
+
+pArbre rotationDroit(pArbre a)
+{
+    if (a == NULL)
+    {
+        exit(6);
+    }
+    pArbre pivot;
+    int eq_a, eq_p;
+    pivot = a->fg;
+    a->fg = pivot->fd;
+    pivot->fd = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - min(eq_p, 0) + 1;
+    pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
+    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
+    a = pivot;
+    return a;
+}
+
+pArbre doubleRotationGauche(pArbre a)
+{
+    if (a == NULL)
+    {
+        exit(7);
+    }
+    a->fd = rotationDroit(a->fd);
+    return rotationGauche(a);
+}
+
+pArbre doubleRotationDroit(pArbre a)
+{
+    if (a == NULL)
+    {
+        exit(8);
+    }
+    a->fg = rotationGauche(a->fg);
+    return rotationDroit(a);
+}
+
+
+int main()
+{
 
     pArbre a = NULL;
-    pArbre b = a;
+    pArbre b = NULL;
 
-    int RouteID;
-    float distance;
-
-    float **tab_final = malloc(SIZE3 * sizeof(float *));
-    for (int i = 0; i < SIZE3; i++) {
-        tab_final[i] = malloc(SIZE1 * sizeof(float));
-    }
-
-    while (fgets(line, SIZE_LINE, file) != NULL) {
-        sscanf(line, "%d;%f", &RouteID, &distance);
-
-        while (b != NULL || RouteID == b->elt) {
-            if (RouteID < b->elt) {
-                b = b->fg;
-            } else if (RouteID > b->elt) {
-                b = b->fd;
-            }
-        }
-
-        // donc là mon reuf, soit il y a un groupe ID soit il n'y en a pas
-        if (b == NULL) {
-            a = insertionAVL(a, RouteID, &a->equilibre);
-        } else {
-            // distance maximale
-            if (b->tab_distance[0] < distance) {
-                b->tab_distance[0] = distance;
-            }
-            // distance minimale
-            else if (b->tab_distance[1] > distance) {
-                b->tab_distance[1] = distance;
-            }
-            // distance totale
-            b->tab_distance[2] += distance;
-            b->tab_distance[3] += 1;
-        }
-    }
-
-    fclose(file);
-
-    freeArbre(a);
-    tab_final = creation_tableau_final(a, tab_final);
-
-    trierTableau(tab_final, SIZE3);
-
-    FILE *chemin = fopen("temp/gnuplot_data_S.txt", "w");
-
-    if (chemin == NULL) {
-        printf("Erreur lors de l'ouverture du fichier");
+    FILE *chemin = fopen("../temp/c_data.txt", "r");
+    if (chemin == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier 1\n");
         exit(1);
     }
 
-    for (int i = 0; i < SIZE3; i++) {
-        int a = tab_final[i][4];
-        fprintf(chemin, "%d;%d;%f;%f;%f", i, a, tab_final[i][0], tab_final[i][1], tab_final[i][2] / tab_final[i][3]);
-        printf("%d;%d;%f;%f;%f\n", i, a, tab_final[i][0], tab_final[i][1], tab_final[i][2] / tab_final[i][3]);
+    int RouteID;
+    float distance;
+    while (fscanf(chemin, "%d;%f\n", &RouteID, &distance) == 2)
+    {
+        int h = 0;
+        a = insertionAVLTrajet(a, RouteID, distance, &h);
     }
-
-    for (int i = 0; i < SIZE3; i++) {
-        free(tab_final[i]);
-    }
-
-    free(tab_final);
-
+    printf("\noui%d\n", a->ID_route);
+    
     fclose(chemin);
+    b = creationArbreFinal(a, b);
+    FILE *chemin2 = fopen("../temp/gnuplot_data_S.txt", "w");
+    if (chemin2 == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier 2\n");
+        exit(1);
+    }
+    infixeInverse(chemin2, b);
+    fclose(chemin2);
 
     return 0;
 }

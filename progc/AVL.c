@@ -18,26 +18,28 @@ pArbre creerArbre(int trajet, float distance)
     return a;
 }
 
-pArbre creationArbreFinal(pArbre a, pArbre b){
-    if(a != NULL){
+pArbre creationArbreFinal(pArbre a, pArbre b)
+{
+    if (a != NULL)
+    {
         a->fg = creationArbreFinal(a->fg, b);
-        insertionAVL(b, a->ID_route, a->distance, a->min, a->max, &a->equilibre);
+        insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &a->equilibre);
         a->fd = creationArbreFinal(a->fd, b);
     }
     return a;
 }
 
-void infixeInverse(FILE* chemin, pArbre a)
+void infixeInverse(FILE *chemin, pArbre a)
 {
     if (a != NULL)
     {
         infixeInverse(chemin, a->fd);
-        fprintf(chemin, "%d;%f;%f;%f;%f\n", a->ID_route, a->distance, a->min, a->max, a->distance/a->compteur);
+        fprintf(chemin, "%d;%f;%f;%f;%f\n", a->ID_route, a->distance, a->min, a->max, a->distance / a->compteur);
         infixeInverse(chemin, a->fg);
     }
 }
 
-pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance,int *h)
+pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
 {
     if (h == NULL)
     {
@@ -72,9 +74,10 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance,int *h)
         *h = 0;
         return a;
     }
+            a->equilibre = a->equilibre + *h;
     if (*h != 0)
     {
-        a->equilibre = a->equilibre + *h;
+
         a = equilibrerAVL(a);
         if (a->equilibre == 0)
         {
@@ -88,7 +91,6 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance,int *h)
     return a;
 }
 
-
 void libererArbre(pArbre a)
 {
     if (a != NULL)
@@ -98,7 +100,6 @@ void libererArbre(pArbre a)
         free(a);
     }
 }
-
 
 pArbre creerArbreEntier(int trajet, float distance, int max, int min, int compteur)
 {

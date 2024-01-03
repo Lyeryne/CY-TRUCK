@@ -5,7 +5,8 @@
 make -C progc
 
 # Exécution du programme C avec le fichier en argument
-cut -d";" -f1,5 "data/$1" | tail -n +2 | ./progc/Projet > temp/gnuplot_data_S.txt
+cut -d";" -f1,5 "data/$1" | tail -n +2 > temp/c_data.txt
+./Projet
 cat "temp/gnuplot_data_S.txt" | head -50
 
 # Exécution du script Gnuplot
