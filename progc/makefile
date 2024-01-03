@@ -1,4 +1,5 @@
 OBJ_DIR := fichiers_o
+CFLAGS = -g -Wall
 
 all: Projet
 
@@ -10,4 +11,4 @@ $(OBJ_DIR)/S.o: S.c S.h
 
 
 Projet: $(OBJ_DIR)/AVL.o $(OBJ_DIR)/S.o 
-	gcc $(OBJ_DIR)/AVL.o $(OBJ_DIR)/S.o  -o Projet 
+	gcc $(CFLAGS) $(OBJ_DIR)/AVL.o $(OBJ_DIR)/S.o  -o Projet -lm

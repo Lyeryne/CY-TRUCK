@@ -6,10 +6,10 @@ int main()
     pArbre a = NULL;
     pArbre b = NULL;
 
-    FILE *chemin = fopen("temp/gnuplot_data_S.txt", "w");
+    FILE *chemin = fopen("../temp/gnuplot_data_S.txt", "w");
     if (chemin == NULL)
     {
-        printf("Erreur lors de l'ouverture du fichier");
+        printf("Erreur lors de l'ouverture du fichier 1\n");
         exit(1);
     }
 
@@ -22,10 +22,10 @@ int main()
     }
     fclose(chemin);
     creationArbreFinal(a, b);
-    FILE *chemin2 = fopen("temp/gnuplot_data_S.txt", "a");
+    FILE *chemin2 = fopen("../temp/gnuplot_data_S.txt", "w");
     if (chemin2 == NULL)
     {
-        printf("Erreur lors de l'ouverture du fichier");
+        printf("Erreur lors de l'ouverture du fichier 2\n");
         exit(1);
     }
     infixeInverse(chemin2, b);
