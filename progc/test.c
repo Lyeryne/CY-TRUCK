@@ -87,14 +87,6 @@ int comparer(float a[], float b[])
     return 0;
 }
 
-void freeArbre(pArbre a) {
-    if (a != NULL) {
-        freeArbre(a->fg);
-        freeArbre(a->fd);
-        free(a);
-    }
-}
-
 
 
 void trierTableau(float **tableau, int taille)
@@ -120,58 +112,54 @@ void trierTableau(float **tableau, int taille)
         }
     }
 }
+void freeArbre(pArbre a) {
+    if (a != NULL) {
+        freeArbre(a->fg);
+        freeArbre(a->fd);
+        free(a);
+    }
+}
 
-int main()
-{
-
+int main() {
     char line[1024];
-    FILE *file = fopen("data/data.csv", "r");
-    if(file == NULL){
-        printf("quelque chose ne vas pas");
+    FILE *file = fopen("data.csv", "r");
+    if (file == NULL) {
+        printf("Quelque chose ne va pas");
         exit(11);
     }
-    while (fgets(line, SIZE_LINE, file) != NULL){
+
     pArbre a = NULL;
     pArbre b = a;
 
     int RouteID;
     float distance;
 
-
     float **tab_final = malloc(SIZE3 * sizeof(float *));
-for (int i = 0; i < SIZE3; i++) {
-    tab_final[i] = malloc(SIZE1 * sizeof(float));
-}
+    for (int i = 0; i < SIZE3; i++) {
+        tab_final[i] = malloc(SIZE1 * sizeof(float));
+    }
 
-    pArbre a = NULL;
- while (sscanf(line, "%d;%f", &RouteID, &distance) == 2)
-    {
-        while (b != NULL || RouteID == b->elt)
-        {
-            if (RouteID < b->elt)
-            {
+    while (fgets(line, SIZE_LINE, file) != NULL) {
+        sscanf(line, "%d;%f", &RouteID, &distance);
+
+        while (b != NULL || RouteID == b->elt) {
+            if (RouteID < b->elt) {
                 b = b->fg;
-            }
-            else if (RouteID > b->elt)
-            {
+            } else if (RouteID > b->elt) {
                 b = b->fd;
             }
         }
-        // donc la mon reuf soit y'a groupe ID soit ya pas
-        if (b == NULL)
-        {
+
+        // donc là mon reuf, soit il y a un groupe ID soit il n'y en a pas
+        if (b == NULL) {
             a = insertionAVL(a, RouteID, &a->equilibre);
-        }
-        else
-        {
+        } else {
             // distance maximale
-            if (b->tab_distance[0] < distance)
-            {
+            if (b->tab_distance[0] < distance) {
                 b->tab_distance[0] = distance;
             }
             // distance minimale
-            else if (b->tab_distance[1] > distance)
-            {
+            else if (b->tab_distance[1] > distance) {
                 b->tab_distance[1] = distance;
             }
             // distance totale
@@ -179,30 +167,34 @@ for (int i = 0; i < SIZE3; i++) {
             b->tab_distance[3] += 1;
         }
     }
-    }
-    freeArbre(a);
-    float **tab_final = creation_tableau_final(a, tab_final);
 
-    trierTableau(tab_final, SIZE2);
+    fclose(file);
+
+    freeArbre(a);
+    tab_final = creation_tableau_final(a, tab_final);
+
+    trierTableau(tab_final, SIZE3);
+
     FILE *chemin = fopen("temp/gnuplot_data_S.txt", "w");
 
-    if (chemin == NULL)
-    {
+    if (chemin == NULL) {
         printf("Erreur lors de l'ouverture du fichier");
         exit(1);
     }
-    for (int i = 0; i < SIZE2; i++)
-    {
+
+    for (int i = 0; i < SIZE3; i++) {
         int a = tab_final[i][4];
         fprintf(chemin, "%d;%d;%f;%f;%f", i, a, tab_final[i][0], tab_final[i][1], tab_final[i][2] / tab_final[i][3]);
-        printf("%d;%d;%f;%f;%f", i, a, tab_final[i][0], tab_final[i][1], tab_final[i][2] / tab_final[i][3]);
+        printf("%d;%d;%f;%f;%f\n", i, a, tab_final[i][0], tab_final[i][1], tab_final[i][2] / tab_final[i][3]);
     }
 
-    for (int i = 0; i < SIZE1; i++)
-    {
+    for (int i = 0; i < SIZE3; i++) {
         free(tab_final[i]);
     }
+
     free(tab_final);
+
+    fclose(chemin);
 
     return 0;
 }

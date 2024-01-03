@@ -26,8 +26,6 @@ else
     ./gnuplot_script_L.sh 
 fi
 
-# Attendre la fin du compte à rebours
-
 
 # Affiche que le temps (time -p 'la ligne de code') puis on dirige la sortie d'erreur standard (2>) au même endroit que la sortie standard (&1) 
 # puis on redirige la sortie vers awk pour extraire le temps "real" de la sortie de time afin de le stocker dans le fichier txt
