@@ -19,15 +19,15 @@ CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-
 trajets=$(LC_NUMERIC=C cut -d';' -f1,6 < "data/$1" | awk -F';' '!routes[$1]++ {compteur[$2]++} END {for (conducteur in compteur) printf "%s;%d\n", conducteur, compteur[conducteur]}' | sort -t';' -k2 -n -r | head -10)
 
 # Envoie des résultats d’exécutions précédentes(echo) dans le dossier temp' 
-echo "$trajets" > temp/gnuplot_data_D1.txt
+echo "$trajets" > temp/gnu_data_D1.txt
 
 # Exécution du script Gnuplot
-file="gnuplot_script_D1.sh"
+file="gnu_script_D1.sh"
 if [ ! -x "$file" ] ; then # verifie si le fichier a la permission d'exécution
-    chmod +x gnuplot_script_D1.sh
-    ./gnuplot_script_D1.sh # on lance le script
+    chmod +x gnu_script_D1.sh
+    ./gnu_script_D1.sh # on lance le script
 else
-    ./gnuplot_script_D1.sh
+    ./gnu_script_D1.sh
 fi
 
 # Affiche que le temps (time -p 'la ligne de code') puis on dirige la sortie d'erreur standard (2>) au même endroit que la sortie standard (&1) 

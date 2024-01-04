@@ -3,13 +3,13 @@
 gnuplot << EOF
 # Définition du style de sortie avec rotation
 set terminal pngcairo enhanced font 'arial,15' size 1100,1000
-set output 'images/output_D2.png'
+set output 'images/output_D1.png'
 
 # Séparateur pour le using
 set datafile separator ";"
 
 # Titre du graphique
-set ylabel 'Option -d2 : Distance = f(Driver)'
+set ylabel 'Option -d1 : Nb routes = f(Driver)'
 
 # Style de la barre 
 set style data histogram
@@ -24,18 +24,17 @@ set boxwidth 1.6
 
 # Axe X
 set xlabel 'DRIVER NAMES' rotate by 180
-set y2label 'DISTANCE (Km)'
+set y2label 'NB ROUTES'
 
 # Ajustement des xtics
 set xtics rotate 
-set y2range [0:160000]
+set y2range [0:250]
 
 # Ajustement des y2tics
 set y2tics rotate 
 unset ytics;set y2tics mirror
 
 # Charger les données depuis le fichier temporaire
-plot 'temp/gnuplot_data_D2.txt' using 2:xticlabels(1) axes x1y2 notitle linecolor 2 lt 1
+plot 'temp/gnu_data_D1.txt' using 2:xticlabels(1) axes x1y2 notitle linecolor 2 lt 1
 EOF
-
-convert -rotate 90 images/output_D2.png images/output_D2.png
+convert -rotate 90 images/output_D1.png images/output_D1.png

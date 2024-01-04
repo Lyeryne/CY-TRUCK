@@ -1,12 +1,4 @@
-#include "AVL.h"
-
-pArbre rotationGauche(pArbre a);
-pArbre rotationDroit(pArbre a);
-pArbre doubleRotationGauche(pArbre a);
-pArbre doubleRotationDroit(pArbre a);
-pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h);
-float min_f(float a, float b);
-float max_f(float a, float b);
+#include "AVL_S.h"
 
 pArbre equilibrerAVL(pArbre a)
 {
@@ -57,8 +49,6 @@ pArbre creerArbre(int trajet, float distance)
     return a;
 }
 
-
-
 pArbre creationArbreFinal(pArbre a, pArbre b)
 {
     if (a != NULL)
@@ -71,13 +61,14 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
     return b;
 }
 
-void infixeInverse(FILE *chemin, pArbre a)
+void infixeInverse(FILE *chemin, pArbre a, int *i)
 {
     if (a != NULL)
     {
-        infixeInverse(chemin, a->fd);
-        fprintf(chemin, "%d;%f;%f;%f\n", a->ID_route, a->min, a->max, a->distance / a->compteur);
-        infixeInverse(chemin, a->fg);
+        infixeInverse(chemin, a->fd, i);
+        (*i)++;
+        fprintf(chemin, "%d;%d;%f;%f;%f\n", *i, a->ID_route, a->min, a->distance / a->compteur, a->max);
+        infixeInverse(chemin, a->fg, i);
     }
 }
 
@@ -200,7 +191,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h)
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int compteur, int *h)
 {
     if (h == NULL)
     {

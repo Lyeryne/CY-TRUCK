@@ -29,5 +29,5 @@ set yrange [0:3000]
 set datafile separator ";"
 
 # Charger les données depuis le fichier temporaire
-plot 'temp/gnuplot_data_L.txt' using 2:xtic(1) with histograms title 'Distance' linecolor 2 lt 1
+plot 'temp/gnu_data_L.txt' using 2:xtic(1) with histograms title 'Distance' linecolor 2 lt 1
 EOF

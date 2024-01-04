@@ -15,15 +15,15 @@ CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-
 distance_conducteur=$(LC_NUMERIC=C awk -F';' 'NR>1 {distance[$6] += $5} END {for (conducteur in distance) printf "%s;%.6f\n", conducteur, distance[conducteur]}' "data/$1" | sort -t';' -k2 -r -n | head -10)
 
 # Envoie des résultats d’exécutions précédentes(echo) dans le dossier temp' 
-echo "$distance_conducteur" > temp/gnuplot_data_D2.txt
+echo "$distance_conducteur" > temp/gnu_data_D2.txt
 
 # Exécution du script Gnuplot
-file="gnuplot_script_D2.sh"
+file="gnu_script_D2.sh"
 if [ ! -x "$file" ] ; then # verifie si le fichier a la permission d'exécution
-    chmod +x gnuplot_script_D2.sh
-    ./gnuplot_script_D2.sh # on lance le script
+    chmod +x gnu_script_D2.sh
+    ./gnu_script_D2.sh # on lance le script
 else
-    ./gnuplot_script_D2.sh
+    ./gnu_script_D2.sh
 fi
 
 # Affiche que le temps (time -p 'la ligne de code') puis on dirige la sortie d'erreur standard (2>) au même endroit que la sortie standard (&1) 
