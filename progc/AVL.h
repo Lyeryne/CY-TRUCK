@@ -40,9 +40,13 @@ int min(int a, int b);
 
 int max(int a, int b);
 
+int max_f(float a,float b);
+
+int min_f(float a, float b);
+
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int *h);
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int compteur, *h);
 
 pArbre rotationGauche(pArbre a);
 

@@ -1,5 +1,44 @@
 #include "AVL.h"
 
+pArbre rotationGauche(pArbre a);
+pArbre rotationDroit(pArbre a);
+pArbre doubleRotationGauche(pArbre a);
+pArbre doubleRotationDroit(pArbre a);
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h);
+float min_f(float a, float b);
+float max_f(float a, float b);
+
+pArbre equilibrerAVL(pArbre a)
+{
+    if (a == NULL)
+    {
+        exit(9);
+    }
+    if (a->equilibre >= 2)
+    {
+        if (a->fd->equilibre >= 0)
+        {
+            return rotationGauche(a);
+        }
+        else
+        {
+            return doubleRotationGauche(a);
+        }
+    }
+    else if (a->equilibre <= -2)
+    {
+        if (a->fg->equilibre <= 0)
+        {
+            return rotationDroit(a);
+        }
+        else
+        {
+            return doubleRotationDroit(a);
+        }
+    }
+    return a;
+}
+
 pArbre creerArbre(int trajet, float distance)
 {
     pArbre a = malloc(sizeof(Arbre));
@@ -18,15 +57,18 @@ pArbre creerArbre(int trajet, float distance)
     return a;
 }
 
+
+
 pArbre creationArbreFinal(pArbre a, pArbre b)
 {
     if (a != NULL)
     {
-        a->fg = creationArbreFinal(a->fg, b);
-        insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &a->equilibre);
-        a->fd = creationArbreFinal(a->fd, b);
+        int h = 0;
+        b = insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &h);
+        b = creationArbreFinal(a->fg, b);
+        b = creationArbreFinal(a->fd, b);
     }
-    return a;
+    return b;
 }
 
 void infixeInverse(FILE *chemin, pArbre a)
@@ -34,7 +76,7 @@ void infixeInverse(FILE *chemin, pArbre a)
     if (a != NULL)
     {
         infixeInverse(chemin, a->fd);
-        fprintf(chemin, "%d;%f;%f;%f;%f\n", a->ID_route, a->distance, a->min, a->max, a->distance / a->compteur);
+        fprintf(chemin, "%d;%f;%f;%f\n", a->ID_route, a->min, a->max, a->distance / a->compteur);
         infixeInverse(chemin, a->fg);
     }
 }
@@ -57,27 +99,22 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
     }
     else if (idtrajet > a->ID_route)
     {
+        *h = 0;
         a->fd = insertionAVLTrajet(a->fd, idtrajet, distance, h);
     }
     else
     {
-        if (a->min > distance)
-        {
-            a->min = distance;
-        }
-        if (a->max < distance)
-        {
-            a->max = distance;
-        }
+        a->min = min_f(a->min, distance);
+        a->max = max_f(a->max, distance);
         a->compteur += 1;
         a->distance += distance;
         *h = 0;
         return a;
     }
-            a->equilibre = a->equilibre + *h;
+
     if (*h != 0)
     {
-
+        a->equilibre = a->equilibre + *h;
         a = equilibrerAVL(a);
         if (a->equilibre == 0)
         {
@@ -101,20 +138,23 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreEntier(int trajet, float distance, int max, int min, int compteur)
+pArbre creerArbreEntier(int trajet, float distance, float min, float max, int compteur)
 {
-    pArbre a = malloc(sizeof(pArbre));
-    if (a == NULL)
+    pArbre c = malloc(sizeof(Arbre));
+    if (c == NULL)
     {
         printf("Erreur d'allocation");
         exit(1);
     }
-    a->distance = distance;
-    a->ID_route = trajet;
-    a->max = max;
-    a->min = min;
-    a->compteur = compteur;
-    return a;
+    c->distance = distance;
+    c->ID_route = trajet;
+    c->max = max;
+    c->min = min;
+    c->compteur = compteur;
+    c->fg = NULL;
+    c->fd = NULL;
+    c->equilibre = 0;
+    return c;
 }
 
 int min(int a, int b)
@@ -134,6 +174,23 @@ int max(int a, int b)
     return a;
 }
 
+float min_f(float a, float b)
+{
+    if (a < b)
+    {
+        return a;
+    }
+    return b;
+}
+float max_f(float a, float b)
+{
+    if (a < b)
+    {
+        return b;
+    }
+    return a;
+}
+
 int existeFilsDroit(pArbre a)
 {
     if (a != NULL)
@@ -143,7 +200,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int *h)
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h)
 {
     if (h == NULL)
     {
@@ -152,16 +209,17 @@ pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, 
     if (a == NULL)
     {
         *h = 1;
-        return creerArbreEntier(trajet, distance, max, min, a->compteur);
+        return creerArbreEntier(trajet, distance, min, max, compteur);
     }
     else if (max - min < a->max - a->min)
     {
-        a->fg = insertionAVL(a->fg, trajet, distance, min, max, h);
+        a->fg = insertionAVL(a->fg, trajet, distance, min, max, compteur, h);
         *h = -*h;
     }
     else if (max - min > a->max - a->min)
     {
-        a->fd = insertionAVL(a->fd, trajet, distance, min, max, h);
+        *h = 0;
+        a->fd = insertionAVL(a->fd, trajet, distance, min, max, compteur, h);
     }
     else
     {
@@ -217,9 +275,9 @@ pArbre rotationDroit(pArbre a)
     pivot->fd = a;
     eq_a = a->equilibre;
     eq_p = pivot->equilibre;
-    a->equilibre = eq_a - max(eq_p, 0) - 1;
-    pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
-    pivot->equilibre = min(pivot->equilibre, eq_p - 1);
+    a->equilibre = eq_a - min(eq_p, 0) + 1;
+    pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
+    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
     a = pivot;
     return a;
 }
@@ -242,35 +300,4 @@ pArbre doubleRotationDroit(pArbre a)
     }
     a->fg = rotationGauche(a->fg);
     return rotationDroit(a);
-}
-
-pArbre equilibrerAVL(pArbre a)
-{
-    if (a == NULL)
-    {
-        exit(9);
-    }
-    if (a->equilibre >= 2)
-    {
-        if (a->fd->equilibre >= 0)
-        {
-            return rotationGauche(a);
-        }
-        else
-        {
-            return doubleRotationGauche(a);
-        }
-    }
-    else if (a->equilibre <= -2)
-    {
-        if (a->fg->equilibre <= 0)
-        {
-            return rotationDroit(a);
-        }
-        else
-        {
-            return doubleRotationDroit(a);
-        }
-    }
-    return a;
 }

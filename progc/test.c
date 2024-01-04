@@ -18,7 +18,7 @@ typedef struct _b
     float min;
     float max;
     int compteur;
-} Arbre;
+}Arbre;
 
 typedef Arbre* pArbre;
 
@@ -27,6 +27,8 @@ pArbre rotationDroit(pArbre a);
 pArbre doubleRotationGauche(pArbre a);
 pArbre doubleRotationDroit(pArbre a);
 pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max,int compteur, int *h);
+float min_f(float a, float b);
+float max_f(float a, float b);
 
 pArbre equilibrerAVL(pArbre a)
 {
@@ -83,9 +85,9 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
 {
     if (a != NULL)
     {
-        b = creationArbreFinal(a->fg, b);
         int h = 0;
         b = insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &h);
+        b = creationArbreFinal(a->fg, b);
         b = creationArbreFinal(a->fd, b);
     }
     return b;
@@ -96,7 +98,7 @@ void infixeInverse(FILE *chemin, pArbre a)
     if (a != NULL)
     {
         infixeInverse(chemin, a->fd);
-        fprintf(chemin, "%d;%f;%f;%f;%f\n", a->ID_route, a->distance, a->min, a->max, a->distance / a->compteur);
+        fprintf(chemin, "%d;%f;%f;%f\n", a->ID_route, a->min, a->max, a->distance / a->compteur);
         infixeInverse(chemin, a->fg);
     }
 }
@@ -124,14 +126,8 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
     }
     else
     {
-        if (a->min > distance)
-        {
-            a->min = distance;
-        }
-        if (a->max < distance)
-        {
-            a->max = distance;
-        }
+        a->min = min_f(a->min, distance);
+        a->max = max_f(a->max, distance);
         a->compteur += 1;
         a->distance += distance;
         *h = 0;
@@ -164,23 +160,23 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreEntier(int trajet, float distance, int max, int min, int compteur)
+pArbre creerArbreEntier(int trajet, float distance, float min, float max, int compteur)
 {
-    pArbre a = malloc(sizeof(Arbre));
-    if (a == NULL)
+    pArbre c = malloc(sizeof(Arbre));
+    if (c == NULL)
     {
         printf("Erreur d'allocation");
         exit(1);
     }
-    a->distance = distance;
-    a->ID_route = trajet;
-    a->max = max;
-    a->min = min;
-    a->compteur = compteur;
-    a->fg = NULL;
-    a->fd = NULL;
-    a->equilibre = 0;
-    return a;
+    c->distance = distance;
+    c->ID_route = trajet;
+    c->max = max;
+    c->min = min;
+    c->compteur = compteur;
+    c->fg = NULL;
+    c->fd = NULL;
+    c->equilibre = 0;
+    return c;
 }
 
 int min(int a, int b)
@@ -192,6 +188,23 @@ int min(int a, int b)
     return b;
 }
 int max(int a, int b)
+{
+    if (a < b)
+    {
+        return b;
+    }
+    return a;
+}
+
+float min_f(float a, float b)
+{
+    if (a < b)
+    {
+        return a;
+    }
+    return b;
+}
+float max_f(float a, float b)
 {
     if (a < b)
     {
@@ -336,6 +349,7 @@ int main()
     
     fclose(chemin);
     b = creationArbreFinal(a, b);
+    libererArbre(a);
     FILE *chemin2 = fopen("../temp/gnuplot_data_S.txt", "w");
     if (chemin2 == NULL)
     {
@@ -344,6 +358,7 @@ int main()
     }
     infixeInverse(chemin2, b);
     fclose(chemin2);
+    libererArbre(b);
 
     return 0;
 }
