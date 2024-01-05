@@ -2,7 +2,7 @@
 
 gnuplot << EOF
 # Determination du style de sortie
-set terminal pngcairo enhanced font 'arial,10'
+set terminal pngcairo enhanced font 'arial,10' size 1100,700
 set output 'images/output_S.png'
 
 # Titre du graphique 
@@ -14,14 +14,20 @@ set xlabel 'ROUTE ID'
 # Axe Y
 set ylabel 'DISTANCE(Km)'
 
+# Graduation de l'axe Y tous les 100
+set ytics 100
+
+# Rotation des numéros de l'axe x de 45 degrés
+set xtics rotate by 45 right
+
 # Ajustement de l'intervalle de l'axe Y
 set yrange [0:1000]
 
 # separateur pour le using
 set datafile separator ";"
 
-# Utilisation d'ID du trajet pour l'axe x et de la distance minimale, maximale et moyenne pour l'axe y
-plot 'temp/gnu_data_S.txt' using 1:2:3:4:xticlabels(1) with yerrorbars title 'Distance Min', \
-     '' using 1:4:4 with lines title 'Distance Moyenne', \
-     '' using 1:5:5 with lines title 'Distance Max'
+
+# Tracé de la zone entre Min et Max (remplissage en vert)
+plot 'temp/gnu_data_S.txt' using 0:3:5:xticlabels(2) with filledcurves linecolor 2 lt 1 title 'Distances Max (Km))', \
+     '' using 0:4 with lines linecolor 0 title 'Distance average (Km)'
 EOF

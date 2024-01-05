@@ -2,6 +2,7 @@
 
 pArbre equilibrerAVL(pArbre a)
 {
+    //fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage 
     if (a == NULL)
     {
         exit(9);
@@ -33,6 +34,7 @@ pArbre equilibrerAVL(pArbre a)
 
 pArbre creerArbre(int trajet, float distance)
 {
+    //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
     pArbre a = malloc(sizeof(Arbre));
     if (a == NULL)
     {
@@ -51,8 +53,11 @@ pArbre creerArbre(int trajet, float distance)
 
 pArbre creationArbreFinal(pArbre a, pArbre b)
 {
+    //fonction récursive pour créer l'arbre final
+    //la fonction va parcourir tout l'arbre a et ajouter les valeurs dans l'arbre b initialement nul
     if (a != NULL)
     {
+        //facteur d'equilibrage toujours initialisé a 0
         int h = 0;
         b = insertionAVL(b, a->ID_route, a->distance, a->min, a->max, a->compteur, &h);
         b = creationArbreFinal(a->fg, b);
@@ -63,38 +68,49 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
 
 void infixeInverse(FILE *chemin, pArbre a, int *i)
 {
+    //fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
+    //Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
+    //la différence entre distance maximale et minimale du trajet, 
+    //parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%f;%f;%f\n", *i, a->ID_route, a->min, a->distance / a->compteur, a->max);
+        fprintf(chemin, "%d;%d;%.3f;%.3f;%.3f;%.3f\n", *i, a->ID_route, a->min, a->distance / a->compteur, a->max, a->max - a->min );
         infixeInverse(chemin, a->fg, i);
     }
 }
 
 pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
 {
+    //fonction d'insertion d'AVL 
     if (h == NULL)
     {
         exit(2);
     }
     if (a == NULL)
     {
+        //si l'id trajet est nouveau, on crée un AVL 
         *h = 1;
         return creerArbre(idtrajet, distance);
     }
     else if (idtrajet < a->ID_route)
     {
+        //parcours d'AVL
         a->fg = insertionAVLTrajet(a->fg, idtrajet, distance, h);
         *h = -*h;
     }
     else if (idtrajet > a->ID_route)
     {
+        //parcours d'AVL
         *h = 0;
         a->fd = insertionAVLTrajet(a->fd, idtrajet, distance, h);
     }
     else
     {
+        //si la valeur d'id est déjà présente 
+        //on modifie la valeur minimale et maximale au besoin du noeud
+        //on augmente le compteur et on actualise la valeur de distance totale
         a->min = min_f(a->min, distance);
         a->max = max_f(a->max, distance);
         a->compteur += 1;
@@ -121,6 +137,7 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
 
 void libererArbre(pArbre a)
 {
+    //libère tout l'arbre de manière récursive
     if (a != NULL)
     {
         libererArbre(a->fg);
@@ -131,6 +148,7 @@ void libererArbre(pArbre a)
 
 pArbre creerArbreEntier(int trajet, float distance, float min, float max, int compteur)
 {
+    //crée un nouvel arbre avec les valeurs entrées
     pArbre c = malloc(sizeof(Arbre));
     if (c == NULL)
     {
@@ -150,6 +168,7 @@ pArbre creerArbreEntier(int trajet, float distance, float min, float max, int co
 
 int min(int a, int b)
 {
+    //retourne la valeur minimale entre a et b
     if (a < b)
     {
         return a;
@@ -158,6 +177,7 @@ int min(int a, int b)
 }
 int max(int a, int b)
 {
+    //retourne la valeur maximale entre a et b
     if (a < b)
     {
         return b;
@@ -167,6 +187,7 @@ int max(int a, int b)
 
 float min_f(float a, float b)
 {
+    //retourne la valeur minimale entre a et b et prnenant des float en argument
     if (a < b)
     {
         return a;
@@ -175,6 +196,7 @@ float min_f(float a, float b)
 }
 float max_f(float a, float b)
 {
+    //retourne la valeur maximale entre a et b et prnenant des float en argument
     if (a < b)
     {
         return b;
@@ -184,6 +206,8 @@ float max_f(float a, float b)
 
 int existeFilsDroit(pArbre a)
 {
+    //renvoie True si l'arbre est vide, False sinon
+    //renvoie 0 en cas d'erreur
     if (a != NULL)
     {
         return a->fg == NULL;
@@ -193,17 +217,20 @@ int existeFilsDroit(pArbre a)
 
 pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int compteur, int *h)
 {
+    //fonction d'insertion d'AVL récursive
     if (h == NULL)
     {
         exit(2);
     }
     if (a == NULL)
     {
+        //on est au bon endroit dans l'AVL, on cré un nouveau noeud et le retourne 
         *h = 1;
         return creerArbreEntier(trajet, distance, min, max, compteur);
     }
     else if (max - min < a->max - a->min)
     {
+        //on veut trier les valeurs en fonction de valeur min - valeur max donc on parcours l'arbre de cette manière
         a->fg = insertionAVL(a->fg, trajet, distance, min, max, compteur, h);
         *h = -*h;
     }
@@ -235,6 +262,7 @@ pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, 
 
 pArbre rotationGauche(pArbre a)
 {
+    //permet de faire une simple rotation a gauche de l'AVL 
     if (a == NULL)
     {
         exit(5);
@@ -255,6 +283,7 @@ pArbre rotationGauche(pArbre a)
 
 pArbre rotationDroit(pArbre a)
 {
+    //permet de faire une simple rotation a droite de l'AVL 
     if (a == NULL)
     {
         exit(6);
@@ -275,6 +304,8 @@ pArbre rotationDroit(pArbre a)
 
 pArbre doubleRotationGauche(pArbre a)
 {
+    //permet de faire une double rotation a gauche de l'AVL 
+    //donc rotation simple droite puis rotation simple gauche
     if (a == NULL)
     {
         exit(7);
@@ -285,6 +316,8 @@ pArbre doubleRotationGauche(pArbre a)
 
 pArbre doubleRotationDroit(pArbre a)
 {
+    //permet de faire une double rotation a droite de l'AVL 
+    //donc rotation simple gauche puis rotation simple droite
     if (a == NULL)
     {
         exit(8);
