@@ -1,17 +1,15 @@
 #!/bin/bash
 
-
+#Exécution du compte à rebours
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+STOP_TEMPS=false
+source "Bonus/Affichage_Temps.sh" &
+CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-plan (&) par la commande précédente, et le stocke dans la variable 'CPID'.
+#Conclusion : Cela permet de manipuler le processus (la 'source') pour envoyer des signaux et pleins d'autres opérations
+        
 # Compilation du programme C
 make -C progc
-    sleep 2
-    clear
-
-    #Exécution du compte à rebours
-    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    STOP_TEMPS=false
-    source "Bonus/Affichage_Temps.sh" &
-    CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-plan (&) par la commande précédente, et le stocke dans la variable 'CPID'.
-    #Conclusion : Cela permet de manipuler le processus (la 'source') pour envoyer des signaux et pleins d'autres opérations
+echo #saut de ligne
 
 #debut compteur temps
 temps_debut=$(date +%s.%N)
@@ -29,7 +27,7 @@ temps_fin=$(date +%s.%N)
 # Calculer la différence de temps
 temps_total=$(echo "$temps_fin - $temps_debut" | bc)
 
-# supprime les dossiers inutiles
+# vide le temp pour mettre seulement gnu_data_S.txt
 rm -f "temp/c_data.txt"
 rm -f "temp/gnuplot_data_S.txt" 
 
@@ -48,4 +46,4 @@ echo #saut de ligne
 echo "arret du compte à rebour => TRAITEMENT FINIE" 
 echo #saut de ligne
 
-echo "Le traitement L a mis $temps_total s" 
+echo "Le traitement S a mis $temps_total s" 

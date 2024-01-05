@@ -32,7 +32,6 @@
     fi
     # si le dossier 'temp' n'existe pas ou 'temp' n'est pas un dossier alors on rm puis mkdir
     if [ ! -e "temp" ] || [ ! -d "temp" ] ; then 
-        rm *temp*
         mkdir temp
         else # si le dossier 'temp' contient des elements alors on rm récursivement 
             if [ ! -z "$(ls -A temp/)" ] ; then
@@ -41,7 +40,6 @@
     fi
     # si le dossier 'images' n'existe pas ou 'images' n'est pas un dossier alors on rm puis mkdir
     if [ ! -e "images" ] || [ ! -d "images" ] ; then 
-        rm *images*
         mkdir images
     else # si le dossier 'images' contient des elements alors on rm récursivement 
         if [ ! -z "$(ls -A images/)" ] ; then
@@ -51,7 +49,8 @@
 
 
 # CHOIX DE TRAITEMENTS (D1, D2, L, T, S)
-    if [ -e "$1" ] || [ -e "data/$1" ] ; then
+    # si le fichier csv existe ou s'il existe dans data/ 
+    if [ -e "$1" ] || [ -e "data/$1" ] ; then # Alors
         # PRINTF DE BIENVENUE
         if [ ! -x "Bonus/Affichage_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
             chmod +x 'Bonus/Affichage_Menu.sh'
@@ -78,49 +77,50 @@
         for i in "$@" ; do
             case $i in 
                 "-d1")
-                    if [ ! -x "D1.sh" ] ; then
+                    if [ ! -x "D1.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x D1.sh
-                        ./D1.sh $1 
+                        ./D1.sh $1 # on lance le script
                     else
-                        ./D1.sh $1
+                        ./D1.sh $1 
                     fi 
                     ;;
                 "-d2")
-                    if [ ! -x "D2.sh" ] ; then
+                    if [ ! -x "D2.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x D2.sh
-                        ./D2.sh $1 
+                        ./D2.sh $1 # on lance le script
                     else
-                        ./D2.sh $1
+                        ./D2.sh $1 
                     fi 
                     ;;
                 "-l")
-                    if [ ! -x "L.sh" ] ; then
+                    if [ ! -x "L.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x L.sh
+                        ./L.sh $1 # on lance le script
+                    else
                         ./L.sh $1 
-                    else
-                        ./L.sh $1
                     fi 
                     ;;
-                "-t") 
-                    if [ ! -x "T.sh" ] ; then
-                        chmod +x T.sh
-                        ./T.sh $1 
-                    else
-                        ./T.sh $1
-                    fi 
-                    ;;
+                #"-t") 
+                #    if [ ! -x "T.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                #        chmod +x T.sh
+                #        ./T.sh $1 # on lance le script
+                #    else
+                #        ./T.sh $1 
+                #    fi 
+                #    ;;
                 "-s")
-                    if [ ! -x "S.sh" ] ; then
+                    if [ ! -x "S.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x S.sh
-                        ./S.sh $1 
+                        ./S.sh $1 # on lance le script
                     else
-                        ./S.sh $1
+                        ./S.sh $1 
                     fi 
                     ;;
             esac
         done
+    # si le fichier csv n'existe pas     
     else
-        echo "Ton fichier CSV ne se trouve pas à la racine du projet"
+        echo "!!! Ton fichier CSV ne se trouve pas à la racine du projet ou dans le dossier 'data' !!!"
     fi
 
 
