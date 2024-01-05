@@ -15,7 +15,7 @@ echo #saut de ligne
 temps_debut=$(date +%s.%N)
 
 # Exécution du programme C avec le fichier en argument
-cut -d";" -f1,5 "data/$1" | tail -n +2 > temp/c_data.txt
+cut -d';' -f1,5 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c_data.txt
 cd progc
 ./Projet
 cd ..
