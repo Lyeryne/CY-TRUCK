@@ -9,6 +9,7 @@
 #define SIZE1 4
 #define SIZE2 50
 #define SIZE3 5
+#define ALLOC_ERROR 77
 
 
 typedef struct _b

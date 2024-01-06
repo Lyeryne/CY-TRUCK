@@ -22,6 +22,11 @@ int main()
     //routeID et distance
     while (fscanf(chemin1, "%d;%f\n", &RouteID, &distance) == 2)
     {
+        //Verification de l'intégrité des données
+        if(distance < 0.0 || distance > 1999.9 || RouteID < 0){
+            printf("Données Corrompues");
+            exit(66);
+        }
         //on crée un AVL petit a petit avec les valeurs de RouteId et de distance
         int h = 0;
         a = insertionAVLTrajet(a, RouteID, distance, &h);

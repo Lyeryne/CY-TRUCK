@@ -5,7 +5,7 @@ pArbre equilibrerAVL(pArbre a)
     //fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage 
     if (a == NULL)
     {
-        exit(9);
+        exit(ALLOC_ERROR);
     }
     if (a->equilibre >= 2)
     {
@@ -32,13 +32,14 @@ pArbre equilibrerAVL(pArbre a)
     return a;
 }
 
+
 pArbre creerArbre(int trajet, float distance)
 {
     //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
     pArbre a = malloc(sizeof(Arbre));
     if (a == NULL)
     {
-        exit(1);
+        exit(ALLOC_ERROR);
     }
     a->fg = NULL;
     a->fd = NULL;
@@ -86,7 +87,7 @@ pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h)
     //fonction d'insertion d'AVL 
     if (h == NULL)
     {
-        exit(2);
+        exit(ALLOC_ERROR);
     }
     if (a == NULL)
     {
@@ -152,8 +153,7 @@ pArbre creerArbreEntier(int trajet, float distance, float min, float max, int co
     pArbre c = malloc(sizeof(Arbre));
     if (c == NULL)
     {
-        printf("Erreur d'allocation");
-        exit(1);
+        exit(ALLOC_ERROR);
     }
     c->distance = distance;
     c->ID_route = trajet;
@@ -220,7 +220,7 @@ pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, 
     //fonction d'insertion d'AVL récursive
     if (h == NULL)
     {
-        exit(2);
+        exit(ALLOC_ERROR);
     }
     if (a == NULL)
     {
@@ -265,7 +265,7 @@ pArbre rotationGauche(pArbre a)
     //permet de faire une simple rotation a gauche de l'AVL 
     if (a == NULL)
     {
-        exit(5);
+        exit(ALLOC_ERROR);
     }
     pArbre pivot;
     int eq_a, eq_p;
@@ -286,7 +286,7 @@ pArbre rotationDroit(pArbre a)
     //permet de faire une simple rotation a droite de l'AVL 
     if (a == NULL)
     {
-        exit(6);
+        exit(ALLOC_ERROR);
     }
     pArbre pivot;
     int eq_a, eq_p;
@@ -308,7 +308,7 @@ pArbre doubleRotationGauche(pArbre a)
     //donc rotation simple droite puis rotation simple gauche
     if (a == NULL)
     {
-        exit(7);
+        exit(ALLOC_ERROR);
     }
     a->fd = rotationDroit(a->fd);
     return rotationGauche(a);
@@ -320,7 +320,7 @@ pArbre doubleRotationDroit(pArbre a)
     //donc rotation simple gauche puis rotation simple droite
     if (a == NULL)
     {
-        exit(8);
+        exit(ALLOC_ERROR);
     }
     a->fg = rotationGauche(a->fg);
     return rotationDroit(a);

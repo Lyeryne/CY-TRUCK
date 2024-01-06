@@ -21,7 +21,12 @@ CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-
     temps_debut=$(date +%s.%N)
 
 trajets=$(LC_NUMERIC=C cut -d';' -f1,6 < "data/$1" | awk -F';' '!routes[$1]++ {compteur[$2]++} END {for (conducteur in compteur) printf "%s;%d\n", conducteur, compteur[conducteur]}' | sort -t';' -k2 -n -r | head -10)
-
+# Tue le programme si la commande ne s'est pas bien terminée
+if [ $? -ne 0 ] ; then
+    echo "Erreur : La commande de traitement des données a échoué. Sortie du programme."
+    kill -SIGTERM $CPID
+    exit 1
+fi
 # Envoie des résultats d’exécutions précédentes(echo) dans le dossier temp' 
 echo "$trajets" > temp/gnu_data_D1.txt
 
