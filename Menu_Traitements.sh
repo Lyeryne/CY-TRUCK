@@ -54,10 +54,10 @@
         # PRINTF DE BIENVENUE
         if [ ! -x "Bonus/Affichage_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
             chmod +x 'Bonus/Affichage_Menu.sh'
-            source Bonus/Affichage_Menu.sh
+            source 'Bonus/Affichage_Menu.sh'
             echo
         else
-            source Bonus/Affichage_Menu.sh
+            source 'Bonus/Affichage_Menu.sh'
             echo
         fi
         # PRINTF COMPTE A REBOURS

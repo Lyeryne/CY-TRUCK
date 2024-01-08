@@ -40,3 +40,5 @@ AffichageTxt() {
   echo  # Retour à la ligne après l'affichage complet
 }
 
+AffichageTxt "GROMU ET EVA QUEEN (;"
+
