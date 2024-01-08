@@ -5,6 +5,12 @@
     if [ -e "$1" ] ; then
         if [ ! -e "data" ] ; then 
             mkdir data #etape 1
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             
             # ROBUSTESSE
             if [[ "$1" != *.csv ]] ; then # verifie si $1 est un .CSV 
@@ -16,6 +22,12 @@
             fi
             
             mv $1 data/ #etape 2
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             
             # ROBUSTESSE
             if  [ ! -e "data/$1" ] ; then # verifie si $1 existe dans data/
@@ -26,6 +38,12 @@
         else
             if [[ "data/$1" != *.csv ]] || [ ! -e "data/$1" ] ; then  # mv le .csv dans data/ s'il n'y est pas ou s'il n'existe pas
                 mv $1 data/
+                    # Tue le programme si la compilation ne s'est pas bien terminée
+                    if [ $? -ne 0 ] ; then
+                        echo "Erreur : Le RM a échoué. Sortie du programme."
+                        kill -SIGTERM $CPID
+                        exit 1
+                    fi
             fi
         fi
 
@@ -33,17 +51,41 @@
     # si le dossier 'temp' n'existe pas ou 'temp' n'est pas un dossier alors on rm puis mkdir
     if [ ! -e "temp" ] || [ ! -d "temp" ] ; then 
         mkdir temp
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                kill -SIGTERM $CPID
+                exit 1
+            fi
         else # si le dossier 'temp' contient des elements alors on rm récursivement 
             if [ ! -z "$(ls -A temp/)" ] ; then
                 rm -r temp/*
+                    # Tue le programme si la compilation ne s'est pas bien terminée
+                    if [ $? -ne 0 ] ; then
+                        echo "Erreur : Le RM a échoué. Sortie du programme."
+                        kill -SIGTERM $CPID
+                        exit 1
+                    fi
             fi
     fi
     # si le dossier 'images' n'existe pas ou 'images' n'est pas un dossier alors on rm puis mkdir
     if [ ! -e "images" ] || [ ! -d "images" ] ; then 
         mkdir images
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                kill -SIGTERM $CPID
+                exit 1
+            fi
     else # si le dossier 'images' contient des elements alors on rm récursivement 
         if [ ! -z "$(ls -A images/)" ] ; then
             rm -r images/*
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
         fi
     fi
 
@@ -54,15 +96,39 @@
         # PRINTF DE BIENVENUE
         if [ ! -x "Bonus/Affichage_Menu.sh" ] ; then # verifie si le fichier a la permission d'exécution
             chmod +x 'Bonus/Affichage_Menu.sh'
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             source 'Bonus/Affichage_Menu.sh'
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             echo
         else
             source 'Bonus/Affichage_Menu.sh'
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             echo
         fi
         # PRINTF COMPTE A REBOURS
         if [ ! -x "Bonus/Affichage_Temps.sh" ] ; then # verifie si le fichier a la permission d'exécution
             chmod +x 'Bonus/Affichage_Temps.sh'
+                # Tue le programme si la compilation ne s'est pas bien terminée
+                if [ $? -ne 0 ] ; then
+                    echo "Erreur : Le RM a échoué. Sortie du programme."
+                    kill -SIGTERM $CPID
+                    exit 1
+                fi
             echo
         fi       
 
@@ -79,25 +145,81 @@
                 "-d1")
                     if [ ! -x "D1.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x D1.sh
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
+                        
                         ./D1.sh $1 # on lance le script
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     else
                         ./D1.sh $1 
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     fi 
                     ;;
                 "-d2")
                     if [ ! -x "D2.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x D2.sh
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
+
                         ./D2.sh $1 # on lance le script
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     else
-                        ./D2.sh $1 
+                        ./D2.sh $1     
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     fi 
                     ;;
                 "-l")
                     if [ ! -x "L.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x L.sh
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                         ./L.sh $1 # on lance le script
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     else
                         ./L.sh $1 
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     fi 
                     ;;
                 #"-t") 
@@ -111,9 +233,27 @@
                 "-s")
                     if [ ! -x "S.sh" ] ; then # verifie si le fichier a la permission d'exécution
                         chmod +x S.sh
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                         ./S.sh $1 # on lance le script
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     else
                         ./S.sh $1 
+                            # Tue le programme si la compilation ne s'est pas bien terminée
+                            if [ $? -ne 0 ] ; then
+                                echo "Erreur : Le RM a échoué. Sortie du programme."
+                                kill -SIGTERM $CPID
+                                exit 1
+                            fi
                     fi 
                     ;;
             esac
