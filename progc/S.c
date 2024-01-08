@@ -8,7 +8,7 @@ int main()
     pArbre b = NULL;
 
     //chemin pour accéder aux données principales
-    FILE *chemin1 = fopen("../temp/c_data.txt", "r");
+    FILE *chemin1 = fopen("../temp/c1_data.txt", "r");
     //vérification que l'allocation a bien été faite
     if (chemin1 == NULL)
     {

@@ -1,25 +1,30 @@
 #!/bin/bash
 
+
 # Exécution du compte à rebours
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 STOP_TEMPS=false
 source "Bonus/Affichage_Temps.sh" &
-    # Tue le programme si la compilation ne s'est pas bien terminée
-    if [ $? -ne 0 ] ; then
-        echo "Erreur : Le RM a échoué. Sortie du programme."
-        kill -SIGTERM $CPID
-        exit 1
-    fi
 CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-plan (&) par la commande précédente, et le stocke dans la variable 'CPID'.
 # Conclusion : Cela permet de manipuler le processus (la 'source') pour envoyer des signaux et pleins d'autres opérations
+
+    # Tue le programme si la compilation ne s'est pas bien terminée
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : La commande a échoué. Sortie du programme."
+        kill -SIGTERM $CPID
+        kill -SIGTERM $$ # $$ : contient le PID du processus en cours
+        exit 38
+    fi
+
 
     #debut compteur temps
     temps_debut=$(date +%s.%N)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
-            echo "Erreur : Le RM a échoué. Sortie du programme."
+            echo "Erreur : La commande a échoué. Sortie du programme."
             kill -SIGTERM $CPID
-            exit 1
+            kill -SIGTERM $$
+            exit 39
         fi
         
 # Ligne de code permettant : 
@@ -34,67 +39,67 @@ distance_conducteur=$(cut -d';' -f5,6 < "data/$1" | LC_NUMERIC=en_US.UTF-8 awk -
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande de traitement des donnnées a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        exit 1
+        kill -SIGTERM $$
+        exit 40
     fi
 
 # Envoie des résultats d’exécutions précédentes(echo) dans le dossier temp' 
 echo "$distance_conducteur" > temp/gnu_data_D2.txt
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : Le RM a échoué. Sortie du programme."
+        echo "Erreur : La commande a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        exit 1
+        kill -SIGTERM $$
+        exit 41
     fi
 
 # Mesurer le temps après l'exécution du processus
 temps_fin=$(date +%s.%N)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : Le RM a échoué. Sortie du programme."
+        echo "Erreur : La commande a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        exit 1
+        kill -SIGTERM $$
+        exit 42
     fi
 
 # Calculer la différence de temps
 temps_total=$(echo "$temps_fin - $temps_debut" | bc)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : Le RM a échoué. Sortie du programme."
+        echo "Erreur : La commande a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        exit 1
+        kill -SIGTERM $$
+        exit 43
     fi
 
 # Exécution du script Gnuplot
     file="gnu_script_D2.sh"
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
-            echo "Erreur : Le RM a échoué. Sortie du programme."
+            echo "Erreur : La commande a échoué. Sortie du programme."
             kill -SIGTERM $CPID
-            exit 1
+            kill -SIGTERM $$
+            exit 44
         fi
 
     if [ ! -x "$file" ] ; then # verifie si le fichier a la permission d'exécution
         chmod +x gnu_script_D2.sh
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
+                echo "Erreur : La commande a échoué. Sortie du programme."
                 kill -SIGTERM $CPID
-                exit 1
-            fi
-        ./gnu_script_D2.sh # on lance le script
-            # Tue le programme si la compilation ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
-                kill -SIGTERM $CPID
-                exit 1
+                kill -SIGTERM $$
+                exit 45
             fi
     else
         ./gnu_script_D2.sh
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
+                echo "Erreur : La commande a échoué. Sortie du programme."
                 kill -SIGTERM $CPID
-                exit 1
+                kill -SIGTERM $$
+                exit 47
             fi
     fi
 
