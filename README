@@ -7,12 +7,12 @@ Vous êtes le gérant d'une société nationale de transport routier. Vous dispo
 
 Avant de lancer le programme, assurez-vous que votre chemin d'accès mène bien au dossier du projet, "Projet-S1", avec tous ses programmes,
     Utilisez la commande suivante dans le terminal :
-        cd users/projets/MI5/Projet-S1
+        cd gromulebg/projets/MI5/Trinome-MI5-B/Projet-S1
 Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vous n'avez pas besoin de le déplacer dans le dossier "data", puisque Menu_Traitements.sh s'en occupe. Si vous souhaitez quand même le faire,
     Utilisez la commande suivante dans le terminal : 
         mv data.csv data/
 Assurez-vous que Menu_Traitements.sh à les droit en 
-    Utilisez la commande suivante dans le terminal :
+    Utilisant la commande suivante dans le terminal :
         chmod +x Menu_Traitements.sh
 Enfin, si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
     Utilisez la commande suivante dans le terminal :
@@ -25,44 +25,47 @@ Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les
 
 ~~> Compilation via 'Menu_Traitements.sh'
 
-!!! IMPORTANT !!! : *csv ou [...].csv signifie quelquechose.csv comme $1 
-donc vous devez renommer votre fichier csv par n'importe quel nom 
+!!! IMPORTANT !!! : 
+- *csv ou [...].csv signifie quelquechose.csv comme $1 donc vous devez renommer votre fichier csv par n'importe quel nom 
+- vous avez le choix de mettre juste avant le traitement (exemple) : -d1 ou _D1 ou -D1 ou _d1 
 
 Si vous souhaitez lancer les traitements, plusieurs choix s'offrent à vous :
     - (1) vous souhaitez lancer tous les traitements en une seule fois, alors lancez la commande =>
-             ./Menu_Traitements.sh *.csv -d1 -d2 -l -s -t    (!!! RESPECTEZ LE FORMAT !!!)
-Dans le script Menu_Traitements.sh, il va vérifier la présence des dossiers 'temp' et 'images'. S'il y a des choses dedans, il vide le contenu ; sinon, il crée les dossiers s'ils ont disparu. Enfin, il déplace le premier argument ([...].csv) dans 'data/', s'il ne se trouve pas à la racine du projet.
+            ./Menu_Traitements.sh *.csv -d1 _d2 -l -S _T    (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
     - (2) vous souhaitez lancer qu'un argument à la fois, alors lancez la commande =>
-             ./Menu_Traitements.sh *.csv -...     (!!! RESPECTEZ LE FORMAT !!!)
-Il fera alors comme le choix (1), vérification de la présence des dossiers (vidage ou non, création des dossiers) et déplacement potentiel de l'argument 1.
+            ./Menu_Traitements.sh *.csv -[...]     (!!! RESPECTEZ LE FORMAT !!!)
     - (3) vous souhaitez une aide expliquant les options pouvant être utilisées ou non, alors lancez la commande =>
-            ./Menu_Traitements.sh *.csv -h            (!!! RESPECTEZ LE FORMAT !!!)
+            ./Menu_Traitements.sh *.csv -h            (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
             ou  
-            ./Menu_Traitements.sh *.csv -d1 -d2 -h    (!!! RESPECTEZ LE FORMAT !!!)
+            ./Menu_Traitements.sh *.csv -D1 -d2 _h    (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
             ou
-            ./Menu_Traitements.sh -h                  (!!! RESPECTEZ LE FORMAT !!!)
-         
+            ./Menu_Traitements.sh -H                  (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
+    Alors tous les autres arguments seront ignorés (si jamais vous aviez mis d'autres arguments avant/après) et il affichera l'aide.        
             
-Alors tous les autres arguments seront ignorés (si jamais vous aviez mis d'autres arguments avant/après) et affichera l'aide.
-
 
 ~~> Compilation via le Makefile 
 
 - Menu_Traitements.sh s'en occupe donc vous n'avez qu'à mettre sur le terminal :
-    ./Menu_Traitements.sh *.csv -t    (!!! RESPECTEZ LE FORMAT !!!)
+    ./Menu_Traitements.sh *.csv -t      (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
     ou
-    ./Menu_Traitements.sh *.csv -s   (!!! RESPECTEZ LE FORMAT !!!)
+    ./Menu_Traitements.sh *.csv -s      (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
     ou
-    ./Menu_Traitements.sh *.csv -s -t   (!!! RESPECTEZ LE FORMAT !!!)
+    ./Menu_Traitements.sh *.csv _S -t   (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
+
 
 ~~> Fonctionnalités Principales
 
 - Le script Shell (Menu_Traitements.sh) placé à la racine du projet vérifie la présence des dossiers 'temp' et 'images'. 
 S'ils n’existent pas, il les crée, sinon les vide avant l’exécution des traitements.
-- Menu_Traitements.sh déplace votre premier argument (le fichier csv) au dossier 'data'.
+- Menu_Traitements.sh déplace votre premier argument (le fichier csv) au dossier 'data' 
+et met les permissions d'excutions de tous les traitements.sh que vous allez utiliser.
 - Les graphiques sont stockés dans le dossier ‘images’ après la compilation de Menu_Traitements.sh.
-- La durée de chaque traitement que vous tapez sur le terminal est affichée en secondes à la fin.
+- La durée de chaque traitement que vous tapez sur le terminal est affichée en secondes à la fin 
+et s'il y a eu un probleme avec la ligne qui permet de calculer le temps, le terminal affichera :" Le traitement [...] a mis 0.000000000 s".
+Mais si la ligne fonctionne mais qu'un moment dans le code une ligne de code permettant de faire le traitement ne marche pas,
+le terminal affichera : "Le traitement [...] n'a pu que mettre ... s" (meme si dans les 2 cas, il n'a pas réellement fait le traitement).
 - L'option -h (H.txt) est une sorte de "HELP" qu'on peut voir dans les jeux, expliquant ce que les traitements font et s'ils sont fonctionelles ou non (voir format à taper sur le terminal dans Compilation via 'Menu_Traitements.sh').
+- Tout problème dans le code arrête le programme et affiche un message d'erreur !
 
 
 ~~> CONTENU DE 'Projet-S1'
@@ -74,8 +77,8 @@ S'ils n’existent pas, il les crée, sinon les vide avant l’exécution des tr
 'Menu_Traitements.sh'.
 - Racine du Projet :
     ~ (D1 || D2 || L || S || T).sh contient le programme permettant de récupérer les données demandées (dans teams [...].dat, 
-      ici c'est temp/gnuplot_data_[...].txt).
-    ~ gnuplot_script_[...].sh contient le script permettant de faire les graphiques.
+      ici c'est temp/gnu_data_[...].txt).
+    ~ gnu_script_[...].sh contient le script permettant de faire les graphiques.
 
 
 ~~> Exigences du Système
@@ -85,8 +88,7 @@ Système d'exploitation : Linux
 
 ~~> Rapport de Bugs
 
-Si vous rencontrez des erreurs du type "Quelque chose ne va pas dans..." concernant des pointeurs,
-vérifiez si le pointeur a été alloué avec malloc et si l'allocation de mémoire (malloc) fonctionne correctement dans le fichier .c correspondant.
+Pas qu'on sache (enfin, nous l'espérons), tant que vous respectez le format et l'espacement, tout va pour le mieux. ç_ç
 
 
 ~~> Licence
@@ -97,14 +99,14 @@ Ce projet est sous licence MI5.
 ~~> Contact 
 
 - CY TECH – CERGY
-- Lien pour mettre une bonne note : https://mycy.cyu.fr
+- Lien pour mettre une excellente note : https://mycy.cyu.fr $_$
 
 
 ~~> Crédits
 
 - ChatGPT
-- Gromu
-- Eva Queen
+- Gromu *_*
+- Eva Queen +_+
 - Louaye SAGHIR
 - Clement PREMOLI
 - Roman BOULLIER

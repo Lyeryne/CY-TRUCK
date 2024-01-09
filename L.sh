@@ -7,23 +7,22 @@ source "Bonus/Affichage_Temps.sh" &
 CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-plan (&) par la commande précédente, et le stocke dans la variable 'CPID'.
 # Conclusion : Cela permet de manipuler le processus (la 'source') pour envoyer des signaux et pleins d'autres opérations
 
-    # Tue le programme si la compilation ne s'est pas bien terminée
+    # Tue le programme si la commande ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Erreur : Le commande a échoué. Sortie du programme."
+        echo "Le traitement L a mis 0.000000000 s" 
         kill -SIGTERM $CPID
-        kill -SIGTERM $$  # $$ : contient le PID du processus en cours
-        exit 48
+        exit 28
     fi
-
 
     #debut compteur temps
     temps_debut=$(date +%s.%N)
-        # Tue le programme si la compilation ne s'est pas bien terminée
+        # Tue le programme si la commande ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
-            echo "Erreur : La commande a échoué. Sortie du programme."
+            echo "Erreur : Le commande a échoué. Sortie du programme."
+            echo "Le traitement L a mis 0.000000000 s" 
             kill -SIGTERM $CPID
-            kill -SIGTERM $$
-            exit 49
+            exit 28
         fi
 
 # Ligne de code permettant : 
@@ -36,30 +35,60 @@ CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-
 # - sort (2) : revient à trier le résultat (head) par numéro d’identifiant de trajet croissant ($1)
 distance_trajet=$(cut -d';' -f1,5 < "data/$1" | LC_NUMERIC=en_US.UTF-8 awk -F';' 'NR>1 {distance[$1] += $2} END {for (conducteur in distance) printf "%s;%f\n", conducteur, distance[conducteur]}'| sort -t';' -k2 -r -n | head -10 | sort -t';' -k1 -n -r) 
     # Tue le programme si la commande ne s'est pas bien terminée
-    if [ $? -ne 0 ]; then
-        echo "La commande de traitement des données a échoué. Sortie du programme."
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : La commande de traitement des données a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
-        exit 50
+        temps_fin=$(date +%s.%N)
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement L a mis 0.000000000 s"
+                exit 101
+            fi
+        temps_total=$(echo "$temps_fin - $temps_debut" | bc)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement L a mis 0.000000000 s"
+                exit 102
+            fi
+        echo "Le traitement L a mis $temps_total s" 
+        exit 30
     fi
-# Envoie des résultats d’exécutions précédentes(echo) dans le dossier 'temp' 
-echo "$distance_trajet" > temp/gnu_data_L.txt 
+
+# Envoie des résultats d’exécutions précédentes(echo) dans le dossier temp' 
+echo "$distance_trajet" > temp/gnu_data_L.txt
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
-        exit 51
+        temps_fin=$(date +%s.%N)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement L a mis 0.000000000 s"
+                exit 103
+            fi
+        # Calculer la différence de temps
+        temps_total=$(echo "$temps_fin - $temps_debut" | bc)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : La commande a échoué. Sortie du programme."
+                echo "Le traitement L a mis 0.000000000 s"
+                exit 104
+            fi
+        echo "Le traitement L a mis $temps_total s"
+        exit 31
     fi
+
 
 # Mesurer le temps après l'exécution du processus
 temps_fin=$(date +%s.%N)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Erreur : la durée du traitement ne peut pas être affichée."
+        echo "Le traitement L a mis 0.000000000 s"
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
-        exit 52
+        exit 32
     fi
 
 # Calculer la différence de temps
@@ -67,9 +96,9 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Le traitement L a mis 0.000000000 s"  
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
-        exit 53
+        exit 33
     fi
 
 # Exécution du script Gnuplot
@@ -77,37 +106,36 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La commande a échoué. Sortie du programme."
+            echo "Le traitement L n'a pu que mettre $temps_total s"
             kill -SIGTERM $CPID
-            kill -SIGTERM $$
-            exit 54
+            exit 34
         fi
-
+        
     if [ ! -x "$file" ] ; then # verifie si le fichier a la permission d'exécution
-        chmod +x gnu_script_L.sh 
+        chmod +x gnu_script_L.sh
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
+                echo "Le traitement L n'a pu que mettre $temps_total s"
                 kill -SIGTERM $CPID
-                kill -SIGTERM $$
-                exit 55
+                exit 35
             fi
     else
-        ./gnu_script_L.sh 
+        ./gnu_script_L.sh
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
+                echo "Le traitement L n'a pu que mettre $temps_total s"
                 kill -SIGTERM $CPID
-                kill -SIGTERM $$
-                exit 57
+                exit 37
             fi
     fi
 
 # Ligne de code : cela enverra le signal SIGUSR1(il se trouve dans Affichage_Temps.sh) au processus identifié par le PID stocké dans la variable $CPID, 
 # déclenchant ainsi la fonction stop_compteur dans le script.
 kill -SIGUSR1 $CPID
-echo #saut de ligne
+echo # Retour à la ligne
 echo "arret du compte à rebour => TRAITEMENT FINIE" 
-echo #saut de ligne
+echo # Retour à la ligne
 
-#echo "Le traitement L a mis $t s" 
-echo "Le traitement L a mis $temps_total s" 
+echo ">> Le traitement L a mis $temps_total s <<" 

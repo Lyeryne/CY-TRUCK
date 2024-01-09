@@ -1,8 +1,13 @@
 #!/bin/bash
 
+clear
+
+# Affichage
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
 # si jamais il voit -h, il affiche l'aide et s'arrete 
     for i in "$@" ; do
-        if [ "$i" = "-h" ] ; then
+        if [ "$i" = "-h" ] || [ "$i" = "-H" ] || [ "$i" = "_h" ] || [ "$i" = "_H" ] ; then
             cat H.txt
             exit 15
         fi
@@ -16,7 +21,6 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le mkdir a échoué. Sortie du programme."
-                    kill -SIGTERM $$ # $$ : contient le PID du processus en cours
                     exit 1
                 fi
             
@@ -33,7 +37,6 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le MV a échoué. Sortie du programme."
-                    kill -SIGTERM $$
                     exit 4
                 fi
             
@@ -49,7 +52,6 @@
                     # Tue le programme si la commande ne s'est pas bien terminée
                     if [ $? -ne 0 ] ; then
                         echo "Erreur : Le MV a échoué. Sortie du programme."
-                        kill -SIGTERM $$
                         exit 6
                     fi
             fi
@@ -62,7 +64,6 @@
             # Tue le programme si la commande ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : Le MKDIR a échoué. Sortie du programme."
-                kill -SIGTERM $$
                 exit 7
             fi
         else # si le dossier 'temp' contient des elements alors on rm récursivement 
@@ -71,7 +72,6 @@
                     # Tue le programme si la commande ne s'est pas bien terminée
                     if [ $? -ne 0 ] ; then
                         echo "Erreur : Le RM a échoué. Sortie du programme."
-                        kill -SIGTERM $$
                         exit 8
                     fi
             fi
@@ -82,7 +82,6 @@
             # Tue le programme si la commande ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : Le MKDIR a échoué. Sortie du programme."
-                kill -SIGTERM $$
                 exit 9
             fi
     else # si le dossier 'images' contient des elements alors on rm récursivement 
@@ -91,7 +90,7 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le RM a échoué. Sortie du programme."
-                    kill -SIGTERM $$
+            
                     exit 10
                 fi
         fi
@@ -107,14 +106,12 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                    kill -SIGTERM $$
                     exit 11
                 fi
             source 'Bonus/Affichage_Menu.sh'
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le SOURCE a échoué. Sortie du programme."
-                    kill -SIGTERM $$
                     exit 12
                 fi
             echo
@@ -123,7 +120,7 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le SOURCE a échoué. Sortie du programme."
-                    kill -SIGTERM $$
+
                     exit 13
                 fi
             echo
@@ -134,11 +131,11 @@
                 # Tue le programme si la commande ne s'est pas bien terminée
                 if [ $? -ne 0 ] ; then
                     echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                    kill -SIGTERM $$
                     exit 14
                 fi
             echo
         fi       
+
 
     # si jamais il voit -h, il affiche l'aide et ne fais pas les autres traitements
         for i in "$@" ; do
@@ -148,93 +145,98 @@
             fi
         done
     # Sinon il fais les traitements
+        #creer une variable pour stocker le data.csv
+        fichier_csv=""
+
         for i in "$@" ; do
-            case $i in 
-                "-d1")
-                    if [ ! -x "D1.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                        chmod +x D1.sh
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 16
-                            fi
-                        fi
-                        ./D1.sh $1 # on lance le script
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : L'execution a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 17
-                            fi
-                    ;;
-                "-d2")
-                    if [ ! -x "D2.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                        chmod +x D2.sh
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 19
-                            fi
-                        fi
-                        ./D2.sh $1 # on lance le script
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : L'execution a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 20
-                            fi
-                    ;;
-                "-l")
-                    if [ ! -x "L.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                        chmod +x L.sh
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 22
-                            fi
-                        fi
-                        ./L.sh $1 # on lance le script
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : L'execution a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 23
-                            fi
-                    ;;
-                #"-t") 
-                #    if [ ! -x "T.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                #        chmod +x T.sh
-                #        ./T.sh $1 # on lance le script
-                #    else
-                #        ./T.sh $1 
-                #    fi 
-                #    ;;
-                "-s")
-                    if [ ! -x "S.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                        chmod +x S.sh
-                            # Tue le programme si la commande ne s'est pas bien terminée
-                            if [ $? -ne 0 ] ; then
-                                echo "Erreur : Le CHMOD a échoué. Sortie du programme."
-                                kill -SIGTERM $$
-                                exit 25
-                            fi
-                        fi
-                    ./S.sh $1 
-                         # Tue le programme si la commande ne s'est pas bien terminée
-                        if [ $? -ne 0 ] ; then
-                            echo "Erreur : L'execution a échoué. Sortie du programme."
-                            kill -SIGTERM $$
-                            exit 27
-                        fi
-                    ;;
-            esac
+            if [ -z "$fichier_csv" ] ; then
+            # Si le fichier (-z) n'a pas encore établi, on considère alors l'arg actuel comme fichier_csv
+            fichier_csv="$i"
+                else
+                    case $i in 
+                        "-d1" | "-D1" | "_d1" | "_D1")
+                            if [ ! -x "D1.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                                chmod +x D1.sh
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : Le CHMOD de D1.sh a échoué. Sortie du programme."                                
+                                        exit 16
+                                    fi
+                                fi
+                                ./D1.sh $1 # on lance le script
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : L'execution D1.sh a échoué. Sortie du programme."
+                                        exit 17
+                                    fi
+                            ;;
+                        "-d2" | "-D2" | "_d2" | "_D2")
+                            if [ ! -x "D2.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                                chmod +x D2.sh
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : Le CHMOD de D2.sh a échoué. Sortie du programme."
+                                        exit 19
+                                    fi
+                                fi
+                                ./D2.sh $1 # on lance le script
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : L'execution D2.sh a échoué. Sortie du programme."
+                                        exit 20
+                                    fi
+                            ;;
+                        "-l" | "-L" | "_l" | "_L")
+                            if [ ! -x "L.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                                chmod +x L.sh
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : Le CHMOD de L.sh a échoué. Sortie du programme."
+                                        exit 22
+                                    fi
+                                fi
+                                ./L.sh $1 # on lance le script
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : L'execution L.sh a échoué. Sortie du programme."
+                                        exit 23
+                                    fi
+                            ;;
+                        #"-t" | "-T" | "_t" | "_T") 
+                        #    if [ ! -x "T.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                        #        chmod +x T.sh
+                        #        ./T.sh $1 # on lance le script
+                        #    else
+                        #        ./T.sh $1 
+                        #    fi 
+                        #    ;;
+                        "-s" | "-S" | "_s" | "_S")
+                            if [ ! -x "S.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                                chmod +x S.sh
+                                    # Tue le programme si la commande ne s'est pas bien terminée
+                                    if [ $? -ne 0 ] ; then
+                                        echo "Erreur : Le CHMOD de S.sh a échoué. Sortie du programme."
+                                        exit 25
+                                    fi
+                                fi
+                            ./S.sh $1 
+                                # Tue le programme si la commande ne s'est pas bien terminée
+                                if [ $? -ne 0 ] ; then
+                                    echo "Erreur : L'execution S.sh a échoué. Sortie du programme."
+                                    exit 27
+                                fi
+                            ;;
+                        # Aucun des autres cas 
+                        *)
+                            echo "Traitement inconnue détectée : '$i' => RESPECTEZ LE FORMAT (revoir readme ou -h '_')"
+                            exit 1000
+                        ;;
+                    esac
+            fi
         done
     # si le fichier csv n'existe pas     
     else
-        echo "!!! Ton fichier CSV ne se trouve pas à la racine du projet ou dans le dossier 'data' ou tu n'as pas respecté le format !!!"
+        echo "!!! [Ton fichier CSV ne se trouve pas à la racine du projet ou dans le dossier 'data'] !!!"
         exit 100
     fi
 

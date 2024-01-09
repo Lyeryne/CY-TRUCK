@@ -10,20 +10,19 @@ CPID=$! # Cela prend le PID du processus ($!) qui vient d'être mis en arrière-
 
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Erreur : Le commande a échoué. Sortie du programme."
+        echo "Le traitement D2 a mis 0.000000000 s" 
         kill -SIGTERM $CPID
-        kill -SIGTERM $$ # $$ : contient le PID du processus en cours
         exit 38
     fi
-
 
     #debut compteur temps
     temps_debut=$(date +%s.%N)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
-            echo "Erreur : La commande a échoué. Sortie du programme."
+            echo "Erreur : la durée du traitement ne peut pas être affichée."            
+            echo "Le traitement D2 a mis 0.000000000 s" 
             kill -SIGTERM $CPID
-            kill -SIGTERM $$
             exit 39
         fi
         
@@ -39,7 +38,22 @@ distance_conducteur=$(cut -d';' -f5,6 < "data/$1" | LC_NUMERIC=en_US.UTF-8 awk -
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande de traitement des donnnées a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
+        temps_fin=$(date +%s.%N)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement D2 a mis 0.000000000 s"             
+                exit 52
+            fi
+        # Calculer la différence de temps
+        temps_total=$(echo "$temps_fin - $temps_debut" | bc)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement D2 a mis 0.000000000 s"             
+                exit 53
+            fi
+        echo "Le traitement L a mis $temps_total s"
         exit 40
     fi
 
@@ -49,7 +63,22 @@ echo "$distance_conducteur" > temp/gnu_data_D2.txt
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande a échoué. Sortie du programme."
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
+        temps_fin=$(date +%s.%N)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement D2 a mis 0.000000000 s"             
+                exit 53
+            fi
+        # Calculer la différence de temps
+        temps_total=$(echo "$temps_fin - $temps_debut" | bc)
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : la durée du traitement ne peut pas être affichée."            
+                echo "Le traitement D2 a mis 0.000000000 s"             
+                exit 54
+            fi
+        echo "Le traitement L a mis $temps_total s"
         exit 41
     fi
 
@@ -57,9 +86,9 @@ echo "$distance_conducteur" > temp/gnu_data_D2.txt
 temps_fin=$(date +%s.%N)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Erreur : la durée du traitement ne peut pas être affichée."            
+        echo "Le traitement D2 a mis 0.000000000 s"             
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
         exit 42
     fi
 
@@ -67,9 +96,9 @@ temps_fin=$(date +%s.%N)
 temps_total=$(echo "$temps_fin - $temps_debut" | bc)
     # Tue le programme si la compilation ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
-        echo "Erreur : La commande a échoué. Sortie du programme."
+        echo "Erreur : la durée du traitement ne peut pas être affichée."            
+        echo "Le traitement D2 a mis 0.000000000 s"             
         kill -SIGTERM $CPID
-        kill -SIGTERM $$
         exit 43
     fi
 
@@ -78,18 +107,18 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La commande a échoué. Sortie du programme."
+            echo "Le traitement D2 n'a pu que mettre $temps_total s"
             kill -SIGTERM $CPID
-            kill -SIGTERM $$
             exit 44
         fi
-
+        
     if [ ! -x "$file" ] ; then # verifie si le fichier a la permission d'exécution
         chmod +x gnu_script_D2.sh
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
+                echo "Le traitement D2 n'a pu que mettre $temps_total s"
                 kill -SIGTERM $CPID
-                kill -SIGTERM $$
                 exit 45
             fi
     else
@@ -97,8 +126,8 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
+                echo "Le traitement D2 n'a pu que mettre $temps_total s"
                 kill -SIGTERM $CPID
-                kill -SIGTERM $$
                 exit 47
             fi
     fi
@@ -110,5 +139,4 @@ echo # Retour à la ligne
 echo "arret du compte à rebour => TRAITEMENT FINIE" 
 echo # Retour à la ligne
 
-echo "Le traitement D2 a mis $temps_total s" 
-
+echo ">> Le traitement D2 a mis $temps_total s <<" 
