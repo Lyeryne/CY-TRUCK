@@ -19,7 +19,7 @@ typedef struct _b
     struct _b *fd;
     int equilibre;
     char nomVille;
-    int count;
+    int compte;
 } Arbre;
 
 

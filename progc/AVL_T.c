@@ -78,7 +78,7 @@ void infixeInverse(FILE *chemin, pArbre a, int *i)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%s\n", *i, a->ID_route, a->compte, char nomVille);
+        fprintf(chemin, "%d;%d;%s\n", *i, a->ID_route, a->compte, a->nomVille);
         infixeInverse(chemin, a->fg, i);
     }
 }
