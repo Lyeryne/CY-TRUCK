@@ -1,23 +1,14 @@
 #include "T.h"
 
-int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        printf("Usage: %s <input_file> <output_file>\n", argv[0]);
-        return 1;
+
+FILE *chemin1 = fopen("../temp/c_data.txt", "r");
+    //vérification que l'allocation a bien été faite
+    if (chemin1 == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier 1\n");
+        exit(1);
     }
 
-    FILE* inputFile = fopen(argv[1], "r");
-    FILE* outputFile = fopen(argv[2], "w");
-
-    if (inputFile == NULL || outputFile == NULL) {
-        perror("Error opening files");
-        return 1;
-    }
-
-    processTopCities(inputFile, outputFile);
-
-    fclose(inputFile);
-    fclose(outputFile);
-
-    return 0;
-}
+    int RouteID;
+    float distance;
+    

@@ -2,7 +2,7 @@
 
 gnuplot << EOF
 # Définition du style de sortie avec rotation
-set terminal pngcairo enhanced font 'arial,15' size 1100,1000
+set terminal pngcairo enhanced font 'arial,15' size 1000,1000
 set output 'images/output_D2.png'
 
 # Séparateur pour le using

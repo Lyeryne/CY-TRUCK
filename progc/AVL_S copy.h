@@ -1,5 +1,5 @@
-#ifndef AVL_T_H
-#define AVL_T_H
+#ifndef AVL_S_H
+#define AVL_S_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,30 +18,25 @@ typedef struct _b
     struct _b *fg;
     struct _b *fd;
     int equilibre;
-    char nomVille;
-    int count;
+    float distance;
+    float min;
+    float max;
+    int compteur;
 } Arbre;
-
-
-typedef struct {
-    int ID_route;
-    char nomVille;
-} insertVille;
-
 
 typedef Arbre* pArbre;
 
-pArbre creerArbre(int ID_route, char nomVille, int compte);
+pArbre creerArbre(int trajet, float distance);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
 void infixeInverse(FILE* chemin, pArbre a, int *i);
 
-pArbre insertionAVLTrajet(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h);
 
 void libererArbre(pArbre a);
 
-pArbre creerArbreEntier(int ID_route, char nomVille, int compte);
+pArbre creerArbreEntier(int trajet, float distance, float min, float max, int compteur);
 
 int min(int a, int b);
 
@@ -53,7 +48,7 @@ float min_f(float a, float b);
 
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVL(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVL(pArbre a, int trajet, float distance, float min, float max, int compteur, int *h);
 
 pArbre rotationGauche(pArbre a);
 
