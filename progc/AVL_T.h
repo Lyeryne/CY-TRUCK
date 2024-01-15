@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
 #define SIZE1 4
 #define SIZE2 50
 #define SIZE3 5
+#define SIZE4 500
 #define ALLOC_ERROR 77
 
 
@@ -19,6 +21,7 @@ typedef struct _b
     struct _b *fd;
     int equilibre;
     char nomVille;
+    int tab[SIZE 4];
     int compte;
 } Arbre;
 
@@ -31,17 +34,17 @@ typedef struct {
 
 typedef Arbre* pArbre;
 
-pArbre creerArbre(int ID_route, char nomVille, int compte);
+pArbre creerArbre(int ID_route, char nomVille, int compte, int tab);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
 void infixeInverse(FILE* chemin, pArbre a, int *i);
 
-pArbre insertionAVLTrajet(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte ,int tab, int *h);
 
 void libererArbre(pArbre a);
 
-pArbre creerArbreEntier(int ID_route, char nomVille, int compte);
+pArbre creationArbreDebut(int ID_route, char nomVille, int compte, int tab);
 
 int min(int a, int b);
 
@@ -53,7 +56,7 @@ float min_f(float a, float b);
 
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVL(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int tab, int *h);
 
 pArbre rotationGauche(pArbre a);
 
