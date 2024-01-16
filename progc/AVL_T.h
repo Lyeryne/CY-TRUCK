@@ -12,6 +12,7 @@
 #define SIZE3 5
 #define SIZE4 500
 #define ALLOC_ERROR 77
+#define ALLOC_ERROR_2 78
 
 typedef struct{
     char nomVille;
@@ -24,43 +25,44 @@ typedef struct _b{
     struct _b *fg;
     struct _b *fd;
     int equilibre;
-    char nomVille;
+    pVille nomVille;
     int tab[SIZE4];
     int compte;
     int compteDebut;
 } Arbre;
 
-typedef struct{
+typedef struct _a{
     int ID_route;
-    Ville nomVilleDepart;
-    Ville nomVilleArrivee;
-    int tab[SIZE4];
+    struct _a *fg;
+    struct _a *fd;
+    int equilibre;
+    char nomVille
     int compte;
     int compteDebut;
-} Debut;
-
+} ArbreF;
 
 typedef struct {
     int ID_route;
     char nomVille;
 } insertVille;
 
-
+typedef ArbreF* pArbreF
+typedef Ville* pVille;
 typedef Arbre* pArbre;
 
-pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut);
+pArbre creerArbreFinal(int ID_route, pVille nomVille, int compte, int compteDebut);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
 void infixeInverse(FILE* chemin, pArbre a, int *i);
 
-pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte ,int tab[], int compteDebut, int *h);
+pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte ,int tab[], int compteDebut, int *h);
 
 void libererArbre(pArbre a);
 
-pArbre TransfoArbreDebut(pArbre a, int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut);
+pArbre TransfoArbreDebut(pArbre a, int ID_route, pVille nomVilleDepart, pVille nomVilleArrivee, int compte, int tab[], int compteDebut);
 
-pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut);
+pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], int compteDebut);
 
 int min(int a, int b);
 
@@ -72,7 +74,7 @@ float min_f(float a, float b);
 
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h);
+pArbre insertionAVLFINAL(pArbre a, int ID_route, pVille nomVille, int compte, int compteDebut, int *h);
 
 pArbre rotationGauche(pArbre a);
 

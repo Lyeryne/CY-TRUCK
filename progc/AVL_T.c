@@ -32,11 +32,20 @@ pArbre equilibrerAVL(pArbre a)
     return a;
 }
 
+pVille creerVille(char nom, int num){
+    pVille a = malloc(sizeof(Ville));
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR_2);
+    }
+    a->nomVille = nom;
+    a->Debut = num;
+    return a;
+}
 
 
 
-
-pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut)
+pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], int compteDebut)
 {
     //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
     pArbre a = malloc(sizeof(Arbre));
@@ -48,20 +57,21 @@ pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrive
     a->fd = NULL;
     a->equilibre = 0;
     a->ID_route = ID_route;
-    a->nomVille = nomVilleDepart;
+    a->nomVille->nomVille = nomVille->nomVille;
+    a->nomVille->Debut = nomVille->Debut;
     for(int i=0;i<=SIZE4;i++){
         a->tab[i] = tab[i];
     }
     a->compte = compte;
     a->compteDebut = compteDebut;
     int h = 0;
-    insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h);
     return a;
 }
 
-pArbre TransfoArbreDebut(pArbre a, int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut){
+pArbre TransfoArbreDebut(pArbre a, int ID_route, pVille nomVilleDepart, pVille nomVilleArrivee, int compte, int tab[], int compteDebut){
     if(a == NULL){
         a = creationArbreDebut(ID_route, nomVilleDepart, nomVilleArrivee, compte, tab, compteDebut);
+        a = insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h)
     }
     else{
         int h = 0;
@@ -96,12 +106,12 @@ void infixeInverse(FILE *chemin, pArbre a, int *i)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille);
+        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille->nomVille);
         infixeInverse(chemin, a->fg, i);
     }
 }
 
-pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int tab[], int compteDebut, int *h)
+pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte, int tab[], int compteDebut, int *h)
 {
     //fonction d'insertion d'AVL 
     if (h == NULL)
@@ -110,9 +120,10 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int 
     }
     if (a == NULL)
     {
-        exit(23);
+        *h = 1;
+        a = creationArbreDebut(ID_route, pVille nomVille, compte, tab, compteDebut);
     }
-    else if (ID_route < a->ID_route)
+    }
     else if (ID_route < a->ID_route)
     {
         //parcours d'AVL
@@ -190,16 +201,17 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut)
+pArbre creerArbreFinal(int ID_route, pVille nomVille, int compte, int compteDebut)
 {
     //crée un nouvel arbre avec les valeurs entrées
-    pArbre c = malloc(sizeof(Arbre));
+    pArbreF c = malloc(sizeof(ArbreF));
     if (c == NULL)
     {
         exit(ALLOC_ERROR);
     }
     c->ID_route = ID_route;
-    c->nomVille = nomVille;
+    c->nomVille = nomVille->nomVille;
+    c->compteDebut = compteDebut;
     c->compte = compte;
     c->fg = NULL;
     c->fd = NULL;
@@ -256,7 +268,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h)
+pArbre insertionAVLFINAL(pArbre a, int ID_route, pVille nomVille, int compte, int compteDebut, int *h)
 {
     //fonction d'insertion d'AVL récursive
     if (h == NULL)

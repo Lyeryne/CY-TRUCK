@@ -16,25 +16,41 @@ int main()
     }
 
     int ID_route;
-    char nomVille;
+    char nomVilleDepart;
+    char nomVilleArrivee;
     //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
     //routeID et distance
-    while (fscanf(chemin1, "%d;%f\n", &ID_route, &nomVille) == 2)
+    while (fscanf(chemin1, "%d;%f;%f\n", &ID_route, &nomVilleDepart, &nomVilleArrivee) == 3)
     {
         //Verification de l'intégrité des données
-        if(nomVille == NULL || nomVille[0] =='\O' || ID_route < 0){
+        if(nomVilleDepart == NULL || nomVilleDepart[0] =='\O' || nomVilleArrivee == NULL || nomVilleArrivee[0] =='\O' || ID_route < 0){
             printf("Données Corrompues");
             exit(66);
         }
-        for(int i = 0; nomVille[i]!= '\0'; i++ ){
-            if(isdigit(nomVille[i])){
-                printf("Données corrompues, il y a un chiffre dans le nom de la ville");
+        for(int i = 0; nomVilleDepart[i]!= '\0'; i++ ){
+            if(isdigit(nomVilleDepart[i])){
+                printf("Données corrompues, il y a un chiffre dans le nom de la ville de départ");
                 exit(67);
             }
         }
-        //on crée un AVL petit a petit avec les valeurs de RouteId et de distance
+        for(int i = 0; nomVilleArrivee[i]!= '\0'; i++ ){
+            if(isdigit(nomVilleArrivee[i])){
+                printf("Données corrompues, il y a un chiffre dans le nom de la ville d'arrivée");
+                exit(68);
+            }
+        }
+        //on crée un AVL petit a petit avec les valeurs de RouteId et des villes
+        
+        pVille VilleDepart = creerVille(nomVilleDepart, 1);
+        pVille VilleArrivée = (nomVilleArrivee, 0);
+        int compte = 0;
         int h = 0;
-        a = insertionAVLDEBUT(a, RouteID, distance, compte, tab[], &h);
+        int tab[SIZE4];
+        for(int i = 0; i<= SIZE4;i++){
+            tab[i] = 0;
+        }
+        int compteDebut = 0
+        a = TransfoArbreDebut(a, RouteID, VilleDepart, VilleArrivee, compte, tab[], compteDebut);
     }
     //fermeture du fichier pour libérer des ressources
     fclose(chemin1);
