@@ -9,18 +9,34 @@
 #define SIZE1 4
 #define SIZE2 50
 #define SIZE3 5
+#define SIZE4 500
 #define ALLOC_ERROR 77
 
+typedef struct{
+    char nomVille;
+    int Debut;
+} Ville;
 
-typedef struct _b
-{
+
+typedef struct _b{
     int ID_route;
     struct _b *fg;
     struct _b *fd;
     int equilibre;
     char nomVille;
+    int tab[SIZE4];
     int compte;
+    int compteDebut;
 } Arbre;
+
+typedef struct{
+    int ID_route;
+    Ville nomVilleDepart;
+    Ville nomVilleArrivee;
+    int tab[SIZE4];
+    int compte;
+    int compteDebut;
+} Debut;
 
 
 typedef struct {
@@ -31,17 +47,19 @@ typedef struct {
 
 typedef Arbre* pArbre;
 
-pArbre creerArbre(int ID_route, char nomVille, int compte);
+pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
 void infixeInverse(FILE* chemin, pArbre a, int *i);
 
-pArbre insertionAVLTrajet(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte ,int tab[], int compteDebut, int *h);
 
 void libererArbre(pArbre a);
 
-pArbre creerArbreEntier(int ID_route, char nomVille, int compte);
+pArbre TransfoArbreDebut(pArbre a, int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut);
+
+pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut);
 
 int min(int a, int b);
 
@@ -53,7 +71,7 @@ float min_f(float a, float b);
 
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVL(pArbre a, int ID_route, char nomVille, int compte, int *h);
+pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h);
 
 pArbre rotationGauche(pArbre a);
 

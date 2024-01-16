@@ -1,4 +1,34 @@
-#include "AVL_T.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+#define SIZE1 4
+#define SIZE2 50
+#define SIZE3 5
+#define SIZE4 500
+#define ALLOC_ERROR 77
+
+
+typedef struct _b
+{
+    int ID_route;
+    struct _b *fg;
+    struct _b *fd;
+    int equilibre;
+    char nomVille;
+    int tab[SIZE 4];
+    int compte;
+} Arbre;
+
+
+typedef struct {
+    int ID_route;
+    char nomVille;
+} insertVille;
+
+
+typedef Arbre* pArbre;
 
 pArbre equilibrerAVL(pArbre a)
 {
@@ -36,7 +66,7 @@ pArbre equilibrerAVL(pArbre a)
 
 
 
-pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut)
+pArbre creationArbreDebut(int ID_route, char nomVille, int compte, int tab[])
 {
     //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
     pArbre a = malloc(sizeof(Arbre));
@@ -48,26 +78,9 @@ pArbre creationArbreDebut(int ID_route, char nomVilleDepart, char nomVilleArrive
     a->fd = NULL;
     a->equilibre = 0;
     a->ID_route = ID_route;
-    a->nomVille = nomVilleDepart;
-    for(int i=0;i<=SIZE4;i++){
-        a->tab[i] = tab[i];
-    }
+    a->nomVille = nomVille;
+    a->tab = tab;
     a->compte = compte;
-    a->compteDebut = compteDebut;
-    int h = 0;
-    insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h);
-    return a;
-}
-
-pArbre TransfoArbreDebut(pArbre a, int ID_route, char nomVilleDepart, char nomVilleArrivee, int compte, int tab[], int compteDebut){
-    if(a == NULL){
-        a = creationArbreDebut(ID_route, nomVilleDepart, nomVilleArrivee, compte, tab, compteDebut);
-    }
-    else{
-        int h = 0;
-        a = insertionAVLDEBUT(a, ID_route, nomVilleDepart, compte, tab, compteDebut, &h);
-        a = insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h);
-    }
     return a;
 }
 
@@ -80,7 +93,7 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
     {
         //facteur d'equilibrage toujours initialisé a 0
         int h = 0;
-        b = insertionAVLFINAL(b, a->ID_route, a->nomVille, a->compte, a->compteDebut, &h);
+        b = insertionAVLFINAL(b, a->ID_route, a->nomVille, a->compte, &h);
         b = creationArbreFinal(a->fg, b);
         b = creationArbreFinal(a->fd, b);
     }
@@ -96,12 +109,12 @@ void infixeInverse(FILE *chemin, pArbre a, int *i)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille);
+        fprintf(chemin, "%d;%d;%s\n", *i, a->ID_route, a->compte, a->nomVille);
         infixeInverse(chemin, a->fg, i);
     }
 }
 
-pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int tab[], int compteDebut, int *h)
+pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int tab[], int *h)
 {
     //fonction d'insertion d'AVL 
     if (h == NULL)
@@ -110,19 +123,21 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int 
     }
     if (a == NULL)
     {
-        exit(23);
+        //si l'id trajet est nouveau, on crée un AVL 
+        *h = 1;
+        return creationArbreDebut(ID_route, nomVille, compte);
     }
     else if (ID_route < a->ID_route)
     {
         //parcours d'AVL
-        a->fd = insertionAVLDEBUT(a->fd, ID_route, nomVille, compte, tab, compteDebut,  h);
+        a->fd = insertionAVLDEBUT(a->fd, ID_route, nomVille, compte, tab,  h);
         *h = 0;
     }
     else if (ID_route > a->ID_route)
     {
         //parcours d'AVL
         *h = -*h;
-        a->fg = insertionAVLDEBUT(a->fg, ID_route, nomVille, compte, tab, compteDebut, h);
+        a->fg = insertionAVLDEBUT(a->fg, ID_route, nomVille, compte, tab, h);
     }
     else
     {
@@ -173,7 +188,7 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut)
+pArbre creerArbreFinal(int ID_route, char nomVille, int compte)
 {
     //crée un nouvel arbre avec les valeurs entrées
     pArbre c = malloc(sizeof(Arbre));
@@ -239,7 +254,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h)
+pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int *h)
 {
     //fonction d'insertion d'AVL récursive
     if (h == NULL)
@@ -250,18 +265,18 @@ pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int 
     {
         //on est au bon endroit dans l'AVL, on cré un nouveau noeud et le retourne 
         *h = 1;
-        return creerArbreFinal(ID_route, nomVille, compte, compteDebut);
+        return creerArbreFinal(ID_route, nomVille, compte);
     }
-    else if (compte > a->compte)
+    else if (compte >= a->compte)
     {
         //on veut trier les valeurs en fonction de valeur min - valeur max donc on parcours l'arbre de cette manière
-        a->fd = insertionAVLFINAL(a->fd, ID_route, nomVille, compte, compteDebut, h);
+        a->fd = insertionAVLFINAL(a->fd, ID_route, nomVille, compte, h);
         *h = 0;
     }
     else if (compte < a->compte)
     {
         *h = -*h;
-        a->fd = insertionAVLFINAL(a->fd, ID_route, nomVille, compte, compteDebut, h);
+        a->fd = insertionAVLFINAL(a->fd, ID_route, nomVille, compte, h);
     }
     else
     {
@@ -350,3 +365,64 @@ pArbre doubleRotationDroit(pArbre a)
     return rotationDroit(a);
 }
 
+
+int main()
+{
+
+    pArbre a = NULL;
+    pArbre b = NULL;
+
+    //chemin pour accéder aux données principales
+    FILE *chemin1 = fopen("../temp/c2_data.txt", "r");
+    //vérification que l'allocation a bien été faite
+    if (chemin1 == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier 1\n");
+        exit(1);
+    }
+
+    int ID_route;
+    char nomVille;
+    //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
+    //routeID et distance
+    while (fscanf(chemin1, "%d;%f\n", &ID_route, &nomVille) == 2)
+    {
+        //Verification de l'intégrité des données
+        if(nomVille == NULL || nomVille[0] =='\O' || ID_route < 0){
+            printf("Données Corrompues");
+            exit(66);
+        }
+        for(int i = 0; nomVille[i]!= '\0'; i++ ){
+            if(isdigit(nomVille[i])){
+                printf("Données corrompues, il y a un chiffre dans le nom de la ville");
+                exit(67);
+            }
+        }
+        //on crée un AVL petit a petit avec les valeurs de RouteId et de distance
+        int h = 0;
+        a = insertionAVLDEBUT(a, RouteID, distance, compte, tab[], &h);
+    }
+    //fermeture du fichier pour libérer des ressources
+    fclose(chemin1);
+    //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par distance max - distance min
+    b = creationArbreFinal(a, b);
+    //désallocation récursive de tout l'arbre manuellement
+    libererArbre(a);
+    //chemin pour accéder au fichier de sortie dans lequel on mettra les données utiles pour le script gnuplot
+    FILE *chemin2 = fopen("../temp/gnuplot_data_S.txt", "w");
+    //verification que l'allocation a bien été faite
+    if (chemin2 == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier 2\n");
+        exit(1);
+    }
+    int i=0;
+    //on parcours l'arbre dans l'ordre décroissant 
+    infixeInverse(chemin2, b, &i);
+    //fermeture du fichier
+    fclose(chemin2);
+    //désallocation récursive de l'arbre manuellement
+    libererArbre(b);
+
+    return 0;
+}
