@@ -25,7 +25,7 @@ typedef struct _b{
     struct _b *fg;
     struct _b *fd;
     int equilibre;
-    pVille nomVille;
+    char nomVille;
     int tab[SIZE4];
     int compte;
     int compteDebut;
@@ -46,11 +46,11 @@ typedef struct {
     char nomVille;
 } insertVille;
 
-typedef ArbreF* pArbreF
+typedef ArbreF* pArbreF;
 typedef Ville* pVille;
 typedef Arbre* pArbre;
 
-pArbre creerArbreFinal(int ID_route, pVille nomVille, int compte, int compteDebut);
+pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
@@ -74,7 +74,7 @@ float min_f(float a, float b);
 
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, pVille nomVille, int compte, int compteDebut, int *h);
+pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h);
 
 pArbre rotationGauche(pArbre a);
 

@@ -57,13 +57,12 @@ pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], 
     a->fd = NULL;
     a->equilibre = 0;
     a->ID_route = ID_route;
-    a->nomVille->nomVille = nomVille->nomVille;
-    a->nomVille->Debut = nomVille->Debut;
+    a->nomVille = nomVille->nomVille;
     for(int i=0;i<=SIZE4;i++){
         a->tab[i] = tab[i];
     }
     a->compte = compte;
-    a->compteDebut = compteDebut;
+    a->compteDebut = compteDebut + nomVille->Debut;
     int h = 0;
     return a;
 }
@@ -201,7 +200,7 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreFinal(int ID_route, pVille nomVille, int compte, int compteDebut)
+pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut)
 {
     //crée un nouvel arbre avec les valeurs entrées
     pArbreF c = malloc(sizeof(ArbreF));
@@ -210,7 +209,7 @@ pArbre creerArbreFinal(int ID_route, pVille nomVille, int compte, int compteDebu
         exit(ALLOC_ERROR);
     }
     c->ID_route = ID_route;
-    c->nomVille = nomVille->nomVille;
+    c->nomVille = nomVille;
     c->compteDebut = compteDebut;
     c->compte = compte;
     c->fg = NULL;
@@ -268,7 +267,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, pVille nomVille, int compte, int compteDebut, int *h)
+pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h)
 {
     //fonction d'insertion d'AVL récursive
     if (h == NULL)
