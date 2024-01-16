@@ -113,6 +113,7 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int 
         exit(23);
     }
     else if (ID_route < a->ID_route)
+    else if (ID_route < a->ID_route)
     {
         //parcours d'AVL
         a->fd = insertionAVLDEBUT(a->fd, ID_route, nomVille, compte, tab, compteDebut,  h);
@@ -126,6 +127,22 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, char nomVille, int compte, int 
     }
     else
     {
+        int i;
+        while(i<=500){
+            if(tab[i] != ID_route){
+                i++;
+            }
+            else{
+                *h = 0;
+                return a;
+            }
+        }
+
+        int j;
+        while(j != '\0'){
+            j++;
+        }
+            tab[j] = ID_route;
         int i;
         while(i<=500){
             if(tab[i] != ID_route){
