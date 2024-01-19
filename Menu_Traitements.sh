@@ -202,14 +202,14 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
                                         exit 23
                                     fi
                             ;;
-                        #"-t" | "-T" | "_t" | "_T") 
-                        #    if [ ! -x "T.sh" ] ; then # verifie si le fichier a la permission d'exécution
-                        #        chmod +x T.sh
-                        #        ./T.sh $1 # on lance le script
-                        #    else
-                        #        ./T.sh $1 
-                        #    fi 
-                        #    ;;
+                        "-t" | "-T" | "_t" | "_T") 
+                            if [ ! -x "T.sh" ] ; then # verifie si le fichier a la permission d'exécution
+                                chmod +x T.sh
+                                ./T.sh $1 # on lance le script
+                            else
+                                ./T.sh $1 
+                            fi 
+                            ;;
                         "-s" | "-S" | "_s" | "_S")
                             if [ ! -x "S.sh" ] ; then # verifie si le fichier a la permission d'exécution
                                 chmod +x S.sh

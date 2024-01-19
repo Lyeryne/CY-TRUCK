@@ -32,7 +32,40 @@ pArbre equilibrerAVL(pArbre a)
     return a;
 }
 
-pVille creerVille(char nom, int num){
+
+pArbreF equilibrerAVLF(pArbreF a)
+{
+    //fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage 
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR);
+    }
+    if (a->equilibre >= 2)
+    {
+        if (a->fd->equilibre >= 0)
+        {
+            return rotationGaucheF(a);
+        }
+        else
+        {
+            return doubleRotationGaucheF(a);
+        }
+    }
+    else if (a->equilibre <= -2)
+    {
+        if (a->fg->equilibre <= 0)
+        {
+            return rotationDroitF(a);
+        }
+        else
+        {
+            return doubleRotationDroitF(a);
+        }
+    }
+    return a;
+}
+
+pVille creerVille(char* nom, int num){
     pVille a = malloc(sizeof(Ville));
     if (a == NULL)
     {
@@ -45,7 +78,7 @@ pVille creerVille(char nom, int num){
 
 
 
-pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], int compteDebut)
+pArbre creationArbreDebut(int ID_route, pVille nVille, int compte, int tab[], int compteDebut)
 {
     //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
     pArbre a = malloc(sizeof(Arbre));
@@ -57,20 +90,20 @@ pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], 
     a->fd = NULL;
     a->equilibre = 0;
     a->ID_route = ID_route;
-    a->nomVille = nomVille->nomVille;
+    a->nomVille = nVille->nomVille;
     for(int i=0;i<=SIZE4;i++){
         a->tab[i] = tab[i];
     }
     a->compte = compte;
-    a->compteDebut = compteDebut + nomVille->Debut;
-    int h = 0;
+    a->compteDebut = compteDebut + nVille->Debut;
     return a;
 }
 
 pArbre TransfoArbreDebut(pArbre a, int ID_route, pVille nomVilleDepart, pVille nomVilleArrivee, int compte, int tab[], int compteDebut){
     if(a == NULL){
-        a = creationArbreDebut(ID_route, nomVilleDepart, nomVilleArrivee, compte, tab, compteDebut);
-        a = insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h)
+        int h = 0;
+        a = creationArbreDebut(ID_route, nomVilleDepart, compte, tab, compteDebut);
+        a = insertionAVLDEBUT(a, ID_route, nomVilleArrivee, compte, tab, compteDebut, &h);
     }
     else{
         int h = 0;
@@ -80,7 +113,7 @@ pArbre TransfoArbreDebut(pArbre a, int ID_route, pVille nomVilleDepart, pVille n
     return a;
 }
 
-pArbre creationArbreFinal(pArbre a, pArbre b)
+pArbreF creationArbreFinal(pArbre a, pArbreF b)
 {
     //fonction récursive pour créer l'arbre final
     //la fonction va parcourir tout l'arbre a et ajouter les valeurs dans 
@@ -96,7 +129,7 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
     return b;
 }
 
-void infixeInverse(FILE *chemin, pArbre a, int *i)
+void infixeInverse(FILE *chemin, pArbreF a, int *i)
 {
     //fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
     //Le compteur, l'id de la route, la ville
@@ -105,7 +138,7 @@ void infixeInverse(FILE *chemin, pArbre a, int *i)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille->nomVille);
+        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille);
         infixeInverse(chemin, a->fg, i);
     }
 }
@@ -120,9 +153,10 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte, in
     if (a == NULL)
     {
         *h = 1;
-        a = creationArbreDebut(ID_route, pVille nomVille, compte, tab, compteDebut);
+        a = creationArbreDebut(ID_route, nomVille, compte, tab, compteDebut);
+        return a;
     }
-    }
+    
     else if (ID_route < a->ID_route)
     {
         //parcours d'AVL
@@ -137,22 +171,6 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte, in
     }
     else
     {
-        int i;
-        while(i<=500){
-            if(tab[i] != ID_route){
-                i++;
-            }
-            else{
-                *h = 0;
-                return a;
-            }
-        }
-
-        int j;
-        while(j != '\0'){
-            j++;
-        }
-            tab[j] = ID_route;
         int i;
         while(i<=500){
             if(tab[i] != ID_route){
@@ -200,10 +218,21 @@ void libererArbre(pArbre a)
     }
 }
 
-pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut)
+void libererArbreF(pArbreF a)
+{
+    //libère tout l'arbre de manière récursive
+    if (a != NULL)
+    {
+        libererArbreF(a->fg);
+        libererArbreF(a->fd);
+        free(a);
+    }
+}
+
+pArbreF creerArbreFinal(int ID_route, char* nomVille, int compte, int compteDebut)
 {
     //crée un nouvel arbre avec les valeurs entrées
-    pArbreF c = malloc(sizeof(ArbreF));
+    pArbreF c = (pArbreF)(sizeof(ArbreF));
     if (c == NULL)
     {
         exit(ALLOC_ERROR);
@@ -267,7 +296,7 @@ int existeFilsDroit(pArbre a)
     return 0;
 }
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h)
+pArbreF insertionAVLFINAL(pArbreF a, int ID_route, char* nomVille, int compte, int compteDebut, int *h)
 {
     //fonction d'insertion d'AVL récursive
     if (h == NULL)
@@ -278,7 +307,8 @@ pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int 
     {
         //on est au bon endroit dans l'AVL, on cré un nouveau noeud et le retourne 
         *h = 1;
-        return creerArbreFinal(ID_route, nomVille, compte, compteDebut);
+         a = creerArbreFinal(ID_route, nomVille, compte, compteDebut);
+        return a;
     }
     else if (compte > a->compte)
     {
@@ -299,7 +329,7 @@ pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int 
     if (*h != 0)
     {
         a->equilibre = a->equilibre + *h;
-        a = equilibrerAVL(a);
+        a = equilibrerAVLF(a);
         if (a->equilibre == 0)
         {
             *h = 0;
@@ -320,6 +350,27 @@ pArbre rotationGauche(pArbre a)
         exit(ALLOC_ERROR);
     }
     pArbre pivot;
+    int eq_a, eq_p;
+    pivot = a->fd;
+    a->fd = pivot->fg;
+    pivot->fg = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - max(eq_p, 0) - 1;
+    pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
+    pivot->equilibre = min(pivot->equilibre, eq_p - 1);
+    a = pivot;
+    return a;
+}
+
+pArbreF rotationGaucheF(pArbreF a)
+{
+    //permet de faire une simple rotation a gauche de l'AVLFinal 
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR);
+    }
+    pArbreF pivot;
     int eq_a, eq_p;
     pivot = a->fd;
     a->fd = pivot->fg;
@@ -377,4 +428,47 @@ pArbre doubleRotationDroit(pArbre a)
     a->fg = rotationGauche(a->fg);
     return rotationDroit(a);
 }
+pArbreF rotationDroitF(pArbreF a)
+{
+    //permet de faire une simple rotation a droite de l'AVL 
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR);
+    }
+    pArbreF pivot;
+    int eq_a, eq_p;
+    pivot = a->fg;
+    a->fg = pivot->fd;
+    pivot->fd = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - min(eq_p, 0) + 1;
+    pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
+    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
+    a = pivot;
+    return a;
+}
 
+pArbreF doubleRotationGaucheF(pArbreF a)
+{
+    //permet de faire une double rotation a gauche de l'AVL 
+    //donc rotation simple droite puis rotation simple gauche
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR);
+    }
+    a->fd = rotationDroitF(a->fd);
+    return rotationGaucheF(a);
+}
+
+pArbreF doubleRotationDroitF(pArbreF a)
+{
+    //permet de faire une double rotation a droite de l'AVL 
+    //donc rotation simple gauche puis rotation simple droite
+    if (a == NULL)
+    {
+        exit(ALLOC_ERROR);
+    }
+    a->fg = rotationGaucheF(a->fg);
+    return rotationDroitF(a);
+}
