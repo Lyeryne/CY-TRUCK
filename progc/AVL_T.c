@@ -138,7 +138,7 @@ void infixeInverse(FILE *chemin, pArbreF a, int *i)
     {
         infixeInverse(chemin, a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%d;%d;%s\n", *i, a->ID_route, a->compte, a->compteDebut, a->nomVille);
+        fprintf(chemin, "%d;%d;%d;%s\n", *i, a->compte, a->compteDebut, a->nomVille);
         infixeInverse(chemin, a->fg, i);
     }
 }
