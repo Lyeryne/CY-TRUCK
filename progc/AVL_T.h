@@ -15,7 +15,7 @@
 #define ALLOC_ERROR_2 78
 
 typedef struct{
-    char nomVille;
+    char* nomVille;
     int Debut;
 } Ville;
 
@@ -25,7 +25,7 @@ typedef struct _b{
     struct _b *fg;
     struct _b *fd;
     int equilibre;
-    char nomVille;
+    char* nomVille;
     int tab[SIZE4];
     int compte;
     int compteDebut;
@@ -36,27 +36,31 @@ typedef struct _a{
     struct _a *fg;
     struct _a *fd;
     int equilibre;
-    char nomVille
+    char* nomVille;
     int compte;
     int compteDebut;
 } ArbreF;
 
 typedef struct {
     int ID_route;
-    char nomVille;
+    char* nomVille;
 } insertVille;
 
 typedef ArbreF* pArbreF;
 typedef Ville* pVille;
 typedef Arbre* pArbre;
 
-pArbre creerArbreFinal(int ID_route, char nomVille, int compte, int compteDebut);
+pArbreF creerArbreFinal(int ID_route, char* nomVille, int compte, int compteDebut);
 
-pArbre creationArbreFinal(pArbre a, pArbre b);
+pVille creerVille(char* nom, int num);
 
-void infixeInverse(FILE* chemin, pArbre a, int *i);
+pArbreF creationArbreFinal(pArbre a, pArbreF b);
+
+void infixeInverse(FILE* chemin, pArbreF a, int *i);
 
 pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte ,int tab[], int compteDebut, int *h);
+
+void libererArbreF(pArbreF a);
 
 void libererArbre(pArbre a);
 
@@ -68,27 +72,29 @@ int min(int a, int b);
 
 int max(int a, int b);
 
-float max_f(float a,float b);
-
-float min_f(float a, float b);
-
 int existeFilsDroit(pArbre a);
 
-pArbre insertionAVLFINAL(pArbre a, int ID_route, char nomVille, int compte, int compteDebut, int *h);
+pArbreF insertionAVLFINAL(pArbreF a, int ID_route, char* nomVille, int compte, int compteDebut, int *h);
 
 pArbre rotationGauche(pArbre a);
 
 pArbre rotationDroit(pArbre a);
 
+pArbreF rotationGaucheF(pArbreF a);
+
+pArbreF rotationDroitF(pArbreF a);
+
 pArbre doubleRotationGauche(pArbre a);
 
 pArbre doubleRotationDroit(pArbre a);
 
+pArbreF doubleRotationGaucheF(pArbreF a);
+
+pArbreF doubleRotationDroitF(pArbreF a);
+
 pArbre equilibrerAVL(pArbre a);
 
+pArbreF equilibrerAVLF(pArbreF a);
+
+
 #endif
-
-
-
-
-

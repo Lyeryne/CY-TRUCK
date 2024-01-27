@@ -66,7 +66,7 @@ les distances en km (mini, moyenne, maxi) représentée en ordonnée.
         |T|r|a|i|t|e|m|e|n|t| |-|T| |:|
         +-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+
 
--La commande suivante (T.sh mais coder en c) a pour objectif de compter le nombre de trajets qui parcourent
+-La commande suivante (T.sh mais codée en c) a pour objectif de compter le nombre de trajets qui parcourent
 chaque ville, ainsi que le nombre de fois où ces villes ont été des villes de départ de trajets.
 -Ensuite, elle trie cette liste par ordre alphabétique de villes et conserve uniquement les 10 premières villes 
 avec le plus de trajets.

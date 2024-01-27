@@ -16,7 +16,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     fi
 
 # Compilation du programme C
-    make -C progc
+    make -C progc Projet_T
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La compilation a échoué. Sortie du programme."
@@ -93,7 +93,7 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 68
         fi
-    ./Projet
+    ./Projet_T
         # Tue le programme si l'execution ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : L'exécution du programme C a échoué. Sortie du programme."
