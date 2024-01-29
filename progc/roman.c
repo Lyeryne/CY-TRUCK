@@ -249,23 +249,25 @@ pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte, in
         a = creationArbreDebut(ID_route, nomVille, compte, tab, compteDebut);
         return a;
     }
-    
-    else if (ID_route < a->ID_route)
+    //resultat = strcmp(nomVille, a->nomville)
+    //resultat < 0 nomville < a->nomville
+    //resultat > 0 nomville > a->nomville
+    else if (strcmp(nomVille->nomVille, a->nomVille) < 0)
     {
         //parcours d'AVL
         a->fd = insertionAVLDEBUT(a->fd, ID_route, nomVille, compte, tab, compteDebut,  h);
         *h = 0;
     }
-    else if (ID_route > a->ID_route)
+    else if (strcmp(nomVille->nomVille, a->nomVille) > 0)
     {
         //parcours d'AVL
-        *h = -*h;
         a->fg = insertionAVLDEBUT(a->fg, ID_route, nomVille, compte, tab, compteDebut, h);
+           
     }
     else
     {
-        int i;
-        while(i<=500){
+        int i = 0;
+        while(tab[i] != '\0'){
             if(tab[i] != ID_route){
                 i++;
             }
@@ -325,7 +327,7 @@ void libererArbreF(pArbreF a)
 pArbreF creerArbreFinal(int ID_route, char* nomVille, int compte, int compteDebut)
 {
     //crée un nouvel arbre avec les valeurs entrées
-    pArbreF c = (pArbreF)(sizeof(ArbreF));
+    pArbreF c = (pArbreF)(malloc(sizeof(ArbreF)));
     if (c == NULL)
     {
         exit(ALLOC_ERROR);
@@ -400,7 +402,7 @@ pArbreF insertionAVLFINAL(pArbreF a, int ID_route, char* nomVille, int compte, i
     {
         //on est au bon endroit dans l'AVL, on cré un nouveau noeud et le retourne 
         *h = 1;
-         a = creerArbreFinal(ID_route, nomVille, compte, compteDebut);
+        a = creerArbreFinal(ID_route, nomVille, compte, compteDebut);
         return a;
     }
     else if (compte > a->compte)
@@ -582,15 +584,24 @@ int main()
 
     int ID_route;
     char* nomVilleDepart;
-    nomVilleDepart = malloc(sizeof(char*));
+    nomVilleDepart = malloc(sizeof(char)*50);
+    if(nomVilleDepart == NULL)
+    {
+        printf("Erreur d'allocation\n");
+    }
     char* nomVilleArrivee;
-    nomVilleArrivee = malloc(sizeof(char*));
+    nomVilleArrivee = malloc(sizeof(char)*50);
+    if(nomVilleArrivee == NULL)
+    {
+        printf("Erreur d'allocation\n");
+    }
+    
     //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
     //routeID et distance
-    while (fscanf(chemin1, "%d;%s;%s\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
+    while (fscanf(chemin1, "%d;%49[^;];%49[^\n]\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
     {
         //Verification de l'intégrité des données
-        if (nomVilleDepart == NULL || nomVilleDepart[0] == '\0' || nomVilleArrivee == NULL || nomVilleArrivee[0] == '\0' || ID_route < 0) {
+        if (nomVilleDepart[0] == '\0' || nomVilleArrivee[0] == '\0' || ID_route < 0) {
 
             printf("Données Corrompues");
             exit(66);
@@ -627,7 +638,8 @@ int main()
     //désallocation récursive de tout l'arbre manuellement
     
     //chemin pour accéder au fichier de sortie dans lequel on mettra les données utiles pour le script gnuplot
-libererArbre(a);    FILE *chemin2 = fopen("../roman/gnuplot_data_T.txt", "w");
+    libererArbre(a);    
+    FILE *chemin2 = fopen("../roman/gnuplot_data_T.txt", "w");
     //verification que l'allocation a bien été faite
     if (chemin2 == NULL)
     {

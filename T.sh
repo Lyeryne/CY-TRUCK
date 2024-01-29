@@ -51,7 +51,7 @@ temps_debut=$(date +%s.%N)
     fi
 
 # Exécution du programme C avec le fichier en argument
-    cut -d';' -f1,3,5 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c2_data.txt
+    cut -d';' -f1,3,4 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c2_data.txt
     # Tue le programme si la commande ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande de traitement des données a échoué. Sortie du programme."
@@ -138,7 +138,7 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 72
         fi
-    head -n 50 "temp/gnuplot_data_T.txt" > "temp/gnu_data_T.txt"
+    head -n 10 "temp/gnuplot_data_T.txt" > "temp/gnu_data_T.txt"
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La compilation a échoué. Sortie du programme."
