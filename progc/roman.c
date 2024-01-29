@@ -581,30 +581,6 @@ int main()
 
     int ID_route;
     char* nomVilleDepart;
-<<<<<<< HEAD
-    nomVilleDepart = malloc(SIZE4 * sizeof(char*));
-    char* nomVilleArrivee;
-    nomVilleArrivee = malloc(SIZE4 * sizeof(char*));
-    //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
-    //routeID et distance
-    while (fscanf(chemin1T, "%d;%s;%s\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
-    {
-       
-        //on crée un AVL petit a petit avec les valeurs de RouteId et des villes
-        
-        pVille VilleDepart = creerVille(nomVilleDepart, 1);
-        pVille VilleArrivee = creerVille(nomVilleArrivee, 0);
-        int compte = 0;
-
-        int tab[SIZE4];
-        for(int i = 0; i<= SIZE4;i++){
-            tab[i] = 0;
-        }
-        int compteDebut = 0;
-        a = TransfoArbreDebut(a, ID_route, VilleDepart, VilleArrivee, compte, tab, compteDebut);
-     //Verification de l'intégrité des données
-        if (nomVilleDepart == NULL || nomVilleDepart[0] == '\0' || nomVilleArrivee == NULL || nomVilleArrivee[0] == '\0' || ID_route < 0) {
-=======
     nomVilleDepart = malloc(sizeof(char)*50);
     if(nomVilleDepart == NULL)
     {
@@ -623,7 +599,6 @@ int main()
     {
         //Verification de l'intégrité des données
         if (nomVilleDepart[0] == '\0' || nomVilleArrivee[0] == '\0' || ID_route < 0) {
->>>>>>> f346c4f9972cc509897c45aa28c5876c8d6a037a
 
             printf("Données Corrompues");
             exit(66);
@@ -653,13 +628,8 @@ int main()
     //désallocation récursive de tout l'arbre manuellement
     
     //chemin pour accéder au fichier de sortie dans lequel on mettra les données utiles pour le script gnuplot
-<<<<<<< HEAD
-libererArbre(a);    
-FILE *chemin2T = fopen("../roman/gnuplot_data_T.txt", "w");
-=======
     libererArbre(a);    
     FILE *chemin2 = fopen("../roman/gnuplot_data_T.txt", "w");
->>>>>>> f346c4f9972cc509897c45aa28c5876c8d6a037a
     //verification que l'allocation a bien été faite
     if (chemin2T == NULL)
     {

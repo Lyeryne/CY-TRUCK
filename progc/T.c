@@ -20,11 +20,7 @@ int main()
     char* nomVilleArrivee;
     //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
     //routeID et distance
-<<<<<<< HEAD
-    while (fscanf(chemin1T, "%d;%s;%s\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
-=======
     while (fscanf(chemin1T, "%d;%49[^;];%49[^\n]\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
->>>>>>> f346c4f9972cc509897c45aa28c5876c8d6a037a
     {
         //Verification de l'intégrité des données
         if (nomVilleDepart == NULL || nomVilleDepart[0] == '\0' || nomVilleArrivee == NULL || nomVilleArrivee[0] == '\0' || ID_route < 0) {

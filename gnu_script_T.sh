@@ -29,24 +29,12 @@ set datafile separator ";"
 # Définition du style des barres
 set style data histogram
 
-<<<<<<< HEAD
-# Chargement des données depuis le fichier CSV
-datafile = "gnuplot_data_T.txt"
-print "Chargement des données..."
-stats datafile using 1 nooutput
-stats datafile using 2 nooutput
-
-# Affichage des 10 premières lignes du fichier pour débogage
-print "Contenu du fichier :"
-system("head -n 10 gnuplot_data_T.txt")
-=======
 # Ajustement de la largeur des colonnes
 set boxwidth 3
 
 # Style de la barre
 set style histogram clustered gap 7
 set style fill solid 1.00 border 0
->>>>>>> f346c4f9972cc509897c45aa28c5876c8d6a037a
 
 # Tracé de l'histogramme
 plot 'temp/gnu_data_T.txt' using 2:xtic(1) title 'Trajets totales', '' using 3 lc rgb "#207523" title 'Trajets de départ'
