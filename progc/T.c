@@ -8,9 +8,9 @@ int main()
     pArbreF b = NULL;
 
     //chemin pour accéder aux données principales
-    FILE *chemin1 = fopen("../temp/c2_data.txt", "r");
+    FILE *chemin1T = fopen("../temp/c2_data.txt", "r");
     //vérification que l'allocation a bien été faite
-    if (chemin1 == NULL){
+    if (chemin1T == NULL){
         printf("Erreur lors de l'ouverture du fichier 1\n");
         exit(1);
     }
@@ -20,7 +20,7 @@ int main()
     char* nomVilleArrivee;
     //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
     //routeID et distance
-    while (fscanf(chemin1, "%d;%s;%s\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
+    while (fscanf(chemin1T, "%d;%s;%s\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
     {
         //Verification de l'intégrité des données
         if (nomVilleDepart == NULL || nomVilleDepart[0] == '\0' || nomVilleArrivee == NULL || nomVilleArrivee[0] == '\0' || ID_route < 0) {
@@ -54,7 +54,7 @@ int main()
         a = TransfoArbreDebut(a, ID_route, VilleDepart, VilleArrivee, compte, tab, compteDebut);
     }
     //fermeture du fichier pour libérer des ressources
-    fclose(chemin1);
+    fclose(chemin1T);
     //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par traversées
     b = creationArbreFinal(a, b);
     //désallocation récursive de tout l'arbre manuellement

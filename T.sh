@@ -6,7 +6,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     # Tue le programme si le fichiers .C ou .h ou le makefile n'existe pas     
     if [ ! -e "progc/T.c" ] || [ ! -e "progc/AVL_T.c" ] || [ ! -e "progc/AVL_T.h" ] || [ ! -e "progc/T.h" ] ; then
         echo "Il vous manque un fichier .c ou .h"
-        echo "Le traitement T a mis 0.000000000 s"
+        echo "Le traitement S a mis 0.000000000 s"
         exit 59
     fi
     if [ ! -e "progc/makefile" ] ; then

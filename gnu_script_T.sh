@@ -3,7 +3,7 @@
 gnuplot << EOF
 # Determination du style de sortie
 set terminal pngcairo enhanced font 'arial,10' size 1100,700
-set output 'images/output_histogramme.png'
+set output 'images/output_T.png'
 
 # Titre du graphique 
 set title 'Histogramme des trajets par ville'
@@ -32,16 +32,14 @@ set style histogram clustered
 set style fill solid border -1
 
 # Chargement des données depuis le fichier CSV
-datafile = "donnees_test.csv"
-print "Chargement des données..."
-stats datafile using 1 nooutput
-stats datafile using 2 nooutput
+#stats datafile using 1 nooutput
+#stats datafile using 2 nooutput
 
 # Affichage des 10 premières lignes du fichier pour débogage
-print "Contenu du fichier :"
-system("head -n 10 donnees_test.csv")
+#print "Contenu du fichier :"
+#system("head -n 10 gnu_data_T.txt.csv")
 
 # Tracé de l'histogramme
-plot datafile using 3:xticlabels(4) title 'Trajets totaux', \
+plot 'temp/gnu_data_T.txt' using 3:xticlabels(4) title 'Trajets totaux', \
      '' using 3:xticlabels(4) title 'Trajets de départ'
 EOF

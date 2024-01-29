@@ -167,8 +167,6 @@ pVille creerVille(char* nom, int num){
     return a;
 }
 
-
-
 pArbre creationArbreDebut(int ID_route, pVille nVille, int compte, int tab[], int compteDebut)
 {
     //crée l'arbre pour le premier AVL, distance, min et max prendront la valeur de distance, et le retourne
