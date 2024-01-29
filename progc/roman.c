@@ -575,9 +575,12 @@ int main()
     pArbreF b = NULL;
 
     //chemin pour accéder aux données principales
-    FILE *chemin1T = fopen("../roman/c2_data.txt", "r");
+    FILE *chemin1 = fopen("../roman/c2_data.txt", "r");
     //vérification que l'allocation a bien été faite
-  
+    if (chemin1 == NULL){
+        printf("Erreur lors de l'ouverture du fichier 1\n");
+        exit(1);
+    }
 
     int ID_route;
     char* nomVilleDepart;
@@ -615,14 +618,21 @@ int main()
                 exit(68);
             }
         }
-        if (feof(chemin1T)) {
-    printf("Fin du fichier atteinte.\n");
-} else {
-    printf("Erreur de lecture du fichier.\n");
-}
+        //on crée un AVL petit a petit avec les valeurs de RouteId et des villes
+        
+        pVille VilleDepart = creerVille(nomVilleDepart, 1);
+        pVille VilleArrivee = creerVille(nomVilleArrivee, 0);
+        int compte = 0;
+
+        int tab[SIZE4];
+        for(int i = 0; i<= SIZE4;i++){
+            tab[i] = 0;
+        }
+        int compteDebut = 0;
+        a = TransfoArbreDebut(a, ID_route, VilleDepart, VilleArrivee, compte, tab, compteDebut);
     }
     //fermeture du fichier pour libérer des ressources
-    fclose(chemin1T);
+    fclose(chemin1);
     //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par traversées
     b = creationArbreFinal(a, b);
     //désallocation récursive de tout l'arbre manuellement
@@ -631,16 +641,16 @@ int main()
     libererArbre(a);    
     FILE *chemin2 = fopen("../roman/gnuplot_data_T.txt", "w");
     //verification que l'allocation a bien été faite
-    if (chemin2T == NULL)
+    if (chemin2 == NULL)
     {
         printf("Erreur lors de l'ouverture du fichier 2\n");
         exit(1);
     }
     int i=0;
     //on parcours l'arbre dans l'ordre décroissant 
-    infixeInverse(chemin2T, b, &i);
+    infixeInverse(chemin2, b, &i);
     //fermeture du fichier
-    fclose(chemin2T);
+    fclose(chemin2);
     //désallocation récursive de l'arbre manuellement
     libererArbreF(b);
     libererArbre(a);

@@ -60,18 +60,18 @@ int main()
     //désallocation récursive de tout l'arbre manuellement
     libererArbre(a);
     //chemin pour accéder au fichier de sortie dans lequel on mettra les données utiles pour le script gnuplot
-    FILE *chemin2T = fopen("../temp/gnuplot_data_T.txt", "w");
+    FILE *chemin2 = fopen("../temp/gnuplot_data_T.txt", "w");
     //verification que l'allocation a bien été faite
-    if (chemin2T == NULL)
+    if (chemin2 == NULL)
     {
         printf("Erreur lors de l'ouverture du fichier 2\n");
         exit(1);
     }
     int i=0;
     //on parcours l'arbre dans l'ordre décroissant 
-    infixeInverse(chemin2T, b, &i);
+    infixeInverse(chemin2, b, &i);
     //fermeture du fichier
-    fclose(chemin2T);
+    fclose(chemin2);
     //désallocation récursive de l'arbre manuellement
     libererArbreF(b);
 
