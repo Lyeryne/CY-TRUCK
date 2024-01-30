@@ -14,13 +14,16 @@ Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vo
 Assurez-vous que Menu_Traitements.sh à les droit en 
     Utilisant la commande suivante dans le terminal :
         chmod +x Menu_Traitements.sh
-Enfin, si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
+Si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
     Utilisez la commande suivante dans le terminal :
         sudo apt update
         sudo apt install imagemagick
 Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les graphiques, 
     Utilisez la commande suivante dans le terminal :
         sudo apt install gnuplot-x11
+Enfin, lorsque vous lancez le code, assurez-vous que vous soyez en grand écran sinon 
+il est fortement possible qu'à chaque fois que vous lancez un traitement, il vous affiche à chaque ligne :
+    LANCEMENT DES TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI)
 
 
 ~~> Compilation via 'Menu_Traitements.sh'

@@ -131,6 +131,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
                 exit 37
             fi
     fi
+    display images/output_D1.png
 
 # Ligne de code : cela enverra le signal SIGUSR1(il se trouve dans Affichage_Temps.sh) au processus identifié par le PID stocké dans la variable $CPID, 
 # déclenchant ainsi la fonction stop_compteur dans le script.

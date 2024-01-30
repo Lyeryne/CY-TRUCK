@@ -66,7 +66,7 @@ pArbre creationArbreFinal(pArbre a, pArbre b)
     return b;
 }
 
-void infixeInverse(FILE *chemin, pArbre a, int *i)
+void infixeInverse(pArbre a, int *i)
 {
     // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
     // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
@@ -74,10 +74,10 @@ void infixeInverse(FILE *chemin, pArbre a, int *i)
     // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
-        infixeInverse(chemin, a->fd, i);
+        infixeInverse(a->fd, i);
         (*i)++;
-        fprintf(chemin, "%d;%d;%.3f;%.3f;%.3f;%.3f\n", *i, a->ID_route, a->min, a->distance / a->compteur, a->max, a->max - a->min);
-        infixeInverse(chemin, a->fg, i);
+        printf("%d;%d;%.3f;%.3f;%.3f;%.3f\n", *i, a->ID_route, a->min, a->distance / a->compteur, a->max, a->max - a->min);
+        infixeInverse(a->fg, i);
     }
 }
 

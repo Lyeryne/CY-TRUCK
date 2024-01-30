@@ -30,7 +30,7 @@ pArbre creerArbre(int trajet, float distance);
 
 pArbre creationArbreFinal(pArbre a, pArbre b);
 
-void infixeInverse(FILE* chemin, pArbre a, int *i);
+void infixeInverse(pArbre a, int *i);
 
 pArbre insertionAVLTrajet(pArbre a, int idtrajet, float distance, int *h);
 

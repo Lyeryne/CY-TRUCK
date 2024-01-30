@@ -16,14 +16,40 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     fi
 
 # Compilation du programme C
-    make -C progc Projet_T
-        # Tue le programme si la compilation ne s'est pas bien terminée
-        if [ $? -ne 0 ] ; then
-            echo "Erreur : La compilation a échoué. Sortie du programme."
-            echo "Le traitement T a mis 0.000000000 s"
-            exit 61
-        fi
-    echo #saut de ligne
+    #makeclean version shell, on rm (executable + fichiers_o) à chaque fois lorsqu'on veut make
+    if [ -z "$(ls -A progc/fichiers_o/)" ] ; then
+        rm -r progc/fichier_o/*
+            # Tue le programme si la commande ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                exit 10
+            fi
+    fi
+    if [ -e "progc/Projet_T" ] ; then
+        rm -f progc/Projet_T
+            # Tue le programme si la commande ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                exit 8
+            fi
+        make -C progc Projet_T
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : La compilation a échoué. Sortie du programme."
+                echo "Le traitement T a mis 0.000000000 s"
+                exit 61
+            fi
+        echo #saut de ligne
+    else
+        make -C progc Projet_T
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : La compilation a échoué. Sortie du programme."
+                echo "Le traitement T a mis 0.000000000 s"
+                exit 61
+            fi
+        echo #saut de ligne
+    fi
     
 # Exécution du compte à rebours
 STOP_TEMPS=false
@@ -227,7 +253,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
                 exit 81
             fi
     fi
-
+    display images/output_T.png
 
 kill -SIGUSR1 $CPID
 echo #saut de ligne

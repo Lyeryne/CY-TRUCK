@@ -16,15 +16,42 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     fi
 
 # Compilation du programme C
-    make -C progc Projet_S
-        # Tue le programme si la compilation ne s'est pas bien terminée
-        if [ $? -ne 0 ] ; then
-            echo "Erreur : La compilation a échoué. Sortie du programme."
-            echo "Le traitement S a mis 0.000000000 s"
-            exit 61
-        fi
-    echo #saut de ligne
-    
+    # makeclean version shell, on rm (executable + fichiers_o) à chaque fois lorsqu'on veut make
+    if [ -z "$(ls -A progc/fichiers_o/)" ] ; then
+        rm -r progc/fichier_o/*
+            # Tue le programme si la commande ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                exit 10
+            fi
+    fi
+    if [ -e "progc/Projet_S" ] ; then
+        rm -f progc/Projet_S
+            # Tue le programme si la commande ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : Le RM a échoué. Sortie du programme."
+                exit 8
+            fi
+        make -C progc Projet_S
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : La compilation a échoué. Sortie du programme."
+                echo "Le traitement S a mis 0.000000000 s"
+                exit 61
+            fi
+        echo #saut de ligne
+
+        else 
+            make -C progc Projet_S
+            # Tue le programme si la compilation ne s'est pas bien terminée
+            if [ $? -ne 0 ] ; then
+                echo "Erreur : La compilation a échoué. Sortie du programme."
+                echo "Le traitement S a mis 0.000000000 s"
+                exit 61
+            fi
+        echo #saut de ligne
+    fi
+
 # Exécution du compte à rebours
 STOP_TEMPS=false
 source "Bonus/Affichage_Temps.sh" &
@@ -52,7 +79,6 @@ temps_debut=$(date +%s.%N)
 
 # Exécution du programme C avec le fichier en argument
     cut -d';' -f1,5 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c1_data.txt
-    #cut -d';' -f1,5 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 >> S.c
     # Tue le programme si la commande ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande de traitement des données a échoué. Sortie du programme."
@@ -94,7 +120,7 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement S a mis $temps_total s"
             exit 68
         fi
-    ./Projet_S
+    ./Projet_S | head -50 > ../temp/gnu_data_S.txt
         # Tue le programme si l'execution ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : L'exécution du programme C a échoué. Sortie du programme."
@@ -139,29 +165,6 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement S a mis $temps_total s"
             exit 72
         fi
-    head -n 50 "temp/gnuplot_data_S.txt" > "temp/gnu_data_S.txt"
-        # Tue le programme si la compilation ne s'est pas bien terminée
-        if [ $? -ne 0 ] ; then
-            echo "Erreur : La compilation a échoué. Sortie du programme."
-            kill -SIGTERM $CPID
-            temps_fin=$(date +%s.%N)
-                # Tue le programme si la compilation ne s'est pas bien terminée
-                if [ $? -ne 0 ] ; then
-                    echo "Erreur : la durée du traitement ne peut pas être affichée."            
-                    echo "Le traitement S a mis 0.000000000 s" 
-                    exit 65
-                fi
-            temps_total=$(echo "$temps_fin - $temps_debut" | bc)
-                # Tue le programme si la compilation ne s'est pas bien terminée
-                if [ $? -ne 0 ] ; then
-                    echo "Erreur : la durée du traitement ne peut pas être affichée."            
-                    echo "Le traitement S a mis 0.000000000 s" 
-                    exit 65
-                fi
-            echo "Le traitement S a mis $temps_total s"
-            exit 74
-        fi
-
 # Mesurer le temps après l'exécution du processus
 temps_fin=$(date +%s.%N)
     # Tue le programme si la commande ne s'est pas bien terminée
@@ -218,16 +221,16 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
                 kill -SIGTERM $CPID
                 exit 80
             fi
-    else
-        ./gnu_script_S.sh
-            # Tue le programme si la compilation ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : La commande a échoué. Sortie du programme."
-                echo "Le traitement S n'a pu que mettre $temps_total s" 
-                kill -SIGTERM $CPID
-                exit 81
-            fi
     fi
+    ./gnu_script_S.sh
+        # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La commande a échoué. Sortie du programme."
+            echo "Le traitement S n'a pu que mettre $temps_total s" 
+            kill -SIGTERM $CPID
+            exit 81
+        fi
+    display images/output_S.png
 
 
 kill -SIGUSR1 $CPID

@@ -3,9 +3,6 @@ CFLAGS = -g -Wall
 
 all: Projet_T Projet_S
 
-clean:
-	rm -f $(OBJ_DIR)/*.o Projet_S
-
 $(OBJ_DIR)/AVL_S.o: AVL_S.c AVL_S.h
 	gcc -c AVL_S.c -o $(OBJ_DIR)/AVL_S.o
 
