@@ -8,7 +8,7 @@ int main()
     pArbre b = NULL;
     int RouteID;
     float distance;
-/*
+
     //chemin pour accéder aux données principales
     FILE *chemin1 = fopen("../temp/c1_data.txt", "r");
     //vérification que l'allocation a bien été faite
@@ -32,7 +32,8 @@ int main()
         int h = 0;
         a = insertionAVLTrajet(a, RouteID, distance, &h);
     }
-*/
+
+/*
     char buffer[100];
     while(fgets(buffer, sizeof(buffer), stdin)!= NULL){
         // Utiliser sscanf pour extraire les deux nombres
@@ -54,7 +55,7 @@ int main()
         int h = 0;
         a = insertionAVLTrajet(a, RouteID, distance, &h);
     }
-
+*/
 
 
 
@@ -66,7 +67,7 @@ int main()
 
 
     //fermeture du fichier pour libérer des ressources
-    //fclose(chemin1);
+    fclose(chemin1);
     //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par distance max - distance min
     b = creationArbreFinal(a, b);
     //désallocation récursive de tout l'arbre manuellement
