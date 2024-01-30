@@ -16,12 +16,23 @@ typedef struct creerVille {
 
 // Fonction qui retourne le max entre 2 entiers
 int max(int a, int b) {
-    return (a > b) ? a : b;
+    if(a > b){
+        return a;
+    }
+    else{
+        return b;
+    }
+    
 }
 
 //Fonction qui retourne le min entre 2 entiers
 int min(int a, int b) {
-    return (a < b) ? a : b;
+    if(a > b){
+        return b;
+    }
+    else{
+        return a;
+    }
 }
 
 // Fonction qui retourne la hauteur du noeud N
