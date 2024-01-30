@@ -57,15 +57,6 @@ int main()
     }
 */
 
-
-
-
-
-
-
-
-
-
     //fermeture du fichier pour libérer des ressources
     fclose(chemin1);
     //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par distance max - distance min
