@@ -1,79 +1,60 @@
 #include "T.h"
 
+int main() {
+    FILE *chemin;
+    char ligne[1024];
 
-int main()
-{
+    creerVille *racine = NULL;
 
-    pArbre a = NULL;
-    pArbreF b = NULL;
-
-    //chemin pour accéder aux données principales
-    FILE *chemin1T = fopen("../temp/c2_data.txt", "r");
-    //vérification que l'allocation a bien été faite
-    if (chemin1T == NULL){
-        printf("Erreur lors de l'ouverture du fichier 1\n");
-        exit(1);
+    chemin = fopen("data.csv", "r");
+    if (chemin == NULL) {
+        printf("Erreur d'ouverture de data");
+        exit(24);
     }
 
-    int ID_route;
-    char* nomVilleDepart;
-    char* nomVilleArrivee;
-    //on récupere les données ligne par ligne du fichier data et on conserve les valeurs récupérées dans deux variables
-    //routeID et distance
-    while (fscanf(chemin1T, "%d;%49[^;];%49[^\n]\n", &ID_route, nomVilleDepart, nomVilleArrivee) == 3)
-    {
-        //Verification de l'intégrité des données
-        if (nomVilleDepart == NULL || nomVilleDepart[0] == '\0' || nomVilleArrivee == NULL || nomVilleArrivee[0] == '\0' || ID_route < 0) {
+    while (fgets(ligne, sizeof(ligne), chemin)) {
+        char *sep;
+        char *Colonnes[5];
 
-            printf("Données Corrompues");
-            exit(66);
+        int colonne = 0;
+        sep = strtok(ligne, ";");
+        while (sep != NULL && colonne < 5) {
+            Colonnes[colonne++] = sep;
+            sep = strtok(NULL, ";");
         }
-        for(int i = 0; nomVilleDepart[i]!= '\0'; i++ ){
-            if(isdigit(nomVilleDepart[i])){
-                printf("Données corrompues, il y a un chiffre dans le nom de la ville de départ");
-                exit(67);
+
+        if (colonne >= 4) {
+            char *ville = Colonnes[3];
+
+            if (strlen(ville) < NOMVILLE) {
+                racine = ajouterVille(racine, ville);
             }
         }
-        for(int i = 0; nomVilleArrivee[i]!= '\0'; i++ ){
-            if(isdigit(nomVilleArrivee[i])){
-                printf("Données corrompues, il y a un chiffre dans le nom de la ville d'arrivée");
-                exit(68);
+
+        if (colonne >= 2 && atoi(Colonnes[1]) == 1 && colonne >= 3) {
+            char *villeDepart = Colonnes[2];
+
+            if (strlen(villeDepart) < NOMVILLE) {
+                racine = ajouterVille(racine, villeDepart);
             }
         }
-        //on crée un AVL petit a petit avec les valeurs de RouteId et des villes
-        
-        pVille VilleDepart = creerVille(nomVilleDepart, 1);
-        pVille VilleArrivee = creerVille(nomVilleArrivee, 0);
-        int compte = 0;
+    }
 
-        int tab[SIZE4];
-        for(int i = 0; i<= SIZE4;i++){
-            tab[i] = 0;
-        }
-        int compteDebut = 0;
-        a = TransfoArbreDebut(a, ID_route, VilleDepart, VilleArrivee, compte, tab, compteDebut);
+
+    fclose(chemin);
+
+    creerVille *maxVilles[NBR_VILLE];
+    unsigned long int nbVillesMAX = 0;
+
+    Prefixe(racine, maxVilles, &nbVillesMAX);
+
+    qsort(maxVilles, nbVillesMAX, sizeof(creerVille *), compareTrajet);
+
+    printf("Les villes les plus traversées sont : \n");
+    for (unsigned long int i = 0; i < nbVillesMAX && i < NBR_VILLE; i++) {
+        printf("%s : Traversée - %d fois \n", maxVilles[i]->nom, maxVilles[i]->CmptVille);
     }
-    //fermeture du fichier pour libérer des ressources
-    fclose(chemin1T);
-    //parcours l'arbre a et ajoute ses valeurs dans l'arbre b qui contiendra toutes les valeurs triées par traversées
-    b = creationArbreFinal(a, b);
-    //désallocation récursive de tout l'arbre manuellement
-    libererArbre(a);
-    //chemin pour accéder au fichier de sortie dans lequel on mettra les données utiles pour le script gnuplot
-    FILE *chemin2 = fopen("../temp/gnuplot_data_T.txt", "w");
-    //verification que l'allocation a bien été faite
-    if (chemin2 == NULL)
-    {
-        printf("Erreur lors de l'ouverture du fichier 2\n");
-        exit(1);
-    }
-    int i=0;
-    //on parcours l'arbre dans l'ordre décroissant 
-    infixeInverse(chemin2, b, &i);
-    //fermeture du fichier
-    fclose(chemin2);
-    //désallocation récursive de l'arbre manuellement
-    libererArbreF(b);
 
     return 0;
+    
 }

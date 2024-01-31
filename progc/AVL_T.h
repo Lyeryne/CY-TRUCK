@@ -3,98 +3,38 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#include <ctype.h>
 
-#define SIZE1 4
-#define SIZE2 50
-#define SIZE3 5
-#define SIZE4 500
-#define ALLOC_ERROR 77
-#define ALLOC_ERROR_2 78
+#define NOMVILLE 35
+#define NBR_VILLE 10
 
-typedef struct{
-    char* nomVille;
-    int Debut;
-} Ville;
-
-
-typedef struct _b{
-    int ID_route;
-    struct _b *fg;
-    struct _b *fd;
-    int equilibre;
-    char* nomVille;
-    int tab[SIZE4];
-    int compte;
-    int compteDebut;
-} Arbre;
-
-typedef struct _a{
-    int ID_route;
-    struct _a *fg;
-    struct _a *fd;
-    int equilibre;
-    char* nomVille;
-    int compte;
-    int compteDebut;
-} ArbreF;
-
-typedef struct {
-    int ID_route;
-    char* nomVille;
-} insertVille;
-
-typedef ArbreF* pArbreF;
-typedef Ville* pVille;
-typedef Arbre* pArbre;
-
-pArbreF creerArbreFinal(int ID_route, char* nomVille, int compte, int compteDebut);
-
-pVille creerVille(char* nom, int num);
-
-pArbreF creationArbreFinal(pArbre a, pArbreF b);
-
-void infixeInverse(FILE* chemin, pArbreF a, int *i);
-
-pArbre insertionAVLDEBUT(pArbre a, int ID_route, pVille nomVille, int compte ,int tab[], int compteDebut, int *h);
-
-void libererArbreF(pArbreF a);
-
-void libererArbre(pArbre a);
-
-pArbre TransfoArbreDebut(pArbre a, int ID_route, pVille nomVilleDepart, pVille nomVilleArrivee, int compte, int tab[], int compteDebut);
-
-pArbre creationArbreDebut(int ID_route, pVille nomVille, int compte, int tab[], int compteDebut);
-
-int min(int a, int b);
+// Structure de base du programme, avec toutes les informations.
+typedef struct creerVille {
+    char nom[NOMVILLE];
+    int CmptVille;
+    struct creerVille *gauche;
+    struct creerVille *droite;
+    int hauteur;
+} creerVille;
 
 int max(int a, int b);
 
-int existeFilsDroit(pArbre a);
+int min(int a, int b);
 
-pArbreF insertionAVLFINAL(pArbreF a, int ID_route, char* nomVille, int compte, int compteDebut, int *h);
+int hauteur(creerVille *N);
 
-pArbre rotationGauche(pArbre a);
+creerVille *nouvelleVille(char *nom);
 
-pArbre rotationDroit(pArbre a);
+creerVille * rotationDroite(creerVille *a);
 
-pArbreF rotationGaucheF(pArbreF a);
+creerVille * rotationGauche(creerVille *a);
 
-pArbreF rotationDroitF(pArbreF a);
+int calculEQUILIBRE(creerVille *N);
 
-pArbre doubleRotationGauche(pArbre a);
+creerVille *ajouterVille(creerVille *branche, char *nom);
 
-pArbre doubleRotationDroit(pArbre a);
+void Prefixe(creerVille *arbre, creerVille *maxVilles[],unsigned long int *ville);
 
-pArbreF doubleRotationGaucheF(pArbreF a);
-
-pArbreF doubleRotationDroitF(pArbreF a);
-
-pArbre equilibrerAVL(pArbre a);
-
-pArbreF equilibrerAVLF(pArbreF a);
-
+int compareTrajet(const void *a, const void *b);
 
 #endif
