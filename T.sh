@@ -77,7 +77,7 @@ temps_debut=$(date +%s.%N)
     fi
 
 # Exécution du programme C avec le fichier en argument
-    cut -d';' -f1,3,4 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c2_data.txt
+    cut -d';' -f1,2,3,4 < "data/$1" | LC_NUMERIC=en_US.UTF-8 tail -n +2 > temp/c2_data.txt
     # Tue le programme si la commande ne s'est pas bien terminée
     if [ $? -ne 0 ] ; then
         echo "Erreur : La commande de traitement des données a échoué. Sortie du programme."
@@ -212,7 +212,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La commande a échoué. Sortie du programme."
-            echo "Le traitement T n'a pu que mettre $temps_total s"
+            echo "Le traitement T n'a pu mettre que $temps_total s"
             kill -SIGTERM $CPID
             exit 76    
         fi
@@ -220,7 +220,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : Le RM a échoué. Sortie du programme."
-            echo "Le traitement T n'a pu que mettre $temps_total s" 
+            echo "Le traitement T n'a pu mettre que $temps_total s" 
             kill -SIGTERM $CPID
             exit 78
         fi
@@ -230,7 +230,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La commande a échoué. Sortie du programme."
-            echo "Le traitement T n'a pu que mettre $temps_total s" 
+            echo "Le traitement T n'a pu mettre que $temps_total s" 
             kill -SIGTERM $CPID
             exit 79
         fi
@@ -239,7 +239,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
-                echo "Le traitement T n'a pu que mettre $temps_total s" 
+                echo "Le traitement T n'a pu mettre que $temps_total s" 
                 kill -SIGTERM $CPID
                 exit 80
             fi
@@ -248,7 +248,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
-                echo "Le traitement T n'a pu que mettre $temps_total s" 
+                echo "Le traitement T n'a pu mettre que $temps_total s" 
                 kill -SIGTERM $CPID
                 exit 81
             fi

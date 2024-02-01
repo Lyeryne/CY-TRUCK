@@ -107,7 +107,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
         # Tue le programme si la compilation ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : La commande a échoué. Sortie du programme."
-            echo "Le traitement D2 n'a pu que mettre $temps_total s"
+            echo "Le traitement D2 n'a pu mettre que $temps_total s"
             kill -SIGTERM $CPID
             exit 44
         fi
@@ -117,7 +117,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
-                echo "Le traitement D2 n'a pu que mettre $temps_total s"
+                echo "Le traitement D2 n'a pu mettre que $temps_total s"
                 kill -SIGTERM $CPID
                 exit 45
             fi
@@ -126,7 +126,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
                 echo "Erreur : La commande a échoué. Sortie du programme."
-                echo "Le traitement D2 n'a pu que mettre $temps_total s"
+                echo "Le traitement D2 n'a pu mettre que $temps_total s"
                 kill -SIGTERM $CPID
                 exit 47
             fi

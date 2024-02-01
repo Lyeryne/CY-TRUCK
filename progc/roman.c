@@ -5,13 +5,26 @@
 #define NOMVILLE 35
 #define NBR_VILLE 10
 
+
+//structure pour vérifier si le trajet s'est déjà déroulé
+typedef struct _cntID {
+    int ID_route;
+    struct _cntID *fg;
+    struct _cntID *fd;
+    int equilibre;
+} compteID;
+
 // Structure de base du programme, avec toutes les informations.
-typedef struct creerVille {
+typedef struct _creerVille {
     char nom[NOMVILLE];
     int CmptVille;
-    struct creerVille *gauche;
-    struct creerVille *droite;
+    int debutTrajet;
+    int nbrID;
+    compteID *ID_ville;
+    struct _creerVille *gauche;
+    struct _creerVille *droite;
     int hauteur;
+    int equilibre;
 } creerVille;
 
 // Fonction qui retourne le max entre 2 entiers
@@ -24,7 +37,6 @@ int max(int a, int b) {
     }
     
 }
-
 //Fonction qui retourne le min entre 2 entiers
 int min(int a, int b) {
     if(a > b){
@@ -35,200 +47,457 @@ int min(int a, int b) {
     }
 }
 
-// Fonction qui retourne la hauteur du noeud N
-int hauteur(creerVille *N) {
-    if (N == NULL)
-        return 0;
-    return N->hauteur;
-}
-
-// Initialise la première ville de l'arbre
-creerVille *nouvelleVille(char *nom) {
-    creerVille *ville = (creerVille *)malloc(sizeof(creerVille));
-    strcpy(ville->nom, nom);
-    ville->CmptVille = 1;
-    ville->hauteur = 1;
-    ville->gauche = NULL;
-    ville->droite = NULL;
-    return ville;
-}
-
-// Fonctions des rotations pour équilibrer l'arbre
-
-creerVille * rotationDroite(creerVille *a)
+creerVille* rotationGauche(creerVille* a)
 {
-    //permet de faire une simple rotation a gauche de l'AVL 
+    // permet de faire une simple rotation a gauche de l'AVL
     if (a == NULL)
     {
-        exit(30);
+        exit(66);
     }
-    creerVille *pivot;
-    int eq_a, eq_p;
-    pivot = a->gauche;
-    a->gauche = pivot->droite;
-    pivot->droite = a;
-    eq_a = a->hauteur;
-    eq_p = pivot->hauteur;
-    a->hauteur = eq_a - max(eq_p, 0) - 1;
-    pivot->hauteur = min(eq_a - 2, eq_a + eq_p - 2);
-    pivot->hauteur = min(pivot->hauteur, eq_p - 1);
-    a = pivot;
-    return a;
-}
-
-creerVille * rotationGauche(creerVille *a)
-{
-    //permet de faire une simple rotation a gauche de l'AVL 
-    if (a == NULL)
-    {
-        exit(30);
-    }
-    creerVille *pivot;
+    creerVille* pivot;
     int eq_a, eq_p;
     pivot = a->droite;
     a->droite = pivot->gauche;
     pivot->gauche = a;
-    eq_a = a->hauteur;
-    eq_p = pivot->hauteur;
-    a->hauteur = eq_a - max(eq_p, 0) - 1;
-    pivot->hauteur = min(eq_a - 2, eq_a + eq_p - 2);
-    pivot->hauteur = min(pivot->hauteur, eq_p - 1);
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - max(eq_p, 0) - 1;
+    pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
+    pivot->equilibre = min(pivot->equilibre, eq_p - 1);
     a = pivot;
     return a;
 }
 
-// Fonction pour obtenir l'équilibre d'un nœud dans l'arbre
-int calculEQUILIBRE(creerVille *N) {
-    if (N == NULL)
-        return 0;
-    return hauteur(N->gauche) - hauteur(N->droite);
+creerVille* rotationDroit(creerVille* a)
+{
+    // permet de faire une simple rotation a droite de l'AVL
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    creerVille* pivot;
+    int eq_a, eq_p;
+    pivot = a->gauche;
+    a->gauche = pivot->droite;
+    pivot->droite = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - min(eq_p, 0) + 1;
+    pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
+    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
+    a = pivot;
+    return a;
 }
 
-// Fonction pour ajouter une ville dans l'arbre
-creerVille *ajouterVille(creerVille *branche, char *nom) {
-    if (branche == NULL)
-        return nouvelleVille(nom); //si pas d'arbre le créée
-
-    if (strcmp(nom, branche->nom) < 0)
-        branche->gauche = ajouterVille(branche->gauche, nom);//ajoute en fonction de l'ordre alphabétique à gauche
-    else if (strcmp(nom, branche->nom) > 0)
-        branche->droite = ajouterVille(branche->droite, nom);//ajoute en fonction de l'ordre alphabétique à droite
-    else {
-        (branche->CmptVille)++;
-        return branche;
+compteID* rotationDroit2(compteID* a)
+{
+    // permet de faire une simple rotation a droite de l'AVL
+    if (a == NULL)
+    {
+        exit(66);
     }
-
-    // Mettre à jour la hauteur de la branche
-    branche->hauteur = 1 + max(hauteur(branche->gauche), hauteur(branche->droite));
-    // Vérifie l'équilibre de la branche et effectue les rotations nécessaires
-    int balance = calculEQUILIBRE(branche);
-
-    if (balance > 1 && strcmp(nom, branche->gauche->nom) < 0)
-        return rotationDroite(branche);
-
-    if (balance < -1 && strcmp(nom, branche->droite->nom) > 0)
-        return rotationGauche(branche);
-
-    if (balance > 1 && strcmp(nom, branche->gauche->nom) > 0) {
-        branche->gauche = rotationGauche(branche->gauche);
-        return rotationDroite(branche);
-    }
-
-    if (balance < -1 && strcmp(nom, branche->droite->nom) < 0) {
-        branche->droite = rotationDroite(branche->droite);
-        return rotationGauche(branche);
-    }
-
-    return branche;
+    compteID* pivot;
+    int eq_a, eq_p;
+    pivot = a->fg;
+    a->fd = pivot->fd;
+    pivot->fd = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - min(eq_p, 0) + 1;
+    pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
+    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
+    a = pivot;
+    return a;
 }
 
-// Parcours l'arbre et affiche les 10 villes les plus visitées
-void Prefixe(creerVille *arbre, creerVille *maxVilles[],unsigned long int *ville) {
-    if (arbre != NULL) {
-        Prefixe(arbre->gauche, maxVilles, ville);
+compteID* rotationGauche2(compteID* a)
+{
+    // permet de faire une simple rotation a gauche de l'AVL
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    compteID* pivot;
+    int eq_a, eq_p;
+    pivot = a->fd;
+    a->fd = pivot->fg;
+    pivot->fg = a;
+    eq_a = a->equilibre;
+    eq_p = pivot->equilibre;
+    a->equilibre = eq_a - max(eq_p, 0) - 1;
+    pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
+    pivot->equilibre = min(pivot->equilibre, eq_p - 1);
+    a = pivot;
+    return a;
+}
 
-        if (*ville < NBR_VILLE) {
-            maxVilles[(*ville)++] = arbre;
-        } else {
-            int minVisite = maxVilles[0]->CmptVille;
-            int min = 0;
 
-            for (int i = 1; i < NBR_VILLE; i++) {
-                if (maxVilles[i]->CmptVille < minVisite) {
-                    minVisite = maxVilles[i]->CmptVille;
-                    min = i;
-                }
-            }
+creerVille* doubleRotationGauche(creerVille* a)
+{
+    // permet de faire une double rotation a gauche de l'AVL
+    // donc rotation simple droite puis rotation simple gauche
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    a->droite = rotationDroit(a->droite);
+    return rotationGauche(a);
+}
 
-            if (arbre->CmptVille > minVisite) {
-                maxVilles[min] = arbre;
-            }
+compteID* doubleRotationGauche2(compteID* a)
+{
+    // permet de faire une double rotation a gauche de l'AVL
+    // donc rotation simple droite puis rotation simple gauche
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    a->fd = rotationDroit2(a->fd);
+    return rotationGauche2(a);
+}
+
+creerVille* doubleRotationDroit(creerVille* a)
+{
+    // permet de faire une double rotation a droite de l'AVL
+    // donc rotation simple gauche puis rotation simple droite
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    a->gauche = rotationGauche(a->gauche);
+    return rotationDroit(a);
+}
+
+compteID* doubleRotationDroit2(compteID* a)
+{
+    // permet de faire une double rotation a droite de l'AVL
+    // donc rotation simple gauche puis rotation simple droite
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    a->fg = rotationGauche2(a->fg);
+    return rotationDroit2(a);
+}
+
+creerVille* equilibrerAVL(creerVille* a)
+{
+    // fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    if (a->equilibre >= 2)
+    {
+        if (a->droite->equilibre >= 0)
+        {
+            return rotationGauche(a);
         }
-
-        Prefixe(arbre->droite, maxVilles, ville);
+        else
+        {
+            return doubleRotationGauche(a);
+        }
     }
+    else if (a->equilibre <= -2)
+    {
+        if (a->gauche->equilibre <= 0)
+        {
+            return rotationDroit(a);
+        }
+        else
+        {
+            return doubleRotationDroit(a);
+        }
+    }
+    return a;
 }
-//Fonction qui compare le nombre de trajets de deux villes
-int compareTrajet(const void *a, const void *b) {
-    const creerVille *villeA = *(const creerVille **)a;
-    const creerVille *villeB = *(const creerVille **)b;
-    return (villeB->CmptVille - villeA->CmptVille);
+compteID* equilibrerAVL2(compteID* a)
+{
+    // fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage
+    if (a == NULL)
+    {
+        exit(66);
+    }
+    if (a->equilibre >= 2)
+    {
+        if (a->fd->equilibre >= 0)
+        {
+            return rotationGauche2(a);
+        }
+        else
+        {
+            return doubleRotationGauche2(a);
+        }
+    }
+    else if (a->equilibre <= -2)
+    {
+        if (a->fg->equilibre <= 0)
+        {
+            return rotationDroit2(a);
+        }
+        else
+        {
+            return doubleRotationDroit2(a);
+        }
+    }
+    return a;
+}
+
+compteID *creerAVL3(int IDRoute){
+    compteID *route_ID = (compteID *)malloc(sizeof(compteID));
+    route_ID->ID_route = IDRoute;
+    route_ID->equilibre = 0;
+    route_ID->fg = NULL;
+    route_ID->fd = NULL;
+    return route_ID;
+}
+
+
+// Initialise la première ville de l'arbre
+creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
+    creerVille *ville = (creerVille *)malloc(sizeof(creerVille));
+    strcpy(ville->nom, nom);
+    ville->CmptVille = 1;
+    ville->hauteur = 1;
+    ville->nbrID = IDRoute;
+    ville->ID_ville = creerAVL3(ville->nbrID);
+    ville->debutTrajet = debutTraj;
+    ville->gauche = NULL;
+    ville->droite = NULL;
+    ville->equilibre = 0;
+    return ville;
+}
+
+creerVille *creerAVL2(creerVille* ville, int IDRoute) {
+    compteID *route_ID = (compteID *)malloc(sizeof(compteID));
+    route_ID->ID_route = IDRoute;
+    route_ID->equilibre = 0;
+    route_ID->fg = NULL;
+    route_ID->fd = NULL;
+    ville->ID_ville = creerAVL3(ville->nbrID);
+    return ville;
+}
+
+
+
+
+
+compteID* insertionAVLMilieu(compteID *a, int IDRoute, int *b, int* h)
+{
+    // fonction d'insertion d'AVL
+    if (h == NULL)
+    {
+        exit(66);
+    }
+    if (a == NULL)
+    {
+        // si l'id trajet est nouveau, on crée un AVL
+        *h = 1;
+        *b = 1;
+        return creerAVL3(IDRoute);
+    }
+    else if (IDRoute < a->ID_route)
+    {
+        // parcours d'AVL
+        a->fg = insertionAVLMilieu(a->fg, IDRoute, b,h);
+        *h = -*h;
+    }
+    else if (IDRoute < a->ID_route)
+    {
+        // parcours d'AVL
+        *h = 0;
+        a->fd = insertionAVLMilieu(a->fd, IDRoute, b, h);
+    }
+    else
+    {
+        *h = 0;
+        return a;
+    }
+
+    if (*h != 0)
+    {
+        a->equilibre = a->equilibre + *h;
+        a = equilibrerAVL2(a);
+        if (a->equilibre == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+
+
+creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, int* h)
+{
+    // fonction d'insertion d'AVL
+    if (h == NULL)
+    {
+        exit(66);
+    }
+    if (a == NULL)
+    {
+        // si l'id trajet est nouveau, on crée un AVL
+        *h = 1;
+        return nouvelleVille(nom, debut, IDRoute);
+    }
+    else if (strcmp(nom, a->nom) < 0)
+    {
+        // parcours d'AVL
+        a->gauche = insertionAVLDebut(a->gauche, nom, debut, IDRoute, h);
+        *h = -*h;
+    }
+    else if (strcmp(nom, a->nom) > 0)
+    {
+        // parcours d'AVL
+        *h = 0;
+        a->droite = insertionAVLDebut(a->droite, nom, debut, IDRoute, h);
+    }
+    else
+    {
+        // si la valeur d'id est déjà présente
+        // on modifie la valeur minimale et maximale au besoin du noeud
+        // on augmente le compteur et on actualise la valeur de distance totale
+        int* b;
+        b = malloc(sizeof(int));
+        if(b == NULL){
+            exit(66);
+        }
+        *b = 0;
+        a->ID_ville = insertionAVLMilieu(a->ID_ville,IDRoute, b, h);
+        if(*b == 1){
+        (a->CmptVille)++;
+        }
+        *h = 0;
+        return a;
+    }
+
+    if (*h != 0)
+    {
+        a->equilibre = a->equilibre + *h;
+        a = equilibrerAVL(a);
+        if (a->equilibre == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+creerVille* insertionAVLFinal(creerVille *a, creerVille *b, int* h)
+{
+    // fonction d'insertion d'AVL
+    if (h == NULL)
+    {
+        exit(66);
+    }
+    if (a == NULL)
+    {
+        // si l'id trajet est nouveau, on crée un AVL
+        *h = 1;
+        return b;
+    }
+    else if (b->CmptVille < a->CmptVille)
+    {
+        // parcours d'AVL
+        a->gauche = insertionAVLFinal(a->gauche,b ,h);
+        *h = -*h;
+    }
+    else if (b->CmptVille >= a->CmptVille)
+    {
+        // parcours d'AVL
+        *h = 0;
+        a->droite = insertionAVLFinal(a->droite ,b , h);
+    }
+
+    if (*h != 0)
+    {
+        a->equilibre = a->equilibre + *h;
+        a = equilibrerAVL(a);
+        if (a->equilibre == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+
+
+
+void infixeInverse(creerVille *a)
+{
+    // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
+    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
+    // la différence entre distance maximale et minimale du trajet,
+    // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
+    if (a != NULL)
+    {
+        infixeInverse(a->droite);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixeInverse(a->gauche);
+    }
 }
 
 int main() {
     FILE *chemin;
-    char ligne[1024];
 
     creerVille *racine = NULL;
 
-    chemin = fopen("data.csv", "r");
+    chemin = fopen("../roman/c2_data.txt", "r");
     if (chemin == NULL) {
-        printf("Erreur d'ouverture de data");
-        exit(24);
+        printf("Erreur d'ouverture de data C2");
+        exit(1);
     }
-
-    while (fgets(ligne, sizeof(ligne), chemin)) {
-        char *sep;
-        char *Colonnes[5];
-
-        int colonne = 0;
-        sep = strtok(ligne, ";");
-        while (sep != NULL && colonne < 5) {
-            Colonnes[colonne++] = sep;
-            sep = strtok(NULL, ";");
-        }
-
-        if (colonne >= 4) {
-            char *ville = Colonnes[3];
-
-            if (strlen(ville) < NOMVILLE) {
-                racine = ajouterVille(racine, ville);
-            }
-        }
-
-        if (colonne >= 2 && atoi(Colonnes[1]) == 1 && colonne >= 3) {
-            char *villeDepart = Colonnes[2];
-
-            if (strlen(villeDepart) < NOMVILLE) {
-                racine = ajouterVille(racine, villeDepart);
-            }
-        }
+    
+    int IDR;
+    int dbt;
+    char *villeDepart = malloc(sizeof(char)*50);
+    if(villeDepart == NULL){
+        exit(66);
     }
-
+    char *villeArrivee = malloc(sizeof(char)*50);
+    if(villeArrivee == NULL){
+        exit(67);
+    }
+    
+    while (fscanf(chemin, "%d;%d,%s,%s\n", &IDR, &dbt, villeDepart, villeArrivee) == 4)
+    {
+        if(villeDepart == NULL || villeArrivee == NULL){
+            printf("constant error");
+            exit(2);
+        }
+        int h1 = 0;
+        int h2 = 0;
+        racine = insertionAVLDebut(racine, villeDepart, dbt, IDR, &h1);
+        racine = insertionAVLDebut(racine, villeArrivee, dbt, IDR, &h2);
+    }
+    
+    
+    int *l = malloc(sizeof(int));
+    if(l == NULL){
+        exit(66);
+    }
+    *l = 1;
+    creerVille *b = insertionAVLFinal(b ,racine, l);  
 
     fclose(chemin);
 
-    creerVille *maxVilles[NBR_VILLE];
-    unsigned long int nbVillesMAX = 0;
-
-    Prefixe(racine, maxVilles, &nbVillesMAX);
-
-    qsort(maxVilles, nbVillesMAX, sizeof(creerVille *), compareTrajet);
 
     printf("Les villes les plus traversées sont : \n");
-    for (unsigned long int i = 0; i < nbVillesMAX && i < NBR_VILLE; i++) {
-        printf("%s : Traversée - %d fois \n", maxVilles[i]->nom, maxVilles[i]->CmptVille);
-    }
+    infixeInverse(b);
 
     return 0;
     

@@ -1,27 +1,26 @@
 ~~~~~~~ README : CY-TRUCK ~~~~~~~
 
-Vous êtes le gérant d'une société nationale de transport routier. Vous disposez d'un outil gérant l'ensemble de votre logistique, mais les données recueillies sont bien trop volumineuses et mélangées pour être traitées par un humain. C'est ainsi que le programme intervient.
+Vous êtes le gérant d'une société nationale de transport routier. Vous disposez d'un outil gérant l'ensemble de votre logistique, 
+mais les données recueillies sont bien trop volumineuses et mélangées pour être traitées par un humain. C'est ainsi que le programme intervient.
 
 
 ~~> Instructions d'Installation
 
-Avant de lancer le programme, assurez-vous que votre chemin d'accès mène bien au dossier du projet, "Projet-S1", avec tous ses programmes,
-    Utilisez la commande suivante dans le terminal :
-        cd gromulebg/projets/MI5/Trinome-MI5-B/Projet-S1
-Ensuite, assurez-vous que votre fichier CSV se trouve à la racine du projet. Vous n'avez pas besoin de le déplacer dans le dossier "data", puisque Menu_Traitements.sh s'en occupe. Si vous souhaitez quand même le faire,
+Avant de lancer le programme, assurez-vous que vous vous trouvez bien dans le répertoire "Projet-S1", avec tous ses programmes.
+Assurez-vous que votre fichier CSV se trouve à la racine du projet. Vous n'avez pas besoin de le déplacer dans le dossier "data", puisque Menu_Traitements.sh s'en occupe. Si vous souhaitez quand même le faire,
     Utilisez la commande suivante dans le terminal : 
         mv data.csv data/
-Assurez-vous que Menu_Traitements.sh à les droit en 
+Assurez-vous que Menu_Traitements.sh possède les droits en 
     Utilisant la commande suivante dans le terminal :
         chmod +x Menu_Traitements.sh
 Si jamais vous n'avez pas l'application ImageMagick permettant d'afficher les schémas,
-    Utilisez la commande suivante dans le terminal :
+    Utilisez les commandes suivantes dans le terminal :
         sudo apt update
         sudo apt install imagemagick
 Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les graphiques, 
     Utilisez la commande suivante dans le terminal :
         sudo apt install gnuplot-x11
-Enfin, lorsque vous lancez le code, assurez-vous que vous soyez en grand écran sinon 
+Enfin, lorsque vous lancez le code, assurez-vous que vous êtes en grand écran sinon 
 il est fortement possible qu'à chaque fois que vous lancez un traitement, il vous affiche à chaque ligne :
     LANCEMENT DES TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI)
 
@@ -29,13 +28,13 @@ il est fortement possible qu'à chaque fois que vous lancez un traitement, il vo
 ~~> Compilation via 'Menu_Traitements.sh'
 
 !!! IMPORTANT !!! : 
-- *csv ou [...].csv signifie quelquechose.csv comme $1 donc vous devez renommer votre fichier csv par n'importe quel nom 
-- vous avez le choix de mettre juste avant le traitement (exemple) : -d1 ou _D1 ou -D1 ou _d1 
+- *csv ou [...].csv signifie quelquechose.csv donc vous pouvez renommer votre fichier csv par n'importe quel nom 
+- La syntaxe pour lancer le traitement n'a guère d'importance. (exemple) : -d1 ou _D1 ou -D1 ou _d1 
 
 Si vous souhaitez lancer les traitements, plusieurs choix s'offrent à vous :
     - (1) vous souhaitez lancer tous les traitements en une seule fois, alors lancez la commande =>
             ./Menu_Traitements.sh *.csv -d1 _d2 -l -S _T    (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
-    - (2) vous souhaitez lancer qu'un argument à la fois, alors lancez la commande =>
+    - (2) vous souhaitez ne lancer qu'un argument à la fois, alors lancez la commande =>
             ./Menu_Traitements.sh *.csv -[...]     (!!! RESPECTEZ LE FORMAT !!!)
     - (3) vous souhaitez une aide expliquant les options pouvant être utilisées ou non, alors lancez la commande =>
             ./Menu_Traitements.sh *.csv -h            (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
@@ -61,13 +60,14 @@ Si vous souhaitez lancer les traitements, plusieurs choix s'offrent à vous :
 - Le script Shell (Menu_Traitements.sh) placé à la racine du projet vérifie la présence des dossiers 'temp' et 'images'. 
 S'ils n’existent pas, il les crée, sinon les vide avant l’exécution des traitements.
 - Menu_Traitements.sh déplace votre premier argument (le fichier csv) au dossier 'data' 
-et met les permissions d'excutions de tous les traitements.sh que vous allez utiliser.
+et donnne les permissions d'execution de tous les traitements que vous allez utiliser.
 - Les graphiques sont stockés dans le dossier ‘images’ après la compilation de Menu_Traitements.sh.
 - La durée de chaque traitement que vous tapez sur le terminal est affichée en secondes à la fin 
-et s'il y a eu un probleme avec la ligne qui permet de calculer le temps, le terminal affichera :" Le traitement [...] a mis 0.000000000 s".
-Mais si la ligne fonctionne mais qu'un moment dans le code une ligne de code permettant de faire le traitement ne marche pas,
-le terminal affichera : "Le traitement [...] n'a pu que mettre ... s" (meme si dans les 2 cas, il n'a pas réellement fait le traitement).
-- L'option -h (H.txt) est une sorte de "HELP" qu'on peut voir dans les jeux, expliquant ce que les traitements font et s'ils sont fonctionelles ou non (voir format à taper sur le terminal dans Compilation via 'Menu_Traitements.sh').
+et, s'il y a eu un probleme avec la ligne qui permet de calculer le temps, le terminal affichera :" Le traitement [...] a mis 0.000000000 s".
+Seulement, si la ligne fonctionne mais qu'a un moment dans le code une ligne de code permettant de faire le traitement ne marche pas,
+le terminal affichera : "Le traitement [...] n'a pu mettre que ... s" (même si, dans les 2 cas, il n'a pas réellement fait le traitement).
+- L'option -h (H.txt) est une sorte de "HELP" qu'on peut voir dans les jeux, expliquant ce que les traitements font 
+et s'ils sont fonctionels ou non (voir format à taper sur le terminal dans "Compilation via 'Menu_Traitements.sh'").
 - Tout problème dans le code arrête le programme et affiche un message d'erreur !
 
 
@@ -75,7 +75,7 @@ le terminal affichera : "Le traitement [...] n'a pu que mettre ... s" (meme si d
 
 - Le programme C et tout ce qui s’y rapporte (makefile, exécutable, …) sont situés dans le dossier 'progc'.
 - Les fichiers intermédiaires (gnuplot_data_[...].txt) nécessaires à l'application sont placés dans le dossier 'temp'.
-- Les résultats d’exécutions précédentes (que nous avons faits de notre côté) sont dans le dossier 'demo'.
+- Les résultats d’exécution précédentes (que nous avons faites de notre côté) sont dans le dossier 'demo'.
 - Le dossier 'Bonus' contient quelque chose (pas de spoil) permettant d'afficher un texte lorsque vous compilez 
 'Menu_Traitements.sh'.
 - Racine du Projet :
@@ -91,7 +91,7 @@ Système d'exploitation : Linux
 
 ~~> Rapport de Bugs
 
-Pas qu'on sache (enfin, nous l'espérons), tant que vous respectez le format et l'espacement, tout va pour le mieux. ç_ç
+Pas qu'on sache (enfin, nous l'espérons), tant que vous respectez le format et l'espacement, tout va pour le mieux. 
 
 
 ~~> Licence
@@ -102,7 +102,7 @@ Ce projet est sous licence MI5.
 ~~> Contact 
 
 - CY TECH – CERGY
-- Lien pour mettre une excellente note : https://mycy.cyu.fr $_$
+- Lien pour mettre une excellente note : https://mycy.cyu.fr 
 
 
 ~~> Crédits
