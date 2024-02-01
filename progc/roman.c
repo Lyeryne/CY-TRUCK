@@ -65,6 +65,7 @@ creerVille* rotationGauche(creerVille* a)
     pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
     pivot->equilibre = min(pivot->equilibre, eq_p - 1);
     a = pivot;
+    free(pivot);
     return a;
 }
 
@@ -99,13 +100,13 @@ compteID* rotationDroit2(compteID* a)
     compteID* pivot;
     int eq_a, eq_p;
     pivot = a->fg;
-    a->fd = pivot->fd;
+    a->fg = pivot->fd;
     pivot->fd = a;
     eq_a = a->equilibre;
     eq_p = pivot->equilibre;
     a->equilibre = eq_a - min(eq_p, 0) + 1;
     pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
-    pivot->equilibre = max(pivot->equilibre, eq_a + 1);
+    pivot->equilibre = max(pivot->equilibre, eq_p + 1);
     a = pivot;
     return a;
 }
@@ -243,6 +244,8 @@ compteID* equilibrerAVL2(compteID* a)
     return a;
 }
 
+
+
 compteID *creerAVL3(int IDRoute){
     compteID *route_ID = (compteID *)malloc(sizeof(compteID));
     route_ID->ID_route = IDRoute;
@@ -251,15 +254,13 @@ compteID *creerAVL3(int IDRoute){
     route_ID->fd = NULL;
     return route_ID;
 }
-
-
 // Initialise la première ville de l'arbre
 creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
     creerVille *ville = (creerVille *)malloc(sizeof(creerVille));
     if(ville == NULL){
         exit(66);
     }
-    ville->nom = malloc(sizeof(char)*35);
+    ville->nom = malloc(sizeof(char)*150);
     if(ville->nom == NULL){
         exit(66);
     }
@@ -268,8 +269,12 @@ creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
     ville->hauteur = 1;
     ville->nbrID = IDRoute;
     ville->ID_ville = creerAVL3(ville->nbrID);
-    if(debutTraj == 1)
+    if(debutTraj == 1){
     ville->debutTrajet ++;
+    }
+    else{
+        ville->debutTrajet = 0;
+    }
     ville->gauche = NULL;
     ville->droite = NULL;
     ville->equilibre = 0;
@@ -285,6 +290,8 @@ creerVille *creerAVL2(creerVille* ville, int IDRoute) {
     ville->ID_ville = creerAVL3(ville->nbrID);
     return ville;
 }
+
+
 
 
 
@@ -307,14 +314,15 @@ compteID* insertionAVLMilieu(compteID *a, int IDRoute, int *b, int* h)
     else if (IDRoute < a->ID_route)
     {
         // parcours d'AVL
-        a->fg = insertionAVLMilieu(a->fg, IDRoute, b,h);
+        a->fg = insertionAVLMilieu(a->fg, IDRoute, b, h);
         *h = -*h;
     }
-    else if (IDRoute < a->ID_route)
+    else if (IDRoute > a->ID_route)
     {
         // parcours d'AVL
         *h = 0;
         a->fd = insertionAVLMilieu(a->fd, IDRoute, b, h);
+        
     }
     else
     {
@@ -406,7 +414,7 @@ creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination, int* h){
         exit(66);
     }
     b->CmptVille = CpVille;
-    b->nom = malloc(sizeof(char)*50);
+    b->nom = malloc(sizeof(char)*150);
     if(b->nom == NULL){
         exit(66);
     }
@@ -498,9 +506,9 @@ void infixe(creerVille *a)
     // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
-        infixeInverse(a->gauche);
-        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
         infixeInverse(a->droite);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixeInverse(a->gauche);
     }
 }
 
@@ -517,11 +525,11 @@ int main() {
     
     int IDR = 0;
     int dbt = 0;
-    char *villeDepart = malloc(sizeof(char)*50);
+    char *villeDepart = malloc(sizeof(char)*150);
     if(villeDepart == NULL){
         exit(66);
     }
-    char *villeArrivee = malloc(sizeof(char)*50);
+    char *villeArrivee = malloc(sizeof(char)*150);
     if(villeArrivee == NULL){
         exit(67);
     }
