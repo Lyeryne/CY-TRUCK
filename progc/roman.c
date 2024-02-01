@@ -16,7 +16,7 @@ typedef struct _cntID {
 
 // Structure de base du programme, avec toutes les informations.
 typedef struct _creerVille {
-    char nom[NOMVILLE];
+    char *nom;
     int CmptVille;
     int debutTrajet;
     int nbrID;
@@ -256,12 +256,20 @@ compteID *creerAVL3(int IDRoute){
 // Initialise la première ville de l'arbre
 creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
     creerVille *ville = (creerVille *)malloc(sizeof(creerVille));
+    if(ville == NULL){
+        exit(66);
+    }
+    ville->nom = malloc(sizeof(char)*35);
+    if(ville->nom == NULL){
+        exit(66);
+    }
     strcpy(ville->nom, nom);
     ville->CmptVille = 1;
     ville->hauteur = 1;
     ville->nbrID = IDRoute;
     ville->ID_ville = creerAVL3(ville->nbrID);
-    ville->debutTrajet = debutTraj;
+    if(debutTraj == 1)
+    ville->debutTrajet ++;
     ville->gauche = NULL;
     ville->droite = NULL;
     ville->equilibre = 0;
@@ -392,8 +400,26 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
     return a;
 }
 
-creerVille* insertionAVLFinal(creerVille *a, creerVille *b, int* h)
-{
+creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination, int* h){
+    creerVille *b = malloc(sizeof(creerVille));
+    if(b == NULL){
+        exit(66);
+    }
+    b->CmptVille = CpVille;
+    b->nom = malloc(sizeof(char)*50);
+    if(b->nom == NULL){
+        exit(66);
+    }
+    b->nom = strcpy(b->nom, nomination);
+    b->debutTrajet = dbT;
+    b->equilibre = *h;
+    return b;
+}
+
+
+
+creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, char* nom, int* h)
+{//a=b b= racine
     // fonction d'insertion d'AVL
     if (h == NULL)
     {
@@ -403,19 +429,19 @@ creerVille* insertionAVLFinal(creerVille *a, creerVille *b, int* h)
     {
         // si l'id trajet est nouveau, on crée un AVL
         *h = 1;
-        return b;
+        return creerArbreFinal(CmptVille, debutTrajet, nom, h);
     }
-    else if (b->CmptVille < a->CmptVille)
+    else if (CmptVille < a->CmptVille)
     {
         // parcours d'AVL
-        a->gauche = insertionAVLFinal(a->gauche,b ,h);
+        a->gauche = insertionAVLFinal(a->gauche,CmptVille, debutTrajet, nom, h);
         *h = -*h;
     }
-    else if (b->CmptVille >= a->CmptVille)
+    else if (CmptVille >= a->CmptVille)
     {
         // parcours d'AVL
         *h = 0;
-        a->droite = insertionAVLFinal(a->droite ,b , h);
+        a->droite = insertionAVLFinal(a->droite ,CmptVille, debutTrajet, nom, h);
     }
 
     if (*h != 0)
@@ -436,6 +462,20 @@ creerVille* insertionAVLFinal(creerVille *a, creerVille *b, int* h)
 
 
 
+creerVille* creationArbreFinal2(creerVille* a, creerVille* b)
+{
+    // fonction récursive pour créer l'arbre final
+    // la fonction va parcourir tout l'arbre a et ajouter les valeurs dans l'arbre b initialement nul
+    if (a != NULL)
+    {
+        // facteur d'equilibrage toujours initialisé a 0
+        int h = 0;
+        b = insertionAVLFinal(b, a->CmptVille, a->debutTrajet, a->nom, &h);
+        b = creationArbreFinal2(a->gauche, b);
+        b = creationArbreFinal2(a->droite, b);
+    }
+    return b;
+}
 
 void infixeInverse(creerVille *a)
 {
@@ -450,6 +490,19 @@ void infixeInverse(creerVille *a)
         infixeInverse(a->gauche);
     }
 }
+void infixe(creerVille *a)
+{
+    // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
+    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
+    // la différence entre distance maximale et minimale du trajet,
+    // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
+    if (a != NULL)
+    {
+        infixeInverse(a->gauche);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixeInverse(a->droite);
+    }
+}
 
 int main() {
     FILE *chemin;
@@ -462,8 +515,8 @@ int main() {
         exit(1);
     }
     
-    int IDR;
-    int dbt;
+    int IDR = 0;
+    int dbt = 0;
     char *villeDepart = malloc(sizeof(char)*50);
     if(villeDepart == NULL){
         exit(66);
@@ -473,7 +526,7 @@ int main() {
         exit(67);
     }
     
-    while (fscanf(chemin, "%d;%d,%s,%s\n", &IDR, &dbt, villeDepart, villeArrivee) == 4)
+    while (fscanf(chemin, "%d;%d;%49[^;];%49[^\n]\n", &IDR, &dbt, villeDepart, villeArrivee) == 4)
     {
         if(villeDepart == NULL || villeArrivee == NULL){
             printf("constant error");
@@ -486,18 +539,13 @@ int main() {
     }
     
     
-    int *l = malloc(sizeof(int));
-    if(l == NULL){
-        exit(66);
-    }
-    *l = 1;
-    creerVille *b = insertionAVLFinal(b ,racine, l);  
+    creerVille* b = NULL;
+    b = creationArbreFinal2(racine ,b);  
 
     fclose(chemin);
 
 
-    printf("Les villes les plus traversées sont : \n");
-    infixeInverse(b);
+    infixe(b);
 
     return 0;
     

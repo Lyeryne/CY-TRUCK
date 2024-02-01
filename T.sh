@@ -119,7 +119,7 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 68
         fi
-    ./Projet_T
+    ./Projet_T | head -10 > temp/gnu_data_T.txt
         # Tue le programme si l'execution ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : L'exécution du programme C a échoué. Sortie du programme."

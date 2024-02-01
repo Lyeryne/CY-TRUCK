@@ -131,7 +131,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
                 exit 47
             fi
     fi
-    display images/output_D2.png
+    #display images/output_D2.png
 
 # Ligne de code : cela enverra le signal SIGUSR1(il se trouve dans Affichage_Temps.sh) au processus identifié par le PID stocké dans la variable $CPID, 
 # déclenchant ainsi la fonction stop_compteur dans le script.
@@ -141,3 +141,7 @@ echo "arret du compte à rebour => TRAITEMENT FINIE"
 echo # Retour à la ligne
 
 echo ">> Le traitement D2 a mis $temps_total s <<" 
+
+cd Bonus
+./Affichage_Bonus.sh calcul_temps
+cd ..
