@@ -23,7 +23,6 @@ typedef struct _creerVille {
     compteID *ID_ville;
     struct _creerVille *gauche;
     struct _creerVille *droite;
-    int hauteur;
     int equilibre;
 } creerVille;
 
@@ -65,7 +64,6 @@ creerVille* rotationGauche(creerVille* a)
     pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
     pivot->equilibre = min(pivot->equilibre, eq_p - 1);
     a = pivot;
-    free(pivot);
     return a;
 }
 
@@ -266,15 +264,13 @@ creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
     }
     strcpy(ville->nom, nom);
     ville->CmptVille = 1;
-    ville->hauteur = 1;
     ville->nbrID = IDRoute;
     ville->ID_ville = creerAVL3(ville->nbrID);
+    ville->debutTrajet = 0;
     if(debutTraj == 1){
-    ville->debutTrajet ++;
+        ville->debutTrajet ++;
     }
-    else{
-        ville->debutTrajet = 0;
-    }
+    
     ville->gauche = NULL;
     ville->droite = NULL;
     ville->equilibre = 0;
@@ -377,7 +373,7 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
     {
         // si la valeur d'id est déjà présente
         // on modifie la valeur minimale et maximale au besoin du noeud
-        // on augmente le compteur et on actualise la valeur de distance totale
+        // on augmente le compteur
         int* b;
         b = malloc(sizeof(int));
         if(b == NULL){
@@ -391,7 +387,10 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
         *h = 0;
         return a;
     }
-
+    if(debut == 1){
+            a->debutTrajet ++;
+        }
+    printf("%d, %s", a->debutTrajet, a->nom);
     if (*h != 0)
     {
         a->equilibre = a->equilibre + *h;
@@ -408,7 +407,7 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
     return a;
 }
 
-creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination, int* h){
+creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination){
     creerVille *b = malloc(sizeof(creerVille));
     if(b == NULL){
         exit(66);
@@ -420,7 +419,7 @@ creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination, int* h){
     }
     b->nom = strcpy(b->nom, nomination);
     b->debutTrajet = dbT;
-    b->equilibre = *h;
+    b->equilibre=0;
     return b;
 }
 
@@ -437,19 +436,23 @@ creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, cha
     {
         // si l'id trajet est nouveau, on crée un AVL
         *h = 1;
-        return creerArbreFinal(CmptVille, debutTrajet, nom, h);
+        return creerArbreFinal(CmptVille, debutTrajet, nom);
     }
     else if (CmptVille < a->CmptVille)
     {
         // parcours d'AVL
-        a->gauche = insertionAVLFinal(a->gauche,CmptVille, debutTrajet, nom, h);
+        a->gauche = insertionAVLFinal(a->gauche, CmptVille, debutTrajet, nom, h);
         *h = -*h;
     }
-    else if (CmptVille >= a->CmptVille)
+    else if (CmptVille > a->CmptVille)
     {
         // parcours d'AVL
         *h = 0;
-        a->droite = insertionAVLFinal(a->droite ,CmptVille, debutTrajet, nom, h);
+        a->droite = insertionAVLFinal(a->droite, CmptVille, debutTrajet, nom, h);
+    }
+    else{
+        *h = 0;
+        return a;
     }
 
     if (*h != 0)
@@ -493,9 +496,9 @@ void infixeInverse(creerVille *a)
     // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
-        infixeInverse(a->droite);
-        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
         infixeInverse(a->gauche);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixeInverse(a->droite);
     }
 }
 void infixe(creerVille *a)
@@ -553,7 +556,7 @@ int main() {
     fclose(chemin);
 
 
-    infixe(b);
+    infixeInverse(b);
 
     return 0;
     

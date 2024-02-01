@@ -18,12 +18,14 @@ trap 'stop_compteur' SIGUSR1
 
 # Affichage du compte à rebours
 AffichageTemps() {
+    printf "LANCEMENT DU TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI)\n"
     for ((i = 0; i <= 100; i++)) ; do
-        printf "LANCEMENT DES TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI) %d%%\r" $i # (\r) permet de revenir en début de ligne
+         # (\r) permet de revenir en début de ligne
+        printf "%d%%\r" $i
         if [ $i -eq 100 ] || [ "$STOP_COMPTEUR" = true ] ; then
             break
         fi
-        sleep 0.9  # suspend l'exécution du programme pendant 0.3 s pour l'effet
+        sleep 0  # suspend l'exécution du programme pendant 0.3 s pour l'effet
     done
 }
 
