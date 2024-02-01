@@ -230,8 +230,11 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
             kill -SIGTERM $CPID
             exit 81
         fi
-    display images/output_S.png
-
+    display images/output_S.png &
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : Affichage Impossible."
+            exit 101
+        fi
 
 kill -SIGUSR1 $CPID
 echo #saut de ligne

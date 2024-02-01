@@ -131,7 +131,11 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
                 exit 37
             fi
     fi
-    #display images/output_D1.png
+    display images/output_D1.png &
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : Affichage Impossible."
+            exit 101
+        fi
 
 # Ligne de code : cela enverra le signal SIGUSR1(il se trouve dans Affichage_Temps.sh) au processus identifié par le PID stocké dans la variable $CPID, 
 # déclenchant ainsi la fonction stop_compteur dans le script.
@@ -143,5 +147,17 @@ echo # Retour à la ligne
 echo ">> Le traitement D1 a mis $temps_total s <<" 
 
 cd Bonus
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi
 ./Affichage_Bonus.sh calcul_ges
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi
 cd ..
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi

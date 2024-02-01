@@ -77,7 +77,7 @@ et s'ils sont fonctionels ou non (voir format à taper sur le terminal dans "Com
 - Les fichiers intermédiaires (gnuplot_data_[...].txt) nécessaires à l'application sont placés dans le dossier 'temp'.
 - Les résultats d’exécution précédentes (que nous avons faites de notre côté) sont dans le dossier 'demo'.
 - Le dossier 'Bonus' contient quelque chose (pas de spoil) permettant d'afficher un texte lorsque vous compilez 
-'Menu_Traitements.sh'.
+'Menu_Traitements.sh' et une Remarque à chaque traitement.
 - Racine du Projet :
     ~ (D1 || D2 || L || S || T).sh contient le programme permettant de récupérer les données demandées (dans teams [...].dat, 
       ici c'est temp/gnu_data_[...].txt).
