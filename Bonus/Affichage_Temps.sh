@@ -26,7 +26,7 @@ AffichageTemps()
         if [ $i -eq 100 ] || [ "$STOP_COMPTEUR" = true ] ; then
             break
         fi
-        sleep 1  # suspend l'exécution du programme pendant 0.3 s pour l'effet
+        sleep 1.4  # suspend l'exécution du programme pendant 0.3 s pour l'effet
     done
 }
 

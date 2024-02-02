@@ -56,7 +56,9 @@ creerVille* equilibrerAVL(creerVille* a);
 
 compteID* equilibrerAVL2(compteID* a);
 
-//void libererArbre(creerVille* a);
+void libererArbre(creerVille* a);
+
+void libererCompteID(compteID* id);
 
 compteID *creerAVL3(int IDRoute);
 

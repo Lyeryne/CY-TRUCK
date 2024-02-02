@@ -22,7 +22,7 @@ Et, si vous n'avez pas installé le logiciel Gnuplot pour créer et afficher les
         sudo apt install gnuplot-x11
 Enfin, lorsque vous lancez le code, assurez-vous que vous êtes en grand écran sinon 
 il est fortement possible qu'à chaque fois que vous lancez un traitement, il vous affiche à chaque ligne :
-    LANCEMENT DES TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI)
+    LANCEMENT DES TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL)
 
 
 ~~> Compilation via 'Menu_Traitements.sh'
@@ -53,6 +53,8 @@ Si vous souhaitez lancer les traitements, plusieurs choix s'offrent à vous :
     ./Menu_Traitements.sh *.csv -s      (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
     ou
     ./Menu_Traitements.sh *.csv _S -t   (!!! RESPECTEZ LE FORMAT/L'ESPACEMENT !!!)
+
+(PS : le make clean est automatisé, vous n'avez pas à le faire vous-même)
 
 
 ~~> Fonctionnalités Principales
@@ -116,8 +118,9 @@ Ce projet est sous licence MI5.
 
 Avec l'aimable participation (aide) de :
 
-- Ayman [explication script gnu/cahier des charges]
+- Ayman [explication script gnu/cahier des charges/Traitement T]
 - Abdel [explication traitement D1]
+- Matias [explication script gnu/Traitement T]
 - Julien [explication traitement T/S]
 - (MI1 filles) [explication script gnu]
 

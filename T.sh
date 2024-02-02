@@ -160,6 +160,8 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 72
         fi
+
+
 # Mesurer le temps après l'exécution du processus
 temps_fin=$(date +%s.%N)
     # Tue le programme si la commande ne s'est pas bien terminée
@@ -238,3 +240,26 @@ echo "arret du compte à rebour => TRAITEMENT FINI"
 echo #saut de ligne
 
 echo ">> Le traitement T a mis $temps_total s <<" 
+
+#make clean
+    cd progc
+    # Tue le programme si la compilation ne s'est pas bien terminée
+     if [ $? -ne 0 ] ; then
+        echo "Erreur : La compilation a échoué. Sortie du programme."
+        echo "Le traitement S a mis 0.000000000 s"
+        exit 61
+    fi
+    make clean > make_T.txt
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement S a mis 0.000000000 s"
+            exit 61
+        fi
+    cd ..
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement S a mis 0.000000000 s"
+            exit 61
+        fi

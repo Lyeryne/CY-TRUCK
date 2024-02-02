@@ -219,6 +219,34 @@ compteID* equilibrerAVL2(compteID* a)
     return a;
 }
 
+void libererArbre(creerVille* a)
+{
+    // libère tout l'arbre de manière récursive
+    if (a != NULL)
+    {
+        libererArbre(a->gauche);
+        libererArbre(a->droite);
+
+        // Libérer la mémoire allouée pour le nom
+        free(a->nom);
+
+        // libère le noeud
+        free(a);
+    }
+}
+
+void libererCompteID(compteID* id)
+{
+    // libère la mémoire pour la structure compteID de manière récursive
+    if (id != NULL)
+    {
+        libererCompteID(id->fg);
+        libererCompteID(id->fd);
+
+        // libère le nœud compteID 
+        free(id);
+    }
+}
 
 //fonction qui créée l'arbre contenant les routes ID
 compteID *creerAVL3(int IDRoute){
@@ -241,23 +269,23 @@ creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
         exit(66);
     }
     strcpy(ville->nom, nom);//copie le nom
-    ville->CmptVille = 1;
-    ville->nbrID = IDRoute;
-    ville->ID_ville = creerAVL3(ville->nbrID);
-    ville->debutTrajet = 0;
-    if(debutTraj == 1){
+    ville->CmptVille = 1;//compte ville est initialisé à 1
+    ville->nbrID = IDRoute;//copie ID route actuel
+    ville->ID_ville = creerAVL3(ville->nbrID);//créée un arbre de routes ID avec l'ID route actuel
+    ville->debutTrajet = 0;//vérification si la ville est une ville de départ de
+    if(debutTraj == 1){//si elle est une ville de départ, debutTraj vaut 1, sinon 0
         ville->debutTrajet ++;
     }
     
-    ville->gauche = NULL;
+    ville->gauche = NULL;//création d'1 noeud donc pas de fils
     ville->droite = NULL;
-    ville->equilibre = 0;
+    ville->equilibre = 0;//équilibre initialisé à 0
     return ville;
 }
 
 //initialise une des 10 dernieres villes
 creerVille* nouvelleVilleFinale(char* nom, int CmptVille, int debut){
-    creerVille* ville = malloc(sizeof(creerVille));
+    creerVille* ville = malloc(sizeof(creerVille));//se référer à nouvelleVille, où on ne s'intéresse pas à toutes les valeurs
     if(ville == NULL){
         exit(66);
     }
@@ -274,7 +302,7 @@ creerVille* nouvelleVilleFinale(char* nom, int CmptVille, int debut){
 }
 
 creerVille *creerAVL2(creerVille* ville, int IDRoute) {
-    compteID *route_ID = (compteID *)malloc(sizeof(compteID));
+    compteID *route_ID = (compteID *)malloc(sizeof(compteID));//se référer à creerAVL3
     route_ID->ID_route = IDRoute;
     route_ID->equilibre = 0;
     route_ID->fg = NULL;
@@ -312,12 +340,12 @@ compteID* insertionAVLMilieu(compteID *a, int IDRoute, int *b, int* h)
         
     }
     else
-    {
+    {//si le trajet existe déjà rien ne se passe
         *h = 0;
         return a;
     }
 
-    if (*h != 0)
+    if (*h != 0)//vérif de l'équilibre
     {
         a->equilibre = a->equilibre + *h;
         a = equilibrerAVL2(a);
@@ -362,26 +390,26 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
     else
     {
         // si la valeur d'id est déjà présente
-        // on modifie la valeur minimale et maximale au besoin du noeud
-        // on augmente le compteur
+        // rien ne se passe 
+        
         
         int* b;
-        b = malloc(sizeof(int));
+        b = malloc(sizeof(int));//créée un pointeur qui pourra vérifier si un id a été ajouté
         if(b == NULL){
             exit(66);
         }
         *b = 0;
         a->ID_ville = insertionAVLMilieu(a->ID_ville,IDRoute, b, h);
-        if(*b == 1){
+        if(*b == 1){//si un ID a ete ajoute on augmente le compte d'IDs
         (a->CmptVille)++;
         }
         *h = 0;
-        if(debut == 1){
+        if(debut == 1){//on vérifie si la ville est une ville de début de trajet 
             a->debutTrajet ++;
     }
         return a;
     }
-    if (*h != 0)
+    if (*h != 0)//vérification de l'équilibre et ajusteents éventuels
     {
         a->equilibre = a->equilibre + *h;
         a = equilibrerAVL(a);
@@ -398,8 +426,8 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
 }
 
 creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination){
-    creerVille *b = malloc(sizeof(creerVille));
-    if(b == NULL){
+    creerVille *b = malloc(sizeof(creerVille));//se référer à nouvelleVille
+    if(b == NULL){//on prend seulement les informations importantes à l'arbre final(nom, compteur d'ID, compteur de Debuts)
         exit(66);
     }
     b->CmptVille = CpVille;
@@ -443,7 +471,7 @@ creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, cha
         return a;
     }
 
-    if (*h != 0)
+    if (*h != 0)//verif d'équilibrage et ajustements en fonction
     {
         a->equilibre = a->equilibre + *h;
         a = equilibrerAVL(a);
@@ -460,15 +488,15 @@ creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, cha
 }
 
 creerVille* insertionABRVraimentFinal(creerVille *a, char *nom, int compteurV, int debut)
-{
+{//insertion d'un arbre VRAIMENT TRES TRES final
 
     if (a == NULL)
     {
-        return nouvelleVilleFinale(nom, compteurV, debut);
+        return nouvelleVilleFinale(nom, compteurV, debut);//premier élément de l'arbre
     }
     else if (strcmp(nom, a->nom) < 0)
     {
-        a->gauche = insertionABRVraimentFinal(a->gauche, nom, compteurV, debut);
+        a->gauche = insertionABRVraimentFinal(a->gauche, nom, compteurV, debut);//insertion dans l'ordre alphabétique
     }
     else if (strcmp(nom, a->nom) > 0)
     {
@@ -480,8 +508,7 @@ creerVille* insertionABRVraimentFinal(creerVille *a, char *nom, int compteurV, i
 void infixeInverse(creerVille *a)
 {
     // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
-    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
-    // la différence entre distance maximale et minimale du trajet,
+    // Le compteur du d'id de la ville, celui du nombre de fois qu'elle est ville de depart
     // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
@@ -494,9 +521,8 @@ void infixeInverse(creerVille *a)
 void infixe(creerVille *a)
 {
     // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
-    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
-    // la différence entre distance maximale et minimale du trajet,
-    // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
+    // Le compteur du d'id de la ville, celui du nombre de fois qu'elle est ville de depart
+    // parcours de l'arbre infixe  pour parcourir dans le sens croissant
     if (a != NULL)
     {
         infixe(a->gauche);
@@ -514,15 +540,16 @@ creerVille* suppMax(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet
         a->droite = suppMax(a->droite, pnom, CmptVille, DebutTrajet);
     } else {
         // Si plus de fils droit, on a le successeur
+        //on récupère les données importantes
         *pnom = strcpy(*pnom, a->nom);
         *CmptVille = a->CmptVille;
         *DebutTrajet = a->debutTrajet;
-        tmp = a;
-        a = a->gauche;
-        free(tmp->nom);
+        tmp = a;//on créée un tampon
+        a = a->gauche;//on remplace a par son éventuel fils gauche
+        free(tmp->nom);//on libére le tampon et le pointeur de charactères nom
         free(tmp);
     }
-    return a;
+    return a;//on renvoie les d noeud supprimé
 }
 
 creerVille* suppression(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet, char** pnom2, int* CmptVille2, int* DebutTrajet2) {
@@ -537,7 +564,7 @@ creerVille* suppression(creerVille* a, char** pnom, int* CmptVille, int* DebutTr
     if (a->droite != NULL) {
         a->droite = suppression(a->droite, pnom, CmptVille, DebutTrajet, pnom2, CmptVille2, DebutTrajet2);
     }
-    else if (a->gauche == NULL) {
+    else if (a->gauche == NULL) {//on vérifie comme dans supMax
             tmp = a;
             *pnom2 = strcpy(*pnom2, tmp->nom);
             *CmptVille2 = tmp->CmptVille;
@@ -547,7 +574,7 @@ creerVille* suppression(creerVille* a, char** pnom, int* CmptVille, int* DebutTr
             free(tmp);
     }
     else {
-        // Élément trouvé : remplacement par prédécesseur
+        // Élément trouvé : remplacement par le fils gauche éventuel
         *pnom2 = strcpy(*pnom2,a->nom);
         *CmptVille2 = a->CmptVille;
         *DebutTrajet2 = a->debutTrajet;
