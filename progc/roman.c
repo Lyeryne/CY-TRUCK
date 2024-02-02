@@ -374,6 +374,7 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
         // si la valeur d'id est déjà présente
         // on modifie la valeur minimale et maximale au besoin du noeud
         // on augmente le compteur
+        
         int* b;
         b = malloc(sizeof(int));
         if(b == NULL){
@@ -385,12 +386,11 @@ creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, 
         (a->CmptVille)++;
         }
         *h = 0;
+        if(debut == 1){
+            a->debutTrajet ++;
+    }
         return a;
     }
-    if(debut == 1){
-            a->debutTrajet ++;
-        }
-    printf("%d, %s", a->debutTrajet, a->nom);
     if (*h != 0)
     {
         a->equilibre = a->equilibre + *h;
@@ -471,21 +471,33 @@ creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, cha
     return a;
 }
 
+creerVille* suppMaxAVL(creerVille* pArbre, int* h, creerVille* sortie){
 
-
-creerVille* creationArbreFinal2(creerVille* a, creerVille* b)
-{
-    // fonction récursive pour créer l'arbre final
-    // la fonction va parcourir tout l'arbre a et ajouter les valeurs dans l'arbre b initialement nul
-    if (a != NULL)
-    {
-        // facteur d'equilibrage toujours initialisé a 0
-        int h = 0;
-        b = insertionAVLFinal(b, a->CmptVille, a->debutTrajet, a->nom, &h);
-        b = creationArbreFinal2(a->gauche, b);
-        b = creationArbreFinal2(a->droite, b);
+    creerVille* tmp;
+    if (pArbre->droite==NULL){
+        sortie = pArbre;
+        tmp=pArbre;
+        pArbre=pArbre->gauche;
+        free(tmp);
+        *h=-1;
+        return sortie;
     }
-    return b;
+    else{
+
+    pArbre->droite=suppMaxAVL(pArbre->droite,h,sortie);
+    *h=-*h;
+}
+    if(*h!=0){
+
+        pArbre->equilibre=pArbre->equilibre+*h;
+        if(pArbre->equilibre==0){
+            *h=-1;
+        }
+        else{
+            *h=0;
+        }
+    }
+    return sortie;
 }
 
 void infixeInverse(creerVille *a)
@@ -501,18 +513,34 @@ void infixeInverse(creerVille *a)
         infixeInverse(a->droite);
     }
 }
-void infixe(creerVille *a)
+
+creerVille * insertionAVLZ(creerVille *c,creerVille * b ){
+    if(c == NULL){ 
+        c=b;
+        return c;
+    }
+    else if (strcmp(b->nom, c->nom) < 0){
+        c->gauche = b;
+    }
+    else if (strcmp(b->nom, c->nom) > 0){
+        c->droite = b;
+    }
+    return c;
+}
+
+creerVille* creationArbreFinal2(creerVille* a, creerVille* b)
 {
-    // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
-    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
-    // la différence entre distance maximale et minimale du trajet,
-    // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
+    // fonction récursive pour créer l'arbre final
+    // la fonction va parcourir tout l'arbre a et ajouter les valeurs dans l'arbre b initialement nul
     if (a != NULL)
     {
-        infixeInverse(a->droite);
-        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
-        infixeInverse(a->gauche);
+        // facteur d'equilibrage toujours initialisé a 0
+        int h = 0;
+        b = insertionAVLFinal(b, a->CmptVille, a->debutTrajet, a->nom, &h);
+        b = creationArbreFinal2(a->gauche, b);
+        b = creationArbreFinal2(a->droite, b);
     }
+    return b;
 }
 
 int main() {
@@ -546,7 +574,7 @@ int main() {
         int h1 = 0;
         int h2 = 0;
         racine = insertionAVLDebut(racine, villeDepart, dbt, IDR, &h1);
-        racine = insertionAVLDebut(racine, villeArrivee, dbt, IDR, &h2);
+        racine = insertionAVLDebut(racine, villeArrivee, 2, IDR, &h2);
     }
     
     
@@ -554,10 +582,15 @@ int main() {
     b = creationArbreFinal2(racine ,b);  
 
     fclose(chemin);
+    
 
-
-    infixeInverse(b);
-
+    creerVille *c = (creerVille *)malloc(sizeof(creerVille));
+    creerVille *d = (creerVille *)malloc(sizeof(creerVille));
+    for(int i = 0; i<10; i++){
+        creerVille * d = suppMaxAVL(b, &b->equilibre, d );
+        creerVille *c = insertionAVLZ(c, d);
+    }
+    infixeInverse(c);
     return 0;
     
 }
