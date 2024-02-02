@@ -14,20 +14,18 @@ set xlabel 'Villes'
 # Axe Y
 set ylabel 'Nombre de trajets'
 
-# Graduation de l'axe Y tous les 10
-set ytics 10
-
 # Rotation des numéros de l'axe x de 45 degrés
 set xtics rotate by -45 
 
 # Ajustement de l'intervalle de l'axe Y
-set yrange [0:3500]
+set autoscale y
+set yrange [0:*]
 
-# separateur pour le using
+# separateur
 set datafile separator ";"
 
 # Définition du style des barres
-set style data histogram
+set style data histograms
 
 # Ajustement de la largeur des colonnes
 set boxwidth 3

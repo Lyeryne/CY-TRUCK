@@ -16,22 +16,27 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     fi
 
 # Compilation du programme C
-    # makeclean version shell, on rm (executable + fichiers_o) à chaque fois lorsqu'on veut make
-    if [ -z "$(ls -A progc/fichiers_o/)" ] ; then
-        rm -r progc/fichier_o/*
-            # Tue le programme si la commande ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
-                exit 10
-            fi
+    cd progc
+    # Tue le programme si la compilation ne s'est pas bien terminée
+     if [ $? -ne 0 ] ; then
+        echo "Erreur : La compilation a échoué. Sortie du programme."
+        echo "Le traitement S a mis 0.000000000 s"
+        exit 61
     fi
-    if [ -e "progc/Projet_S" ] ; then
-        rm -f progc/Projet_S
-            # Tue le programme si la commande ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
-                exit 8
-            fi
+    make clean > make_S.txt
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement S a mis 0.000000000 s"
+            exit 61
+        fi
+    cd ..
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement S a mis 0.000000000 s"
+            exit 61
+        fi
         make -C progc Projet_S
             # Tue le programme si la compilation ne s'est pas bien terminée
             if [ $? -ne 0 ] ; then
@@ -41,16 +46,6 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
             fi
         echo #saut de ligne
 
-        else 
-            make -C progc Projet_S
-            # Tue le programme si la compilation ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : La compilation a échoué. Sortie du programme."
-                echo "Le traitement S a mis 0.000000000 s"
-                exit 61
-            fi
-        echo #saut de ligne
-    fi
 
 # Exécution du compte à rebours
 STOP_TEMPS=false
@@ -238,7 +233,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
 
 kill -SIGUSR1 $CPID
 echo #saut de ligne
-echo "arret du compte à rebour => TRAITEMENT FINIE" 
+echo "arret du compte à rebour => TRAITEMENT FINI" 
 echo #saut de ligne
 
 echo ">> Le traitement S a mis $temps_total s <<" 

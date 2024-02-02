@@ -21,7 +21,8 @@ set ytics 100
 set xtics rotate by 45 right
 
 # Ajustement de l'intervalle de l'axe Y
-set yrange [0:1000]
+set autoscale y
+set yrange [0:*]
 
 # separateur pour le using
 set datafile separator ";"

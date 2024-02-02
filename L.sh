@@ -140,7 +140,23 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
 # déclenchant ainsi la fonction stop_compteur dans le script.
 kill -SIGUSR1 $CPID
 echo # Retour à la ligne
-echo "arret du compte à rebour => TRAITEMENT FINIE" 
+echo "arret du compte à rebour => TRAITEMENT FINI" 
 echo # Retour à la ligne
 
 echo ">> Le traitement L a mis $temps_total s <<" 
+
+cd Bonus
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi
+./Affichage_Bonus.sh calcul_distance_ges
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi
+cd ..
+    if [ $? -ne 0 ] ; then
+        echo "Erreur : Affichage Impossible."
+        exit 101
+    fi

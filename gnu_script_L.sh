@@ -23,7 +23,8 @@ set xlabel 'ROUTE ID'
 set ylabel 'DISTANCE(km)'
 
 # Ajustement de l'intervalle de l'axe y
-set yrange [0:3000]
+set autoscale y
+set yrange [0:*]
 
 # separateur pour le using
 set datafile separator ";"

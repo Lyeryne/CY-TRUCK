@@ -141,7 +141,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
 # déclenchant ainsi la fonction stop_compteur dans le script.
 kill -SIGUSR1 $CPID
 echo # Retour à la ligne
-echo "arret du compte à rebour => TRAITEMENT FINIE" 
+echo "arret du compte à rebour => TRAITEMENT FINI" 
 echo # Retour à la ligne
 
 echo ">> Le traitement D2 a mis $temps_total s <<" 

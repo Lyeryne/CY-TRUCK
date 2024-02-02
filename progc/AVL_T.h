@@ -8,33 +8,82 @@
 #define NOMVILLE 35
 #define NBR_VILLE 10
 
+#define NOMVILLE 35
+#define NBR_VILLE 10
+
+
+//structure pour vérifier si le trajet s'est déjà déroulé
+typedef struct _cntID {
+    int ID_route;
+    struct _cntID *fg;
+    struct _cntID *fd;
+    int equilibre;
+} compteID;
+
 // Structure de base du programme, avec toutes les informations.
-typedef struct creerVille {
-    char nom[NOMVILLE];
+typedef struct _creerVille {
+    char *nom;
     int CmptVille;
-    struct creerVille *gauche;
-    struct creerVille *droite;
-    int hauteur;
+    int debutTrajet;
+    int nbrID;
+    compteID *ID_ville;
+    struct _creerVille *gauche;
+    struct _creerVille *droite;
+    int equilibre;
 } creerVille;
 
 int max(int a, int b);
 
 int min(int a, int b);
 
-int hauteur(creerVille *N);
+creerVille* rotationGauche(creerVille* a);
 
-creerVille *nouvelleVille(char *nom);
+creerVille* rotationDroit(creerVille* a);
 
-creerVille * rotationDroite(creerVille *a);
+compteID* rotationDroit2(compteID* a);
 
-creerVille * rotationGauche(creerVille *a);
+compteID* rotationGauche2(compteID* a);
 
-int calculEQUILIBRE(creerVille *N);
+creerVille* doubleRotationGauche(creerVille* a);
 
-creerVille *ajouterVille(creerVille *branche, char *nom);
+compteID* doubleRotationGauche2(compteID* a);
 
-void Prefixe(creerVille *arbre, creerVille *maxVilles[],unsigned long int *ville);
+creerVille* doubleRotationDroit(creerVille* a);
 
-int compareTrajet(const void *a, const void *b);
+compteID* doubleRotationDroit2(compteID* a);
+
+creerVille* equilibrerAVL(creerVille* a);
+
+compteID* equilibrerAVL2(compteID* a);
+
+//void libererArbre(creerVille* a);
+
+compteID *creerAVL3(int IDRoute);
+
+creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute);
+
+creerVille* nouvelleVilleFinale(char* nom, int CmptVille, int debut);
+
+creerVille *creerAVL2(creerVille* ville, int IDRoute);
+
+compteID* insertionAVLMilieu(compteID *a, int IDRoute, int *b, int* h);
+
+creerVille* insertionAVLDebut(creerVille *a, char *nom, int debut, int IDRoute, int* h);
+
+creerVille* creerArbreFinal(int CpVille, int dbT, char* nomination);
+
+creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, char* nom, int* h);
+
+creerVille* insertionABRVraimentFinal(creerVille *a, char *nom, int compteurV, int debut);
+
+void infixeInverse(creerVille *a);
+
+void infixe(creerVille *a);
+
+creerVille* suppMax(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet);
+
+creerVille* suppression(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet, char** pnom2, int* CmptVille2, int* DebutTrajet2);
+
+creerVille* creationArbreFinal2(creerVille* a, creerVille* b);
 
 #endif

@@ -6,43 +6,43 @@
 #define NBR_VILLE 10
 
 
-//structure pour vérifier si le trajet s'est déjà déroulé
+//structure pour vérifier si le trajet existe déjà
 typedef struct _cntID {
-    int ID_route;
-    struct _cntID *fg;
-    struct _cntID *fd;
-    int equilibre;
+    int ID_route;//contient un identifiant trajet
+    struct _cntID *fg;//fils gauche
+    struct _cntID *fd;//fils droit
+    int equilibre;//facteur d'équilibre accessible à tout moment
 } compteID;
 
 // Structure de base du programme, avec toutes les informations.
 typedef struct _creerVille {
-    char *nom;
-    int CmptVille;
-    int debutTrajet;
-    int nbrID;
-    compteID *ID_ville;
-    struct _creerVille *gauche;
-    struct _creerVille *droite;
-    int equilibre;
+    char *nom;//nom de la ville
+    int CmptVille;//compteur du nombre de fois que la ville est traversée
+    int debutTrajet;//compteur du nombre de fois que la ville est la ville de départ d'un trajet
+    int nbrID;//ID route actuel
+    compteID *ID_ville;//arbre qui contient les trajets déjà effectués pour cette ville
+    struct _creerVille *gauche;//fils gauche
+    struct _creerVille *droite;//fils droit
+    int equilibre;//facteur d'équilibre accessible à tout moment
 } creerVille;
 
 // Fonction qui retourne le max entre 2 entiers
 int max(int a, int b) {
     if(a > b){
-        return a;
+        return a;//si a est plus grand que b on retourne a
     }
     else{
-        return b;
+        return b;//sinon on retourne b
     }
     
 }
 //Fonction qui retourne le min entre 2 entiers
 int min(int a, int b) {
     if(a > b){
-        return b;
+        return b;//si a est inférieur à b on retourne a
     }
     else{
-        return a;
+        return a;//sinon on retourne b
     }
 }
 
@@ -53,18 +53,18 @@ creerVille* rotationGauche(creerVille* a)
     {
         exit(66);
     }
-    creerVille* pivot;
+    creerVille* pivot;//on créée le pivot de notre rotation
     int eq_a, eq_p;
-    pivot = a->droite;
-    a->droite = pivot->gauche;
-    pivot->gauche = a;
-    eq_a = a->equilibre;
-    eq_p = pivot->equilibre;
+    pivot = a->droite;//le fils droit est choisi comme pivot
+    a->droite = pivot->gauche;//on fait la rotation
+    pivot->gauche = a;//on termine la rotation
+    eq_a = a->equilibre;//on vérifie l'équilibre de l'arbre
+    eq_p = pivot->equilibre;//et on réajuste en conséquence
     a->equilibre = eq_a - max(eq_p, 0) - 1;
     pivot->equilibre = min(eq_a - 2, eq_a + eq_p - 2);
     pivot->equilibre = min(pivot->equilibre, eq_p - 1);
-    a = pivot;
-    return a;
+    a = pivot;//on remet la base de l'arbre au pivot
+    return a;// on retourne notre arbre
 }
 
 creerVille* rotationDroit(creerVille* a)
@@ -74,18 +74,18 @@ creerVille* rotationDroit(creerVille* a)
     {
         exit(66);
     }
-    creerVille* pivot;
+    creerVille* pivot;//on créée le pivot de notre rotation
     int eq_a, eq_p;
-    pivot = a->gauche;
-    a->gauche = pivot->droite;
-    pivot->droite = a;
-    eq_a = a->equilibre;
-    eq_p = pivot->equilibre;
+    pivot = a->gauche;//le fils gauche est choisi comme pivot
+    a->gauche = pivot->droite;//on fait la rotation
+    pivot->droite = a;//on termine la rotation
+    eq_a = a->equilibre;//on vérifie l'équilibre de l'arbre
+    eq_p = pivot->equilibre;//et on réajuste en conséquence
     a->equilibre = eq_a - min(eq_p, 0) + 1;
     pivot->equilibre = max(eq_a + 2, eq_a + eq_p + 2);
     pivot->equilibre = max(pivot->equilibre, eq_a + 1);
-    a = pivot;
-    return a;
+    a = pivot;//on remet la base de l'arbre au pivot
+    return a;// on retourne notre arbre
 }
 
 compteID* rotationDroit2(compteID* a)
@@ -95,8 +95,8 @@ compteID* rotationDroit2(compteID* a)
     {
         exit(66);
     }
-    compteID* pivot;
-    int eq_a, eq_p;
+    compteID* pivot;//se référer à rotationDroit, 
+    int eq_a, eq_p;//elle fait la même chose mais avec un type d'arbre différent
     pivot = a->fg;
     a->fg = pivot->fd;
     pivot->fd = a;
@@ -116,8 +116,8 @@ compteID* rotationGauche2(compteID* a)
     {
         exit(66);
     }
-    compteID* pivot;
-    int eq_a, eq_p;
+    compteID* pivot;//se référer à rotationGauche
+    int eq_a, eq_p;//elle fait la même chose mais avec un type d'arbre différent
     pivot = a->fd;
     a->fd = pivot->fg;
     pivot->fg = a;
@@ -186,9 +186,9 @@ creerVille* equilibrerAVL(creerVille* a)
     {
         exit(66);
     }
-    if (a->equilibre >= 2)
+    if (a->equilibre >= 2)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
     {
-        if (a->droite->equilibre >= 0)
+        if (a->droite->equilibre >= 0)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
         {
             return rotationGauche(a);
         }
@@ -197,9 +197,9 @@ creerVille* equilibrerAVL(creerVille* a)
             return doubleRotationGauche(a);
         }
     }
-    else if (a->equilibre <= -2)
+    else if (a->equilibre <= -2)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
     {
-        if (a->gauche->equilibre <= 0)
+        if (a->gauche->equilibre <= 0)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
         {
             return rotationDroit(a);
         }
@@ -210,6 +210,7 @@ creerVille* equilibrerAVL(creerVille* a)
     }
     return a;
 }
+
 compteID* equilibrerAVL2(compteID* a)
 {
     // fonction pour équilibrer l'AVL en fonction du facteur d'equilibrage
@@ -217,9 +218,9 @@ compteID* equilibrerAVL2(compteID* a)
     {
         exit(66);
     }
-    if (a->equilibre >= 2)
+    if (a->equilibre >= 2)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
     {
-        if (a->fd->equilibre >= 0)
+        if (a->fd->equilibre >= 0)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
         {
             return rotationGauche2(a);
         }
@@ -228,9 +229,9 @@ compteID* equilibrerAVL2(compteID* a)
             return doubleRotationGauche2(a);
         }
     }
-    else if (a->equilibre <= -2)
+    else if (a->equilibre <= -2)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
     {
-        if (a->fg->equilibre <= 0)
+        if (a->fg->equilibre <= 0)//vérifie les facteurs d'équilibre pour déterminer le type de rotation
         {
             return rotationDroit2(a);
         }
@@ -243,29 +244,30 @@ compteID* equilibrerAVL2(compteID* a)
 }
 
 
-
+//fonction qui créée l'arbre contenant les routes ID
 compteID *creerAVL3(int IDRoute){
     compteID *route_ID = (compteID *)malloc(sizeof(compteID));
-    route_ID->ID_route = IDRoute;
-    route_ID->equilibre = 0;
-    route_ID->fg = NULL;
+    route_ID->ID_route = IDRoute;//ajout du route ID de ce noeud de l'arbre
+    route_ID->equilibre = 0;//equilibre mis a 0
+    route_ID->fg = NULL;//noeud unique donc pas de fils
     route_ID->fd = NULL;
     return route_ID;
 }
-// Initialise la première ville de l'arbre
+
+// Initialise la première ville de l'arbre 
 creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
-    creerVille *ville = (creerVille *)malloc(sizeof(creerVille));
-    if(ville == NULL){
+    creerVille *ville = (creerVille *)malloc(sizeof(creerVille));//allocation dynamique de mémoire
+    if(ville == NULL){//robustesse : vérification de l'allocation
         exit(66);
     }
-    ville->nom = malloc(sizeof(char)*150);
-    if(ville->nom == NULL){
+    ville->nom = malloc(sizeof(char)*150);//allocation dynamique de mémoire
+    if(ville->nom == NULL){//robustesse : vérification de l'allocation
         exit(66);
     }
-    strcpy(ville->nom, nom);
-    ville->CmptVille = 1;
-    ville->nbrID = IDRoute;
-    ville->ID_ville = creerAVL3(ville->nbrID);
+    strcpy(ville->nom, nom);//copie le nom dans le noeud
+    ville->CmptVille = 1;//le compte des route ID est mis à 1
+    ville->nbrID = IDRoute;//le premier ID route est copié
+    ville->ID_ville = creerAVL3(ville->nbrID);//cree un arbre  
     ville->debutTrajet = 0;
     if(debutTraj == 1){
         ville->debutTrajet ++;
@@ -274,6 +276,24 @@ creerVille *nouvelleVille(char *nom, int debutTraj, int IDRoute) {
     ville->gauche = NULL;
     ville->droite = NULL;
     ville->equilibre = 0;
+    return ville;
+}
+
+//initialise une des 10 dernieres villes
+creerVille* nouvelleVilleFinale(char* nom, int CmptVille, int debut){
+    creerVille* ville = malloc(sizeof(creerVille));
+    if(ville == NULL){
+        exit(66);
+    }
+    ville->CmptVille = CmptVille;
+    ville->nom = malloc(strlen(nom+1));
+    if(ville->nom == NULL){
+        exit(66);
+    }
+    strcpy(ville->nom, nom);
+    ville->debutTrajet = debut;
+    ville->droite = NULL;
+    ville->gauche = NULL;
     return ville;
 }
 
@@ -471,33 +491,22 @@ creerVille* insertionAVLFinal(creerVille *a, int CmptVille, int debutTrajet, cha
     return a;
 }
 
-creerVille* suppMaxAVL(creerVille* pArbre, int* h, creerVille* sortie){
+creerVille* insertionABRVraimentFinal(creerVille *a, char *nom, int compteurV, int debut)
+{
 
-    creerVille* tmp;
-    if (pArbre->droite==NULL){
-        sortie = pArbre;
-        tmp=pArbre;
-        pArbre=pArbre->gauche;
-        free(tmp);
-        *h=-1;
-        return sortie;
+    if (a == NULL)
+    {
+        return nouvelleVilleFinale(nom, compteurV, debut);
     }
-    else{
-
-    pArbre->droite=suppMaxAVL(pArbre->droite,h,sortie);
-    *h=-*h;
-}
-    if(*h!=0){
-
-        pArbre->equilibre=pArbre->equilibre+*h;
-        if(pArbre->equilibre==0){
-            *h=-1;
-        }
-        else{
-            *h=0;
-        }
+    else if (strcmp(nom, a->nom) < 0)
+    {
+        a->gauche = insertionABRVraimentFinal(a->gauche, nom, compteurV, debut);
     }
-    return sortie;
+    else if (strcmp(nom, a->nom) > 0)
+    {
+        a->droite = insertionABRVraimentFinal(a->droite, nom, compteurV, debut);
+    }
+    return a;
 }
 
 void infixeInverse(creerVille *a)
@@ -508,25 +517,80 @@ void infixeInverse(creerVille *a)
     // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
     if (a != NULL)
     {
-        infixeInverse(a->gauche);
-        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
         infixeInverse(a->droite);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixeInverse(a->gauche);
     }
 }
 
-creerVille * insertionAVLZ(creerVille *c,creerVille * b ){
-    if(c == NULL){ 
-        c=b;
-        return c;
+void infixe(creerVille *a)
+{
+    // fonction récursive qui écris dans le fichier de données de sortie toutes les données nécessaires
+    // Le compteur, l'id de la route, la distance minimale du trajet, la moyenne de distance du trajet, la distance maximale du trajet
+    // la différence entre distance maximale et minimale du trajet,
+    // parcours de l'arbre infixe inverse pour parcourir dans le sens décroissant
+    if (a != NULL)
+    {
+        infixe(a->gauche);
+        printf("%s;%d;%d\n", a->nom, a->CmptVille, a->debutTrajet);
+        infixe(a->droite);
     }
-    else if (strcmp(b->nom, c->nom) < 0){
-        c->gauche = b;
-    }
-    else if (strcmp(b->nom, c->nom) > 0){
-        c->droite = b;
-    }
-    return c;
 }
+
+
+creerVille* suppMax(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet) {
+    creerVille* tmp;
+
+    // On rappelle la fonction avec le fils droit
+    if (a->droite != NULL) {
+        a->droite = suppMax(a->droite, pnom, CmptVille, DebutTrajet);
+    } else {
+        // Si plus de fils droit, on a le successeur
+        *pnom = strcpy(*pnom, a->nom);
+        *CmptVille = a->CmptVille;
+        *DebutTrajet = a->debutTrajet;
+        tmp = a;
+        a = a->gauche;
+        free(tmp->nom);
+        free(tmp);
+    }
+    return a;
+}
+
+creerVille* suppression(creerVille* a, char** pnom, int* CmptVille, int* DebutTrajet, char** pnom2, int* CmptVille2, int* DebutTrajet2) {
+    creerVille* tmp;
+
+    // Element non présent dans l'arbre
+    if (a == NULL) {
+        return a;
+    }
+
+    // Parcours récursif de l'arbre
+    if (a->droite != NULL) {
+        a->droite = suppression(a->droite, pnom, CmptVille, DebutTrajet, pnom2, CmptVille2, DebutTrajet2);
+    }
+    else if (a->gauche == NULL) {
+            tmp = a;
+            *pnom2 = strcpy(*pnom2, tmp->nom);
+            *CmptVille2 = tmp->CmptVille;
+            *DebutTrajet2 = tmp->debutTrajet;
+            a = a->droite;
+            free(tmp->nom);
+            free(tmp);
+    }
+    else {
+        // Élément trouvé : remplacement par prédécesseur
+        *pnom2 = strcpy(*pnom2,a->nom);
+        *CmptVille2 = a->CmptVille;
+        *DebutTrajet2 = a->debutTrajet;
+        a->gauche = suppMax(a->gauche, &a->nom, &a->CmptVille, &a->debutTrajet);
+
+    }
+    return a;
+}
+
+
+
 
 creerVille* creationArbreFinal2(creerVille* a, creerVille* b)
 {
@@ -583,14 +647,23 @@ int main() {
 
     fclose(chemin);
     
-
-    creerVille *c = (creerVille *)malloc(sizeof(creerVille));
-    creerVille *d = (creerVille *)malloc(sizeof(creerVille));
-    for(int i = 0; i<10; i++){
-        creerVille * d = suppMaxAVL(b, &b->equilibre, d );
-        creerVille *c = insertionAVLZ(c, d);
+    char* nom = malloc(sizeof(150));
+    if(nom == NULL){
+        exit(66);
     }
-    infixeInverse(c);
+    char* nom2 = malloc(150);
+    if(nom2 == NULL){
+        exit(66);
+    }
+    int debut, debut2;
+    int CompteurVille, CompteurVille2;
+    creerVille *c = NULL;
+    for(int i = 0; i<10; i++){
+        b = suppression(b, &nom, &CompteurVille, &debut, &nom2, &CompteurVille2, &debut2);
+        int h = 0;
+        c = insertionABRVraimentFinal(c, nom2, CompteurVille2, debut2);
+    }
+    infixe(c);
     return 0;
     
 }

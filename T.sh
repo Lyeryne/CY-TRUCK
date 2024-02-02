@@ -16,40 +16,36 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CY TRUCK ~~~~~~~~~~~~~~~~
     fi
 
 # Compilation du programme C
-    #makeclean version shell, on rm (executable + fichiers_o) à chaque fois lorsqu'on veut make
-    if [ -z "$(ls -A progc/fichiers_o/)" ] ; then
-        rm -r progc/fichier_o/*
-            # Tue le programme si la commande ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
-                exit 10
-            fi
+cd progc
+    # Tue le programme si la compilation ne s'est pas bien terminée
+     if [ $? -ne 0 ] ; then
+        echo "Erreur : La compilation a échoué. Sortie du programme."
+        echo "Le traitement T a mis 0.000000000 s"
+        exit 61
     fi
-    if [ -e "progc/Projet_T" ] ; then
-        rm -f progc/Projet_T
-            # Tue le programme si la commande ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : Le RM a échoué. Sortie du programme."
-                exit 8
-            fi
-        make -C progc Projet_T
-            # Tue le programme si la compilation ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : La compilation a échoué. Sortie du programme."
-                echo "Le traitement T a mis 0.000000000 s"
-                exit 61
-            fi
+    make clean > make_T.txt
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement T a mis 0.000000000 s"
+            exit 61
+        fi
+    cd ..
+    # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement T a mis 0.000000000 s"
+            exit 61
+        fi
+    make -C progc Projet_T
+        # Tue le programme si la compilation ne s'est pas bien terminée
+        if [ $? -ne 0 ] ; then
+            echo "Erreur : La compilation a échoué. Sortie du programme."
+            echo "Le traitement T a mis 0.000000000 s"
+            exit 61
+        fi
         echo #saut de ligne
-    else
-        make -C progc Projet_T
-            # Tue le programme si la compilation ne s'est pas bien terminée
-            if [ $? -ne 0 ] ; then
-                echo "Erreur : La compilation a échoué. Sortie du programme."
-                echo "Le traitement T a mis 0.000000000 s"
-                exit 61
-            fi
-        echo #saut de ligne
-    fi
+
     
 # Exécution du compte à rebours
 STOP_TEMPS=false
@@ -119,7 +115,7 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 68
         fi
-    ./Projet_T | head -10 > temp/gnu_data_T.txt
+    ./Projet_T | head -30 > ../temp/gnu_data_T.txt
         # Tue le programme si l'execution ne s'est pas bien terminée
         if [ $? -ne 0 ] ; then
             echo "Erreur : L'exécution du programme C a échoué. Sortie du programme."
@@ -164,29 +160,6 @@ temps_debut=$(date +%s.%N)
             echo "Le traitement T a mis $temps_total s"
             exit 72
         fi
-    head -n 10 "temp/gnuplot_data_T.txt" > "temp/gnu_data_T.txt"
-        # Tue le programme si la compilation ne s'est pas bien terminée
-        if [ $? -ne 0 ] ; then
-            echo "Erreur : La compilation a échoué. Sortie du programme."
-            kill -SIGTERM $CPID
-            temps_fin=$(date +%s.%N)
-                # Tue le programme si la compilation ne s'est pas bien terminée
-                if [ $? -ne 0 ] ; then
-                    echo "Erreur : la durée du traitement ne peut pas être affichée."            
-                    echo "Le traitement T a mis 0.000000000 s" 
-                    exit 65
-                fi
-            temps_total=$(echo "$temps_fin - $temps_debut" | bc)
-                # Tue le programme si la compilation ne s'est pas bien terminée
-                if [ $? -ne 0 ] ; then
-                    echo "Erreur : la durée du traitement ne peut pas être affichée."            
-                    echo "Le traitement T a mis 0.000000000 s" 
-                    exit 65
-                fi
-            echo "Le traitement T a mis $temps_total s"
-            exit 74
-        fi
-
 # Mesurer le temps après l'exécution du processus
 temps_fin=$(date +%s.%N)
     # Tue le programme si la commande ne s'est pas bien terminée
@@ -261,7 +234,7 @@ temps_total=$(echo "$temps_fin - $temps_debut" | bc)
 
 kill -SIGUSR1 $CPID
 echo #saut de ligne
-echo "arret du compte à rebour => TRAITEMENT FINIE" 
+echo "arret du compte à rebour => TRAITEMENT FINI" 
 echo #saut de ligne
 
 echo ">> Le traitement T a mis $temps_total s <<" 

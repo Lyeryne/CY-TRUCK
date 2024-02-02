@@ -4,7 +4,8 @@
 STOP_COMPTEUR=false
 
 # Fonction pour arrêter le compte à rebours
-stop_compteur() {
+stop_compteur() 
+{
     STOP_COMPTEUR=true
     exit 0
 }
@@ -17,15 +18,15 @@ stop_compteur() {
 trap 'stop_compteur' SIGUSR1
 
 # Affichage du compte à rebours
-AffichageTemps() {
-    printf "LANCEMENT DU TRAITEMENTS (PENSEZ À JETER UN COUP D'ŒIL SI L'UN DES TRAITEMENTS EST FINI)\n"
+AffichageTemps() 
+{
     for ((i = 0; i <= 100; i++)) ; do
-         # (\r) permet de revenir en début de ligne
-        printf "%d%%\r" $i
+        # (\r) permet de revenir en début de ligne
+        printf "LANCEMENT DU TRAITEMENT (PENSEZ À JETER UN COUP D'ŒIL) %d%%\r" $i
         if [ $i -eq 100 ] || [ "$STOP_COMPTEUR" = true ] ; then
             break
         fi
-        sleep 0  # suspend l'exécution du programme pendant 0.3 s pour l'effet
+        sleep 1  # suspend l'exécution du programme pendant 0.3 s pour l'effet
     done
 }
 

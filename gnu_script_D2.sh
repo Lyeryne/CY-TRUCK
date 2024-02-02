@@ -28,9 +28,10 @@ set y2label 'DISTANCE (Km)'
 
 # Ajustement des xtics
 set xtics rotate 
-set y2range [0:160000]
 
 # Ajustement des y2tics
+set autoscale y2
+set y2range [0:*]
 set y2tics rotate 
 unset ytics;set y2tics mirror
 
